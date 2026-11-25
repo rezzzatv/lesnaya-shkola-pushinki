@@ -110,6 +110,38 @@
   .pop{max-width:560px;width:100%;max-height:94vh;max-height:94dvh;overflow:auto;flex:none;animation:pop .3s}
   .pop .btn{display:block;margin:12px auto 0;font-size:24px;padding:12px 24px}
   .card.fit{flex:none;margin:auto 0}
+  .chain{font-size:34px;font-weight:bold;margin:6px auto;display:flex;flex-direction:column;align-items:flex-start;width:max-content;max-width:100%}
+  .chain .cl{padding:2px 10px;border-radius:12px;white-space:nowrap}
+  .chain .cl.new{background:#fff3c4;box-shadow:0 0 0 3px #ffd76a;animation:pop .45s}
+  .cT{color:#2a5bd7}.cU{color:#1f8a2c}.cM{color:#e0453a}.cR{color:#8a3fd1;background:#f3e8ff;border-radius:8px;padding:0 4px}
+  .cnote{background:#fff8ef;border:3px solid #ffc58a;border-radius:16px;padding:8px 12px;font-size:20px;line-height:1.45;margin-top:8px}
+  .chain.task{font-size:32px;margin:4px auto}
+  .chain.task .cl{padding:2px 4px;line-height:1.25}
+  .chain.mini{font-size:20px;margin:6px auto 2px}
+  .cbox{display:inline-flex;align-items:center;justify-content:center;min-width:54px;height:46px;padding:0 4px;border:3px dashed #b9c9e8;border-radius:12px;margin:2px 3px;vertical-align:middle;background:#f7f9ff}
+  .cbox.cur{border:3px solid #ffb300;background:#fff3c4;color:#2a5bd7;box-shadow:0 0 0 3px #ffe08a}
+  .cbox.ok{border:3px solid #a8dcab;background:#f0fbf1}
+  .chain.mini .cbox{min-width:0;height:auto;border:none;background:none;margin:0;padding:0}
+  .clegend{text-align:center;font-size:16px;margin-top:6px;font-weight:bold}
+  .namebox{display:block;width:100%;max-width:340px;margin:6px auto 4px;background:#ffe08a;border-radius:22px;padding:8px;box-shadow:0 6px 0 #e0a800}
+  .nameinput{display:block;width:100%;font-family:"Comic Sans MS","Segoe UI","Trebuchet MS",sans-serif;font-weight:bold;font-size:30px;color:#6b3d00;text-align:center;
+    padding:8px 10px;border:none;border-radius:16px;outline:none;background:#fffdf5;box-shadow:inset 0 3px 0 #f0cf7a;caret-color:#e0a800;-webkit-user-select:text;user-select:text}
+  .nameinput::placeholder{color:#d8b878;font-weight:bold}
+  .namebox:focus-within{background:#ffd24d;box-shadow:0 6px 0 #c98f00}
+  /* орешки */
+  .flynut{position:fixed;z-index:400;font-size:26px;pointer-events:none;will-change:transform}
+  .nutcount.bump{animation:bump .35s}
+  @keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+  .crackwrap{position:fixed;left:50%;top:42%;z-index:400;pointer-events:none;width:0;height:0}
+  .crackwrap .half{position:absolute;font-size:90px;line-height:1;left:-45px;top:-45px;animation:shakeNut .35s}
+  .crackwrap .half.l{clip-path:inset(0 50% 0 0);animation:shakeNut .35s,splitL .6s .35s ease-in forwards}
+  .crackwrap .half.r{clip-path:inset(0 0 0 50%);animation:shakeNut .35s,splitR .6s .35s ease-in forwards}
+  .crackwrap .crackline{position:absolute;left:-18px;top:-40px;font-size:40px;opacity:0;animation:flash .3s .3s}
+  @keyframes shakeNut{0%,100%{transform:rotate(0)}20%{transform:rotate(-12deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(8deg)}}
+  @keyframes splitL{to{transform:translate(-60px,140px) rotate(-70deg);opacity:0}}
+  @keyframes splitR{to{transform:translate(60px,140px) rotate(70deg);opacity:0}}
+  @keyframes flash{0%,100%{opacity:0}50%{opacity:1}}
+  .linkbtn{font-family:inherit;background:none;border:none;color:#8a6a30;font-size:16px;text-decoration:underline;margin-top:14px;cursor:pointer}
   .slide{flex:1;display:flex;flex-direction:column;justify-content:center}
   /* ---- телефон ---- */
   @media (max-width:600px),(max-height:900px){
@@ -146,6 +178,7 @@
     h1{font-size:24px}.big{font-size:17px}.story{font-size:40px}
     .menu{gap:10px;margin-top:10px}.mcard{padding:14px 8px}.mi{font-size:44px}.mt{font-size:24px}.ms{font-size:14px}
     .tnav{margin-top:10px}.tnav .btn{font-size:20px;padding:10px 14px}
+    .chain{font-size:26px}.chain.task{font-size:24px}.chain.mini{font-size:17px}.cbox{min-width:44px;height:38px;border-radius:10px;margin:2px}.chain .cl{padding:1px 8px}.cnote{font-size:16px;padding:6px 10px}.clegend{font-size:13px}
     .cert{padding:8px;border-width:5px}.cert .medal{font-size:52px}
     .cert h1{margin:0}.cert .big{margin:6px 0;font-size:16px}.cert .big span{font-size:30px!important}
     .cert .tnav{gap:6px}.cert .tnav .btn{font-size:16px;padding:8px 10px}
@@ -167,7 +200,11 @@ const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()
 const sym=op=>op==='-'?'−':'+';
 const calc=(n,op,m)=>op==='-'?n-m:n+m;
 function plural(n,f){const a=n%100,b=n%10;if(a>10&&a<20)return f[2];if(b===1)return f[0];if(b>=2&&b<=4)return f[1];return f[2];}
-const NAME='Наташа';
+/* имя и пол игрока: спрашиваем при первом запуске, запоминаем на устройстве */
+let NAME='',GIRL=true;
+try{NAME=localStorage.getItem('pl_name')||'';GIRL=localStorage.getItem('pl_girl')!=='0'}catch(e){}
+const g=(f,m)=>GIRL?f:m;
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 /* ---------- генераторы примеров (без перехода через десяток) ---------- */
 function gAddU(){const t=R(1,8),u=R(1,7);return {n:10*t+u,op:'+',m:R(1,9-u)}}
@@ -215,6 +252,45 @@ function stepsFor(p){
 }
 
 /* ================= задания ================= */
+/* ---------- задание-цепочка ---------- */
+function chainTask(p,given){
+  const {n,op,m}=p,T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m),ones=m<10,o=sym(op);
+  const x=ones?calc(u,op,m):calc(T,op,m);
+  const slots=[];const S=(a,k,hint)=>{slots.push({a,k,hint});return {s:slots.length-1}};
+  const lines=[[`${n} ${o} `,{f:m,k:'M'}]];
+  const dec=`Разложи ${n} на десятки и единицы: ${n} = <b>${T}</b> + <b>${u}</b>.`;
+  lines.push(given?['= ',{f:T,k:'T'},' + ',{f:u,k:'U'},` ${o} `,{f:m,k:'M'}]
+                  :['= ',S(T,'T',dec),' + ',S(u,'U',dec),` ${o} `,{f:m,k:'M'}]);
+  if(ones){
+    lines.push(['= ',S(T,'T',`За скобками остаются <b>десятки</b> — ${T}. Они ждут, пока мы посчитаем единицы.`),' + (',
+      S(u,'U',`В скобки пишем <b>единицы</b>: сначала ${u}, потом ${m}. Все числа остаются на месте: ${T}, ${u} и ${m}.`),` ${o} `,
+      S(m,'M',`В скобках: ${u} ${o} <b>${m}</b> — число ${m} никуда не теряем, переписываем его.`),')']);
+    lines.push(['= ',S(T,'T',`Десятки ${T} просто переписываем.`),' + ',S(x,'R',`Считаем в скобках: ${u} ${o} ${m} = <b>${x}</b>.`)]);
+    lines.push(['= ',S(r,'R',`Осталось сложить: ${T} + ${x} = <b>${r}</b>.`)]);
+  }else{
+    lines.push(['= (',S(T,'T',`В скобки пишем <b>десятки</b>: сначала ${T}, потом ${m}.`),` ${o} `,
+      S(m,'M',`В скобках: ${T} ${o} <b>${m}</b> — число ${m} никуда не теряем.`),') + ',
+      S(u,'U',`За скобками ждут <b>единицы</b> — ${u}. Все числа на месте: ${T}, ${m} и ${u}.`)]);
+    lines.push(['= ',S(x,'R',`Считаем в скобках: ${T} ${o} ${m} = <b>${x}</b>.`),' + ',S(u,'U',`Единицы ${u} просто переписываем.`)]);
+    lines.push(['= ',S(r,'R',`Осталось сложить: ${x} + ${u} = <b>${r}</b>.`)]);
+  }
+  const t={type:'steps',chain:true,lines,face:given?'🦉':'🐻',
+    q:given?'Запиши цепочкой, как в тетради! Вставь числа в окошки — в скобки и за скобки.':'Сам разложи число и допиши цепочку! Ничего не теряем 😉',
+    html:'',steps:slots,res:r};
+  t.exp=()=>`<div class="explain"><p>${slots[Math.min(st.step,slots.length-1)].hint}</p><div class="chain mini">${chainHTML(t,99,true)}</div>${RULE}</div>`;
+  return t;
+}
+function chainHTML(t,upto,all){
+  const cls={T:'cT',U:'cU',M:'cM',R:'cR'};
+  return t.lines.map(line=>`<div class="cl">${line.map(tok=>{
+    if(typeof tok==='string')return tok;
+    if(tok.f!==undefined)return `<span class="${cls[tok.k]}">${tok.f}</span>`;
+    const sl=t.steps[tok.s];
+    if(all||tok.s<upto)return `<span class="cbox ok ${cls[sl.k]}">${sl.a}</span>`;
+    if(tok.s===upto)return `<span class="cbox cur" id="ans">${st.input||'?'}</span>`;
+    return `<span class="cbox"></span>`;}).join('')}</div>`).join('');
+}
+
 function buildTasks(){
   const L=[];
   // 1. Из чего состоит число
@@ -224,9 +300,11 @@ function buildTasks(){
      html:sticks(n)+`<div class="expr"><span class="t">${n} = ?</span></div>`,opts,ans:`${T} + ${u}`,
      exp:()=>`<div class="explain"><p>Пучки — это <b>десятки</b>: ${t} ${plural(t,['пучок','пучка','пучков'])} = <b>${T}</b>.</p><p>Отдельные палочки — <b>единицы</b>: <b>${u}</b>.</p><p>Значит, ${n} = <b>${T} + ${u}</b>.</p></div>`});}
   // 2-5. По шагам
-  const sq=[[gAddU,'Сначала единицы, потом всё вместе!'],[gAddT,'Теперь прибавляем десятки!'],[gSubU,'Вычитаем единицы!'],[gSubT,'Вычитаем десятки!']];
+  const sq=[[gAddU,'Сначала единицы, потом всё вместе!'],[gSubT,'Вычитаем десятки!']];
   for(const [g,hint] of sq){const p=g();
     L.push({type:'steps',face:'🐿️',q:`Реши по шагам, как в учебнике. ${hint}`,html:expr(p,'final'),steps:stepsFor(p),exp:()=>explain(p),res:calc(p.n,p.op,p.m)});}
+  // Цепочки «как в тетради»: вставь числа в скобки и за скобки
+  [[gAddU,true],[gAddT,true],[gSubU,false],[gSubT,false]].forEach(([g,given])=>L.push(chainTask(g(),given)));
   // 6. В уме
   {const p=pick([gAddU,gSubU,gAddT,gSubT])();
    L.push({type:'num',face:'🦉',q:'Совёнок Угу просит: посчитай в уме!',html:expr(p),ans:calc(p.n,p.op,p.m),exp:()=>explain(p)});}
@@ -274,15 +352,32 @@ function tones(fs,type='triangle'){if(!soundOn)return;try{actx=actx||new (window
     g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.25,t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+0.3);
     o.connect(g).connect(actx.destination);o.start(t);o.stop(t+0.35)})}catch(e){}}
 const yay=()=>tones([523,659,784,1047]);
-const oops=()=>tones([330,262],'sine');
+/* шум для звуков орешков */
+function noise(t,dur,freq,q,vol){const c=actx,len=Math.max(1,Math.floor(c.sampleRate*dur)),b=c.createBuffer(1,len,c.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);
+  const s=c.createBufferSource();s.buffer=b;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=freq;f.Q.value=q;
+  const g=c.createGain();g.gain.value=vol;s.connect(f).connect(g).connect(c.destination);s.start(t);}
+function knock(t,freq,vol){const c=actx,o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.setValueAtTime(freq,t);o.frequency.exponentialRampToValueAtTime(freq*0.6,t+0.06);
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.0001,t+0.07);o.connect(g).connect(c.destination);o.start(t);o.stop(t+0.08);}
+/* орешки сыплются в дупло: дробный деревянный стук */
+function rattle(){if(!soundOn)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const now=actx.currentTime;
+  for(let k=0;k<9;k++){const t=now+k*0.035+Math.random()*0.03,v=0.5*(1-k/11);
+    knock(t,700+Math.random()*700,v*0.5);noise(t,0.035,2500+Math.random()*2500,4,v*1.2);}}catch(e){}}
+/* ошибка: треск раскалывающегося орешка и грустное «уа-уа» */
+function oops(){if(!soundOn)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const c=actx,now=c.currentTime;
+  noise(now,0.09,1800,0.8,1.4);noise(now+0.05,0.12,900,1,0.9);knock(now,180,0.5);
+  [[466,415,0.25],[415,349,0.25],[392,294,0.6]].forEach(([f1,f2,d],i)=>{const t=now+0.3+i*0.3,o=c.createOscillator(),g=c.createGain();
+    o.type='triangle';o.frequency.setValueAtTime(f1,t);o.frequency.linearRampToValueAtTime(f2,t+d);
+    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.2,t+0.03);g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+    o.connect(g).connect(c.destination);o.start(t);o.stop(t+d+0.05)});}catch(e){}}
 function confetti(n=36){for(let i=0;i<n;i++){const d=document.createElement('div');d.className='conf';d.textContent=pick(['🌰','⭐','🍂','✨','🎉','🌟']);
   d.style.left=Math.random()*100+'vw';d.style.animationDuration=(1.4+Math.random()*1.4)+'s';d.style.animationDelay=Math.random()*0.4+'s';
   document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
 
-const PRAISE=[`Умница, ${NAME}! 🌟`,'Супер! Пушинка в восторге! 🐿️','Точно в цель! 🎯','Вот это да! Настоящий математик! 🧠','Великолепно! ✨','Браво! Орешек твой! 🌰','Ура! Так держать! 🚀','Отлично считаешь! 💪','Молодец! Ты молния! ⚡'];
+const PRAISE=[()=>`Умница, ${esc(NAME)}! 🌟`,()=>'Супер! Пушинка в восторге! 🐿️',()=>'Точно в цель! 🎯',()=>'Вот это да! Настоящий математик! 🧠',()=>'Великолепно! ✨',()=>'Браво! Орешек твой! 🌰',()=>`Ура! Так держать, ${esc(NAME)}! 🚀`,()=>'Отлично считаешь! 💪',()=>'Молодец! Ты молния! ⚡'];
 const SOFT=['Почти получилось! Давай разберёмся вместе 👀','Ничего страшного — ошибки помогают учиться! Смотри:','Хорошая попытка! Посмотри, как надо:'];
 let lastPraise=-1;
-function praise(){let i;do{i=R(0,PRAISE.length-1)}while(i===lastPraise);lastPraise=i;return PRAISE[i]}
+function praise(){let i;do{i=R(0,PRAISE.length-1)}while(i===lastPraise);lastPraise=i;return PRAISE[i]()}
 
 /* ================= игра ================= */
 const app=document.getElementById('app');
@@ -291,7 +386,7 @@ let tasks,idx,nuts,results,st;
 function header(){
   const dots=tasks.map((_,i)=>{const r=results[i];const c=i===idx&&r===undefined?'cur':'';
     return `<span class="dot ${c}">${r==='star'?'⭐':r==='help'?'👍':r==='learn'?'📘':(i===idx?'🐿️':'')}</span>`}).join('');
-  return `<div class="top"><div class="dots">${dots}</div><div class="prog">📝 ${idx+1}/${tasks.length}</div><div style="display:flex;gap:8px;align-items:center"><span class="nutcount">🌰 ${nuts}</span><button class="snd" onclick="toggleSound(this)">${soundOn?'🔊':'🔇'}</button><button class="home" onclick="askExit()">🏠 В меню</button></div></div>`}
+  return `<div class="top"><div class="dots">${dots}</div><div class="prog">📝 ${idx+1}/${tasks.length}</div><div style="display:flex;gap:8px;align-items:center"><span class="nutcount" id="nutc">🌰 <span id="nutn">${shownNuts=nuts}</span></span><button class="snd" onclick="toggleSound(this)">${soundOn?'🔊':'🔇'}</button><button class="home" onclick="askExit()">🏠 В меню</button></div></div>`}
 function askExit(){if(document.getElementById('exitbox'))return;
   const d=document.createElement('div');d.id='exitbox';d.className='overlay';
   d.innerHTML=`<div class="card center" style="max-width:420px"><div style="font-size:60px">🐿️</div><p class="big">Выйти в главное меню?<br><span style="font-size:19px;color:#8a7">Орешки этой игры не сохранятся.</span></p>
@@ -300,20 +395,71 @@ function askExit(){if(document.getElementById('exitbox'))return;
 function toggleSound(b){soundOn=!soundOn;b.textContent=soundOn?'🔊':'🔇'}
 
 /* ================= меню ================= */
+function nameScreen(){tasks=null;st=null;document.querySelectorAll('.overlay').forEach(o=>o.remove());
+  app.innerHTML=`<div class="card center fit">
+    <div class="story">🐿️👋</div>
+    <h1>Привет! Я белочка Пушинка.</h1>
+    <p class="big">А как тебя зовут?</p>
+    <label class="namebox"><input id="nm" class="nameinput" maxlength="20" placeholder="Твоё имя…" value="${esc(NAME)}" autocomplete="off" autocapitalize="words" spellcheck="false"></label>
+    <p class="big" style="margin-bottom:6px">Ты…</p>
+    <div class="tf" style="margin-top:0"><button class="btn sex ${NAME&&GIRL?'good':''}" data-g="1">👧 Девочка</button><button class="btn sex ${NAME&&!GIRL?'good':''}" data-g="0">👦 Мальчик</button></div>
+    <div id="nmErr" class="soft" style="min-height:24px;margin-top:6px"></div>
+    <button class="btn green next" id="nmGo">Готово! ➜</button></div>`;
+  let pickG=NAME?GIRL:null;
+  document.querySelectorAll('.sex').forEach(b=>b.onclick=()=>{pickG=b.dataset.g==='1';document.querySelectorAll('.sex').forEach(x=>x.classList.toggle('good',x===b))});
+  const go=()=>{const v=document.getElementById('nm').value.trim();const err=document.getElementById('nmErr');
+    if(!v){err.textContent='Напиши, пожалуйста, своё имя ✏️';document.getElementById('nm').focus();return}
+    if(pickG===null){err.textContent='Нажми: девочка или мальчик 🙂';return}
+    NAME=v.charAt(0).toUpperCase()+v.slice(1);GIRL=pickG;
+    try{localStorage.setItem('pl_name',NAME);localStorage.setItem('pl_girl',GIRL?'1':'0')}catch(e){}
+    startScreen()};
+  document.getElementById('nmGo').onclick=go;
+  document.getElementById('nm').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('nm').blur()}};}
+
 function startScreen(){tasks=null;st=null;document.querySelectorAll('.overlay').forEach(o=>o.remove());
+  if(!NAME)return nameScreen();
   app.innerHTML=`<div class="card center fit">
     <div class="story">🐿️🌳🍂</div>
     <h1>Белочка Пушинка готовится к зиме!</h1>
-    <p class="big">Привет, ${NAME}! Сегодня учимся складывать и вычитать<br><b>десятки и единицы</b>. Что выберешь?</p>
+    <p class="big">Привет, <b>${esc(NAME)}</b>! Сегодня учимся складывать и вычитать<br><b>десятки и единицы</b>. Что выберешь?</p>
     <div class="menu">
       <button class="mcard theory" onclick="openTheory(0)"><span class="mi">📖</span><span class="mt">Учимся</span><span class="ms">Пушинка объяснит, как решать</span></button>
       <button class="mcard practice" onclick="begin()"><span class="mi">🎮</span><span class="mt">Играем</span><span class="ms">12 заданий и орешки за ответы</span></button>
-    </div></div>`}
+    </div>
+    <button class="linkbtn" onclick="nameScreen()">✏️ Играет кто-то другой? Сменить имя</button></div>`}
 
 /* ================= теория ================= */
 function plainExpr(s){return `<div class="expr"><span class="t">${s}</span></div>`}
 function treeExpr(p,res){const left=`${tree(p.n)}<span class="t">${sym(p.op)}</span><span class="t">${p.m}</span>`;
   return `<div class="expr">${left}<span class="t">=</span><span class="t"><span class="box ${res!==undefined?'ok':''}">${res??'?'}</span></span></div>`}
+/* запись в тетради цепочкой: ни одно число не теряется */
+function chainSlides(n,op,m){
+  const T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m),ones=m<10,o=sym(op);
+  const cT=x=>`<span class="cT">${x}</span>`,cU=x=>`<span class="cU">${x}</span>`,cM=x=>`<span class="cM">${x}</span>`,cR=x=>`<span class="cR">${x}</span>`;
+  const lines=[`${n} ${o} ${cM(m)}`,`= ${cT(T)} + ${cU(u)} ${o} ${cM(m)}`];
+  const notes=[`Записываем пример. Число ${cM(m)} — то, что ${op==='+'?'прибавляем':'вычитаем'}.`,
+    `Разложили ${n} на ${cT(T)} и ${cU(u)}.<br>Проверим: ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔ — <b>все числа на месте</b>, ничего не потеряли!`];
+  if(ones){
+    lines.push(`= ${cT(T)} + (${cU(u)} ${o} ${cM(m)})`);
+    notes.push(`Ставим скобки: единицы ${op==='+'?'складываем с единицами':'вычитаем из единиц'}. Скобки — значит, <b>это считаем первым</b>. Числа опять все на месте: ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔`);
+    lines.push(`= ${cT(T)} + ${cR(calc(u,op,m))}`);
+    notes.push(`Считаем в скобках: ${cU(u)} ${o} ${cM(m)} = ${cR(calc(u,op,m))}.`);
+  }else{
+    lines.push(`= (${cT(T)} ${o} ${cM(m)}) + ${cU(u)}`);
+    notes.push(`Переставили: десятки ${op==='+'?'к десяткам':'вычитаем из десятков'}, а ${cU(u)} подождёт в конце. Скобки — значит, <b>это считаем первым</b>. Все числа на месте: ${cT(T)} ✔ ${cM(m)} ✔ ${cU(u)} ✔`);
+    lines.push(`= ${cR(calc(T,op,m))} + ${cU(u)}`);
+    notes.push(`Считаем в скобках: ${cT(T)} ${o} ${cM(m)} = ${cR(calc(T,op,m))}.`);
+  }
+  lines.push(`= <b>${r}</b>`);
+  notes.push(`Складываем, что получилось, — вот и ответ: <b>${r}</b>! 🎉`);
+  const res=[];
+  for(let k=1;k<lines.length;k++){
+    const ls=lines.slice(0,k+1).map((l,i)=>`<div class="cl${i===k?' new':''}">${l}</div>`).join('');
+    res.push(`<p class="big"><b>Как записать в тетради</b> — шаг за шагом:</p><div class="chain">${ls}</div><div class="cnote">${notes[k]}</div>`
+      +(k===1?`<div class="clegend">${cT('десятки')} · ${cU('единицы')} · ${cM(op==='+'?'прибавляем':'вычитаем')}</div>`:''));
+  }
+  return res;
+}
 function lessonOp(n,op,m,title,face){
   const p={n,op,m},T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m),ones=m<10;
   const c=[];
@@ -322,15 +468,7 @@ function lessonOp(n,op,m,title,face){
   c.push(`<p class="big">Смотрим на число <b>${m}</b>. ${ones?`Это <b>единицы</b> — отдельные палочки.`:`Это <b>десятки</b> — ${m/10} ${plural(m/10,['пучок','пучка','пучков'])}.`} Значит, ${op==='+'?(ones?'прибавляем их к единицам':'прибавляем их к десяткам'):(ones?'вычитаем их из единиц':'вычитаем их из десятков')}!</p>`
     +sticks(n,op==='+'?(ones?{addU:m}:{addT:m/10}):(ones?{remU:m}:{remT:m/10}))
     +`<div class="legend">${op==='+'?'синие — было, красные — прибавили':'зачёркнутые — убрали'}</div>`);
-  if(ones){
-    c.push(`<p class="big"><b>Шаг 2.</b> Единицы ${op==='+'?'складываем с единицами':'вычитаем из единиц'}:</p>${plainExpr(`${u} ${sym(op)} ${m} = <span class="hl">${calc(u,op,m)}</span>`)}`);
-    c.push(`<p class="big"><b>Шаг 3.</b> Десятки не трогали. Соединяем десятки и единицы:</p>${plainExpr(`${T} + ${calc(u,op,m)} = <span class="hl">${r}</span>`)}`);
-    c.push(`<p class="big">Как записать в тетради:</p>${plainExpr(`${T} + (${u} ${sym(op)} ${m}) = ${r}`)}${treeExpr(p,r)}`);
-  }else{
-    c.push(`<p class="big"><b>Шаг 2.</b> Десятки ${op==='+'?'складываем с десятками':'вычитаем из десятков'}:</p>${plainExpr(`${T} ${sym(op)} ${m} = <span class="hl">${calc(T,op,m)}</span>`)}`);
-    c.push(`<p class="big"><b>Шаг 3.</b> Единицы не трогали. Соединяем десятки и единицы:</p>${plainExpr(`${calc(T,op,m)} + ${u} = <span class="hl">${r}</span>`)}`);
-    c.push(`<p class="big">Как записать в тетради:</p>${plainExpr(`(${T} ${sym(op)} ${m}) + ${u} = ${r}`)}${treeExpr(p,r)}`);
-  }
+  c.push(...chainSlides(n,op,m));
   return {title,face,chunks:c};
 }
 const LESSONS=[
@@ -340,7 +478,7 @@ const LESSONS=[
     `<p class="big">Вот число <b>36</b>: <b>3 пучка</b> (3 десятка) и <b>6 палочек</b> (6 единиц).</p>${sticks(36)}`,
     `<p class="big">Поэтому 36 можно разложить на <b>30</b> и <b>6</b>. В учебнике это рисуют «домиком»:</p><div class="expr">${tree(36)}</div>`,
     `<div class="rule" style="font-size:22px">В числе 36 первая цифра <b>3</b> — сколько десятков,<br>вторая цифра <b>6</b> — сколько единиц.</div>`]},
-  lessonOp(36,'+',2,'Прибавляем единицы: 36 + 2','🐿️'),
+  lessonOp(76,'+',2,'Прибавляем единицы: 76 + 2','🐿️'),
   lessonOp(36,'+',20,'Прибавляем десятки: 36 + 20','🦉'),
   lessonOp(36,'-',2,'Вычитаем единицы: 36 − 2','🦊'),
   lessonOp(36,'-',20,'Вычитаем десятки: 36 − 20','🐻'),
@@ -348,7 +486,7 @@ const LESSONS=[
     `<p class="big">Зайчик спрашивает: а если маленькое число стоит первым?</p>${plainExpr('3 + 46 = ?')}`,
     `<p class="big">От перестановки чисел сумма не меняется! Поменяем их местами:</p>${plainExpr('3 + 46 = 46 + 3')}`,
     `<p class="big">Дальше решаем как обычно:</p>${treeExpr({n:46,op:'+',m:3})}<p class="big">Единицы с единицами: 6 + 3 = <span class="hl">9</span>. Потом 40 + 9 = <span class="hl">49</span>.</p>`]},
-  {title:'Будь внимательна!',face:'🦔',chunks:[
+  {title:'Осторожно, ловушка!',face:'🦔',chunks:[
     `<p class="big">Ёжик Колючкин торопился и решил так:</p>${plainExpr('36 + 2 = <s style="color:#e0245e">56</s>')}`,
     `<p class="big">Он ошибся: прибавил <b>2</b> к десяткам, а 2 — это <b>единицы</b>!</p><p class="big">Правильно: 6 + 2 = 8, а 30 + 8 = <span class="hl">38</span>.</p>`,
     `<p class="big">Перед тем как решать, всегда спрашивай себя:</p><div class="rule" style="font-size:24px">Что я прибавляю или вычитаю — <b>единицы</b> или <b>десятки</b>?</div>`,
@@ -402,6 +540,7 @@ function renderTF(){const t=tasks[idx];
 
 /* --- шаги --- */
 function renderSteps(){const t=tasks[idx];
+  if(t.chain){document.getElementById('stepsBox').innerHTML=`<div class="chain task">${chainHTML(t,st.done?99:st.step,st.done)}</div>`;return}
   let h='<div class="steps">';
   t.steps.forEach((s,i)=>{if(i>st.step)return;const done=i<st.step||st.done;
     h+=`<div class="step ${!done?'cur':''}"><span class="sn">Шаг ${i+1}.</span>${s.l}<span class="box small ${done?'ok':''}" ${!done?'id="ans"':''}>${done?s.a:(st.input||'?')}</span></div>`});
@@ -438,35 +577,66 @@ function check(){const t=tasks[idx];const box=document.getElementById('ans');
 function win(extra=''){const t=tasks[idx];st.done=true;
   const g=st.err?1:2;nuts+=g;results[idx]=st.err?'help':'star';
   if(t.type==='steps'){renderSteps();const f=document.getElementById('final');if(f){f.textContent=t.res;f.classList.add('ok')}}
-  yay();confetti(st.err?18:36);
+  yay();confetti(st.err?14:26);
   document.getElementById('fb').innerHTML=`<div class="praise">${praise()}<br><span style="font-size:24px">+${g} 🌰</span></div>${extra}`;
+  flyNuts(g);
   nextBtn();}
 
 /* --- ошибка --- */
-function miss(correct,reveal,final=false){const t=tasks[idx];st.err=true;st.tries++;st.input='';oops();
+function miss(correct,reveal,final=false){const t=tasks[idx];const ex=t.exp();st.err=true;st.tries++;st.input='';oops();crackNut();
   const fb=document.getElementById('fb');
   if(st.tries===1&&!final){
     const b=document.getElementById('ans');if(b)b.textContent='?';
     fb.innerHTML=`<div class="soft" style="text-align:center;color:#2a5bd7">Попробуй ещё раз! 💪</div>`;
-    popup(`<div class="soft">${pick(SOFT)}</div>${t.exp()}`,'Понятно! Ещё раз 💪');
+    popup(`<div class="soft">${pick(SOFT)}</div>${ex}`,'Понятно! Ещё раз 💪');
   }else{
     if(reveal)reveal();
     if(t.type==='steps'&&st.step<t.steps.length-1){ // показываем ответ шага и идём дальше
       st.step++;st.tries=0;renderSteps();
       fb.innerHTML=`<div class="answer-reveal" style="text-align:center">Было: ${correct}. Идём дальше! 👉</div>`;
-      popup(`<div class="answer-reveal">Правильно было: ${correct}</div>${t.exp()}`,'Понятно 👍');return}
+      popup(`<div class="answer-reveal">Правильно было: ${correct}</div>${ex}`,'Понятно 👍');return}
     st.done=true;results[idx]='learn';
     if(t.type==='steps'){renderSteps();const f=document.getElementById('final');if(f){f.textContent=t.res;f.classList.add('ok')}}
     fb.innerHTML=`<div class="answer-reveal" style="text-align:center">${correct!==null?`Правильный ответ: ${correct}`:'В следующий раз получится! 😊'}</div>`;
-    popup(`${correct!==null?`<div class="answer-reveal">Правильный ответ: ${correct}</div>`:`<div class="soft">Давай посмотрим, как было на самом деле:</div>`}${t.exp()}<div class="soft" style="color:#2a5bd7;margin-top:8px">Теперь ты знаешь, как решать! 😊</div>`,'Понятно 👍');
+    popup(`${correct!==null?`<div class="answer-reveal">Правильный ответ: ${correct}</div>`:`<div class="soft">Давай посмотрим, как было на самом деле:</div>`}${ex}<div class="soft" style="color:#2a5bd7;margin-top:8px">Теперь ты знаешь, как решать! 😊</div>`,'Понятно 👍');
     nextBtn();
   }}
 
 function popup(html,btn){
-  const d=document.createElement('div');d.className='overlay';d.id='popbox';
-  d.innerHTML=`<div class="card pop">${html}<button class="btn green">${btn}</button></div>`;
-  d.querySelector('.btn').onclick=()=>d.remove();
-  document.body.appendChild(d);}
+  // сначала орешек раскалывается, потом появляется окно с объяснением
+  const d=document.createElement('div');d.className='overlay';d.id='popbox';d.style.background='transparent';
+  document.body.appendChild(d);
+  setTimeout(()=>{d.style.background='';
+    d.innerHTML=`<div class="card pop">${html}<button class="btn green">${btn}</button></div>`;
+    d.querySelector('.btn').onclick=()=>d.remove();},950);}
+
+/* --- орешки летят в счётчик --- */
+let shownNuts=0;
+function flyNuts(count){
+  const from=(document.querySelector('.praise')||document.getElementById('fb')).getBoundingClientRect();
+  const to=document.getElementById('nutc');if(!to){shownNuts=nuts;return}
+  for(let i=0;i<count;i++)setTimeout(()=>{
+    const tr=to.getBoundingClientRect();
+    const x0=from.left+from.width/2-18+(i?30:-30),y0=from.top+10;
+    const x1=tr.left+12,y1=tr.top;
+    const n=document.createElement('div');n.className='flynut';n.textContent='🌰';
+    n.style.left=x0+'px';n.style.top=y0+'px';document.body.appendChild(n);
+    const dx=x1-x0,dy=y1-y0;
+    const a=n.animate([
+      {transform:'translate(0,0) scale(1.6) rotate(0deg)'},
+      {transform:`translate(${dx*0.35}px,${dy*0.35-90}px) scale(1.9) rotate(200deg)`,offset:0.4},
+      {transform:`translate(${dx}px,${dy}px) scale(.9) rotate(420deg)`}],{duration:850,easing:'ease-in'});
+    a.onfinish=()=>{n.remove();shownNuts=Math.min(shownNuts+1,nuts);
+      const c=document.getElementById('nutn');if(c)c.textContent=shownNuts;
+      to.classList.remove('bump');void to.offsetWidth;to.classList.add('bump');
+      rattle();};
+  },300+i*380);}
+
+/* --- орешек раскалывается --- */
+function crackNut(){
+  const w=document.createElement('div');w.className='crackwrap';
+  w.innerHTML=`<span class="half l">🌰</span><span class="half r">🌰</span><span class="crackline">⚡</span>`;
+  document.body.appendChild(w);setTimeout(()=>w.remove(),1300);}
 
 function nextBtn(){const last=idx===tasks.length-1;
   document.getElementById('ctl').innerHTML=`<button class="btn green next" id="nx">${last?'Узнать результат 🏆':'Дальше ➜'}</button>`;
@@ -483,9 +653,9 @@ function finish(){const max=tasks.length*2;
     <div style="font-size:26px;letter-spacing:4px;color:#b07a00">ГРАМОТА</div>
     <div class="medal">${medal}</div>
     <h1>${title}</h1>
-    <p class="big"><b>${NAME}</b> помогла белочке Пушинке и собрала<br><span style="font-size:44px">🌰 ${nuts}</span> из ${max} орешков!</p>
+    <p class="big"><b>${esc(NAME)}</b> ${g("помогла","помог")} белочке Пушинке и ${g("собрала","собрал")}<br><span style="font-size:44px">🌰 ${nuts}</span> из ${max} орешков!</p>
     <p class="big">С первого раза решено: <b>${stars}</b> из ${tasks.length} ⭐</p>
-    <p class="big">${nuts>=max-4?'Ты настоящий мастер десятков и единиц! 🧠✨':'Ты отлично постаралась! Сыграй ещё раз — будет ещё лучше! 💪'}</p>
+    <p class="big">${nuts>=max-4?'Ты настоящий мастер десятков и единиц! 🧠✨':`Ты отлично ${g('постаралась','постарался')}! Сыграй ещё раз — будет ещё лучше! 💪`}</p>
     ${RULE}
     <div class="tnav" style="justify-content:center;flex-wrap:wrap"><button class="btn" onclick="startScreen()">🏠 В меню</button><button class="btn" onclick="openTheory(0)">📖 Повторить теорию</button><button class="btn green" onclick="begin()">Играть ещё раз 🔄</button></div>
     <div style="font-size:16px;color:#999;margin-top:6px">Каждый раз будут новые примеры!</div>
