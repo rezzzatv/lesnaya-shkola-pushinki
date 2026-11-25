@@ -122,6 +122,14 @@
   .cbox.cur{border:3px solid #ffb300;background:#fff3c4;color:#2a5bd7;box-shadow:0 0 0 3px #ffe08a}
   .cbox.ok{border:3px solid #a8dcab;background:#f0fbf1}
   .chain.mini .cbox{min-width:0;height:auto;border:none;background:none;margin:0;padding:0}
+  .cN{color:#3a2a1a}.cA{color:#fff;background:#4caf50;border-radius:8px;padding:0 6px}
+  .chain .cl>span{display:inline-block}
+  .jumper{position:fixed;z-index:450;pointer-events:none;font-weight:bold;display:flex;align-items:center;justify-content:center;text-shadow:0 2px 0 #fff;will-change:transform}
+  .src-glow{animation:glow .7s}
+  @keyframes glow{0%,100%{filter:none}40%{filter:drop-shadow(0 0 6px #ffb300) drop-shadow(0 0 2px #ffb300)}}
+  .landed{animation:land .4s}
+  @keyframes land{0%{transform:scale(1.5)}60%{transform:scale(.9)}100%{transform:scale(1)}}
+  .replay{font-family:inherit;font-size:16px;background:#fff;border:2px solid #f0cf7a;border-radius:14px;padding:4px 12px;margin-top:8px;cursor:pointer;color:#8a5a00}
   .clegend{text-align:center;font-size:16px;margin-top:6px;font-weight:bold}
   .namebox{display:block;width:100%;max-width:340px;margin:6px auto 4px;background:#ffe08a;border-radius:22px;padding:8px;box-shadow:0 6px 0 #e0a800}
   .nameinput{display:block;width:100%;font-family:"Comic Sans MS","Segoe UI","Trebuchet MS",sans-serif;font-weight:bold;font-size:30px;color:#6b3d00;text-align:center;
@@ -252,43 +260,92 @@ function stepsFor(p){
 }
 
 /* ================= задания ================= */
-/* ---------- задание-цепочка ---------- */
-function chainTask(p,given){
-  const {n,op,m}=p,T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m),ones=m<10,o=sym(op);
+/* ---------- цепочка «как в тетради»: откуда приходит каждое число ---------- */
+/* токен: {v:значение, k:цвет, id, from:[id из предыдущей строки]} — по from число «перепрыгивает» через «=» */
+function chainSpec(n,op,m){
+  const T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m),ones=m<10,o=` ${sym(op)} `;
   const x=ones?calc(u,op,m):calc(T,op,m);
-  const slots=[];const S=(a,k,hint)=>{slots.push({a,k,hint});return {s:slots.length-1}};
-  const lines=[[`${n} ${o} `,{f:m,k:'M'}]];
-  const dec=`Разложи ${n} на десятки и единицы: ${n} = <b>${T}</b> + <b>${u}</b>.`;
-  lines.push(given?['= ',{f:T,k:'T'},' + ',{f:u,k:'U'},` ${o} `,{f:m,k:'M'}]
-                  :['= ',S(T,'T',dec),' + ',S(u,'U',dec),` ${o} `,{f:m,k:'M'}]);
+  const N=(v,k,id,...from)=>({v,k,id,from});
+  const L=[[N(n,'N','n'),o,N(m,'M','m0')],
+           ['= ',N(T,'T','t1','n'),' + ',N(u,'U','u1','n'),o,N(m,'M','m1','m0')]];
   if(ones){
-    lines.push(['= ',S(T,'T',`За скобками остаются <b>десятки</b> — ${T}. Они ждут, пока мы посчитаем единицы.`),' + (',
-      S(u,'U',`В скобки пишем <b>единицы</b>: сначала ${u}, потом ${m}. Все числа остаются на месте: ${T}, ${u} и ${m}.`),` ${o} `,
-      S(m,'M',`В скобках: ${u} ${o} <b>${m}</b> — число ${m} никуда не теряем, переписываем его.`),')']);
-    lines.push(['= ',S(T,'T',`Десятки ${T} просто переписываем.`),' + ',S(x,'R',`Считаем в скобках: ${u} ${o} ${m} = <b>${x}</b>.`)]);
-    lines.push(['= ',S(r,'R',`Осталось сложить: ${T} + ${x} = <b>${r}</b>.`)]);
+    L.push(['= ',N(T,'T','t2','t1'),' + (',N(u,'U','u2','u1'),o,N(m,'M','m2','m1'),')']);
+    L.push(['= ',N(T,'T','t3','t2'),' + ',N(x,'R','x3','u2','m2')]);
+    L.push(['= ',N(r,'A','r4','t3','x3')]);
   }else{
-    lines.push(['= (',S(T,'T',`В скобки пишем <b>десятки</b>: сначала ${T}, потом ${m}.`),` ${o} `,
-      S(m,'M',`В скобках: ${T} ${o} <b>${m}</b> — число ${m} никуда не теряем.`),') + ',
-      S(u,'U',`За скобками ждут <b>единицы</b> — ${u}. Все числа на месте: ${T}, ${m} и ${u}.`)]);
-    lines.push(['= ',S(x,'R',`Считаем в скобках: ${T} ${o} ${m} = <b>${x}</b>.`),' + ',S(u,'U',`Единицы ${u} просто переписываем.`)]);
-    lines.push(['= ',S(r,'R',`Осталось сложить: ${x} + ${u} = <b>${r}</b>.`)]);
+    L.push(['= (',N(T,'T','t2','t1'),o,N(m,'M','m2','m1'),') + ',N(u,'U','u2','u1')]);
+    L.push(['= ',N(x,'R','x3','t2','m2'),' + ',N(u,'U','u3','u2')]);
+    L.push(['= ',N(r,'A','r4','x3','u3')]);
   }
-  const t={type:'steps',chain:true,lines,face:given?'🦉':'🐻',
-    q:given?'Запиши цепочкой, как в тетради! Вставь числа в окошки — в скобки и за скобки.':'Сам разложи число и допиши цепочку! Ничего не теряем 😉',
+  return {L,T,u,r,x,ones,o:sym(op),n,m,op};
+}
+const CCLS={N:'cN',T:'cT',U:'cU',M:'cM',R:'cR',A:'cA'};
+const tokSpan=(tk,extra='')=>`<span class="${CCLS[tk.k]}${extra}" data-tid="${tk.id}"${tk.from.length?` data-from="${tk.from.join(',')}"`:''}>${tk.v}</span>`;
+
+/* прыжок: копии чисел-источников летят по дуге в число-цель */
+function jumpSound(merge){if(!soundOn)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const c=actx,t=c.currentTime,o=c.createOscillator(),g=c.createGain();
+  o.type='sine';o.frequency.setValueAtTime(merge?500:380,t);o.frequency.exponentialRampToValueAtTime(merge?1300:900,t+0.16);
+  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.18,t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+0.2);
+  o.connect(g).connect(c.destination);o.start(t);o.stop(t+0.22);}catch(e){}}
+function jumpInto(dst,delay=0){
+  const line=dst.closest('.cl'),prev=line&&line.previousElementSibling;if(!prev||!dst.dataset.from)return;
+  const srcs=dst.dataset.from.split(',').map(id=>prev.querySelector(`[data-tid="${id}"]`)).filter(Boolean);
+  if(!srcs.length)return;
+  dst.style.visibility='hidden';
+  setTimeout(()=>{
+    const d=dst.getBoundingClientRect();let left=srcs.length;const merge=srcs.length>1;
+    jumpSound(merge);
+    srcs.forEach(s=>{
+      const r=s.getBoundingClientRect(),cs=getComputedStyle(s);
+      const f=document.createElement('div');f.className='jumper';f.textContent=s.textContent;
+      f.style.cssText+=`left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;font-size:${cs.fontSize};color:${cs.color}`;
+      document.body.appendChild(f);
+      s.classList.add('src-glow');setTimeout(()=>s.classList.remove('src-glow'),700);
+      const dx=d.left+d.width/2-(r.left+r.width/2),dy=d.top+d.height/2-(r.top+r.height/2);
+      const a=f.animate([{transform:'translate(0,0) scale(1)'},{transform:`translate(${dx/2}px,${dy/2-55}px) scale(1.35)`,offset:.5},
+        {transform:`translate(${dx}px,${dy}px) scale(${merge?.6:1})`}],{duration:650,easing:'ease-in-out'});
+      a.onfinish=()=>{f.remove();if(--left===0){dst.style.visibility='';dst.classList.remove('landed');void dst.offsetWidth;dst.classList.add('landed');
+        if(merge)tones([880,1175]);}};
+    });
+  },delay);
+}
+function animateLine(line){[...line.querySelectorAll('[data-from]')].forEach((el,i)=>jumpInto(el,250+i*700));}
+
+/* ---------- задание-цепочка: ребёнок вписывает числа в окошки ---------- */
+function chainTask(p,given){
+  const c=chainSpec(p.n,p.op,p.m),{T,u,r,x,o,n,m}=c;
+  const dec=`Разложи ${n} на десятки и единицы: ${n} = <b>${T}</b> + <b>${u}</b>. Оба числа перепрыгивают через «=».`;
+  const H=c.ones?{t1:dec,u1:dec,
+      t2:`Десятки <b>${T}</b> перепрыгивают через «=» и встают за скобками. Не теряем!`,
+      u2:`В скобки перепрыгивают <b>единицы</b>: сначала ${u}, потом ${m}.`,
+      m2:`Число <b>${m}</b> тоже перепрыгивает в скобки — его нельзя потерять!`,
+      t3:`Десятки <b>${T}</b> снова перепрыгивают через «=» — не теряем!`,
+      x3:`${u} и ${m} из скобок соединяются в одно число: ${u} ${o} ${m} = <b>${x}</b>.`,
+      r4:`Последний прыжок: ${T} и ${x} соединяются: ${T} + ${x} = <b>${r}</b>.`}
+    :{t1:dec,u1:dec,
+      t2:`В скобки перепрыгивают <b>десятки</b>: сначала ${T}, потом ${m}.`,
+      m2:`Число <b>${m}</b> перепрыгивает в скобки к десяткам — его нельзя потерять!`,
+      u2:`Единицы <b>${u}</b> перепрыгивают за скобки и ждут. Не теряем!`,
+      x3:`${T} и ${m} из скобок соединяются в одно число: ${T} ${o} ${m} = <b>${x}</b>.`,
+      u3:`Единицы <b>${u}</b> снова перепрыгивают через «=» — не теряем!`,
+      r4:`Последний прыжок: ${x} и ${u} соединяются: ${x} + ${u} = <b>${r}</b>.`};
+  const slots=[];
+  c.L.forEach((line,li)=>line.forEach(tk=>{if(typeof tk==='string'||li===0)return;
+    if(li===1&&(given||tk.k==='M'))return;tk.slot=slots.length;slots.push({a:tk.v,k:tk.k,id:tk.id,hint:H[tk.id]});}));
+  const t={type:'steps',chain:c,face:given?'🦉':'🐻',
+    q:given?'Запиши цепочкой! Числа перепрыгивают через «=» — впиши их в окошки. Ничего не теряем!':'Сам разложи число и допиши цепочку! Все числа должны перепрыгнуть 😉',
     html:'',steps:slots,res:r};
   t.exp=()=>`<div class="explain"><p>${slots[Math.min(st.step,slots.length-1)].hint}</p><div class="chain mini">${chainHTML(t,99,true)}</div>${RULE}</div>`;
   return t;
 }
 function chainHTML(t,upto,all){
-  const cls={T:'cT',U:'cU',M:'cM',R:'cR'};
-  return t.lines.map(line=>`<div class="cl">${line.map(tok=>{
-    if(typeof tok==='string')return tok;
-    if(tok.f!==undefined)return `<span class="${cls[tok.k]}">${tok.f}</span>`;
-    const sl=t.steps[tok.s];
-    if(all||tok.s<upto)return `<span class="cbox ok ${cls[sl.k]}">${sl.a}</span>`;
-    if(tok.s===upto)return `<span class="cbox cur" id="ans">${st.input||'?'}</span>`;
-    return `<span class="cbox"></span>`;}).join('')}</div>`).join('');
+  return t.chain.L.map(line=>`<div class="cl">${line.map(tk=>{
+    if(typeof tk==='string')return tk;
+    if(tk.slot===undefined)return tokSpan(tk);
+    const from=tk.from.length?` data-from="${tk.from.join(',')}"`:'';
+    if(all||tk.slot<upto)return `<span class="cbox ok ${CCLS[tk.k]}" data-tid="${tk.id}"${from}>${tk.v}</span>`;
+    if(tk.slot===upto)return `<span class="cbox cur" id="ans" data-tid="${tk.id}">${st.input||'?'}</span>`;
+    return `<span class="cbox" data-tid="${tk.id}"></span>`;}).join('')}</div>`).join('');
 }
 
 function buildTasks(){
@@ -432,34 +489,26 @@ function startScreen(){tasks=null;st=null;document.querySelectorAll('.overlay').
 function plainExpr(s){return `<div class="expr"><span class="t">${s}</span></div>`}
 function treeExpr(p,res){const left=`${tree(p.n)}<span class="t">${sym(p.op)}</span><span class="t">${p.m}</span>`;
   return `<div class="expr">${left}<span class="t">=</span><span class="t"><span class="box ${res!==undefined?'ok':''}">${res??'?'}</span></span></div>`}
-/* запись в тетради цепочкой: ни одно число не теряется */
+/* запись в тетради цепочкой: числа перепрыгивают через «=», ни одно не теряется */
 function chainSlides(n,op,m){
-  const T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m),ones=m<10,o=sym(op);
-  const cT=x=>`<span class="cT">${x}</span>`,cU=x=>`<span class="cU">${x}</span>`,cM=x=>`<span class="cM">${x}</span>`,cR=x=>`<span class="cR">${x}</span>`;
-  const lines=[`${n} ${o} ${cM(m)}`,`= ${cT(T)} + ${cU(u)} ${o} ${cM(m)}`];
-  const notes=[`Записываем пример. Число ${cM(m)} — то, что ${op==='+'?'прибавляем':'вычитаем'}.`,
-    `Разложили ${n} на ${cT(T)} и ${cU(u)}.<br>Проверим: ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔ — <b>все числа на месте</b>, ничего не потеряли!`];
-  if(ones){
-    lines.push(`= ${cT(T)} + (${cU(u)} ${o} ${cM(m)})`);
-    notes.push(`Ставим скобки: единицы ${op==='+'?'складываем с единицами':'вычитаем из единиц'}. Скобки — значит, <b>это считаем первым</b>. Числа опять все на месте: ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔`);
-    lines.push(`= ${cT(T)} + ${cR(calc(u,op,m))}`);
-    notes.push(`Считаем в скобках: ${cU(u)} ${o} ${cM(m)} = ${cR(calc(u,op,m))}.`);
-  }else{
-    lines.push(`= (${cT(T)} ${o} ${cM(m)}) + ${cU(u)}`);
-    notes.push(`Переставили: десятки ${op==='+'?'к десяткам':'вычитаем из десятков'}, а ${cU(u)} подождёт в конце. Скобки — значит, <b>это считаем первым</b>. Все числа на месте: ${cT(T)} ✔ ${cM(m)} ✔ ${cU(u)} ✔`);
-    lines.push(`= ${cR(calc(T,op,m))} + ${cU(u)}`);
-    notes.push(`Считаем в скобках: ${cT(T)} ${o} ${cM(m)} = ${cR(calc(T,op,m))}.`);
-  }
-  lines.push(`= <b>${r}</b>`);
-  notes.push(`Складываем, что получилось, — вот и ответ: <b>${r}</b>! 🎉`);
+  const c=chainSpec(n,op,m),{T,u,r,x,o}=c;
+  const cT=v=>`<span class="cT">${v}</span>`,cU=v=>`<span class="cU">${v}</span>`,cM=v=>`<span class="cM">${v}</span>`,cR=v=>`<span class="cR">${v}</span>`;
+  const notes=[null,
+    `🦘 Число ${n} разложилось на ${cT(T)} и ${cU(u)} — и <b>все числа перепрыгнули</b> через «=». Проверим: ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔ — ничего не потеряли!`,
+    c.ones?`🦘 Снова прыжок! Все числа на месте: ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔. Единицы прыгнули <b>в скобки</b> — их считаем первыми.`
+          :`🦘 Снова прыжок! Все числа на месте: ${cT(T)} ✔ ${cM(m)} ✔ ${cU(u)} ✔. Десятки прыгнули <b>в скобки</b>, а ${cU(u)} ждёт за скобками.`,
+    c.ones?`💫 ${cU(u)} и ${cM(m)} из скобок <b>соединились</b> в ${cR(x)}. А ${cT(T)} перепрыгнуло дальше — его не теряем!`
+          :`💫 ${cT(T)} и ${cM(m)} из скобок <b>соединились</b> в ${cR(x)}. А ${cU(u)} перепрыгнуло дальше — его не теряем!`,
+    `💫 Последний прыжок — числа соединились, и вот ответ: <b>${r}</b>! 🎉`];
   const res=[];
-  for(let k=1;k<lines.length;k++){
-    const ls=lines.slice(0,k+1).map((l,i)=>`<div class="cl${i===k?' new':''}">${l}</div>`).join('');
-    res.push(`<p class="big"><b>Как записать в тетради</b> — шаг за шагом:</p><div class="chain">${ls}</div><div class="cnote">${notes[k]}</div>`
-      +(k===1?`<div class="clegend">${cT('десятки')} · ${cU('единицы')} · ${cM(op==='+'?'прибавляем':'вычитаем')}</div>`:''));
+  for(let k=1;k<c.L.length;k++){
+    const ls=c.L.slice(0,k+1).map((line,i)=>`<div class="cl${i===k?' new':''}">${line.map(tk=>typeof tk==='string'?tk:tokSpan(tk)).join('')}</div>`).join('');
+    res.push(`<p class="big"><b>Как записать в тетради</b> — следи за прыжками:</p><div class="chain theory">${ls}</div><div class="cnote">${notes[k]}</div>`
+      +`<div class="center"><button class="replay" onclick="replayJump()">🔁 Ещё раз прыжок</button></div>`);
   }
   return res;
 }
+function replayJump(){const l=document.querySelector('.chain.theory .cl.new');if(l)animateLine(l)}
 function lessonOp(n,op,m,title,face){
   const p={n,op,m},T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m),ones=m<10;
   const c=[];
@@ -506,6 +555,8 @@ function renderTheory(){const L=LESSONS[L_i],lastLesson=L_i===LESSONS.length-1,a
    <div class="who"><div class="face">${L.face}</div><div class="bubble"><b>${L.title}</b></div></div>
    ${body}
    <div class="tnav bottom">${(L_i>0||L_k>0)?`<button class="btn" onclick="theoryBack()">👈 Назад</button>`:'<span></span>'}<button class="btn green" onclick="${nextFn}">${nextLabel}</button></div></div>`;
+  const nl=document.querySelector('.chain.theory .cl.new');
+  if(nl){nl.querySelectorAll('[data-from]').forEach(e=>e.style.visibility='hidden');setTimeout(()=>animateLine(nl),300)}
 }
 function theoryNext(){L_k++;tones([660,880]);renderTheory()}
 function theoryBack(){if(L_k>0){L_k--;renderTheory()}else{L_i--;L_k=LESSONS[L_i].chunks.length-1;renderTheory()}}
@@ -565,7 +616,10 @@ function check(){const t=tasks[idx];const box=document.getElementById('ans');
   const need=t.type==='steps'?t.steps[st.step].a:t.ans;
   if(v===need){
     if(t.type==='steps'&&st.step<t.steps.length-1){
-      st.step++;st.input='';st.tries=0;tones([660,880]);renderSteps();
+      st.step++;st.input='';st.tries=0;renderSteps();
+      if(t.chain){const el=document.querySelector(`#stepsBox [data-tid="${t.steps[st.step-1].id}"]`);if(el)jumpInto(el,0);else tones([660,880]);
+        document.getElementById('fb').innerHTML=`<div class="praise" style="font-size:20px">Верно! Число на месте ✔</div>`;return}
+      tones([660,880]);
       document.getElementById('fb').innerHTML=`<div class="praise">Верно! Следующий шаг 👉</div>`;return}
     box.classList.add('ok');win();
   }else{
@@ -576,7 +630,8 @@ function check(){const t=tasks[idx];const box=document.getElementById('ans');
 /* --- верно --- */
 function win(extra=''){const t=tasks[idx];st.done=true;
   const g=st.err?1:2;nuts+=g;results[idx]=st.err?'help':'star';
-  if(t.type==='steps'){renderSteps();const f=document.getElementById('final');if(f){f.textContent=t.res;f.classList.add('ok')}}
+  if(t.type==='steps'){renderSteps();const f=document.getElementById('final');if(f){f.textContent=t.res;f.classList.add('ok')}
+    if(t.chain){const el=document.querySelector('#stepsBox [data-tid="r4"]');if(el)jumpInto(el,0)}}
   yay();confetti(st.err?14:26);
   document.getElementById('fb').innerHTML=`<div class="praise">${praise()}<br><span style="font-size:24px">+${g} 🌰</span></div>${extra}`;
   flyNuts(g);
