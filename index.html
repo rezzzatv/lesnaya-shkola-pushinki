@@ -122,7 +122,9 @@
   .cbox.cur{border:3px solid #ffb300;background:#fff3c4;color:#2a5bd7;box-shadow:0 0 0 3px #ffe08a}
   .cbox.ok{border:3px solid #a8dcab;background:#f0fbf1}
   .chain.mini .cbox{min-width:0;height:auto;border:none;background:none;margin:0;padding:0}
-  .cN{color:#3a2a1a}.cA{color:#fff;background:#4caf50;border-radius:8px;padding:0 6px}
+  .cN{color:#3a2a1a}.cA{color:#2b1a0c;background:#fff1c2;border-radius:8px;padding:0 6px;box-shadow:0 0 0 2px #ffc94d}
+  .cB{color:#9a5221}.cP{color:#8a3fd1}
+  .cbox.ok.cA{color:#2b1a0c;background:#fff1c2;border-color:#ffb300}
   .chain .cl>span{display:inline-block}
   .jumper{position:fixed;z-index:450;pointer-events:none;font-weight:bold;display:flex;align-items:center;justify-content:center;text-shadow:0 2px 0 #fff;will-change:transform}
   .src-glow{animation:glow .7s}
@@ -270,16 +272,16 @@ function chainSpec(n,op,m){
            ['= ',N(T,'T','t1','n'),' + ',N(u,'U','u1','n'),o,N(m,'M','m1','m0')]];
   if(ones){
     L.push(['= ',N(T,'T','t2','t1'),' + (',N(u,'U','u2','u1'),o,N(m,'M','m2','m1'),')']);
-    L.push(['= ',N(T,'T','t3','t2'),' + ',N(x,'R','x3','u2','m2')]);
+    L.push(['= ',N(T,'T','t3','t2'),' + ',N(x,'B','x3','u2','m2')]);
     L.push(['= ',N(r,'A','r4','t3','x3')]);
   }else{
     L.push(['= (',N(T,'T','t2','t1'),o,N(m,'M','m2','m1'),') + ',N(u,'U','u2','u1')]);
-    L.push(['= ',N(x,'R','x3','t2','m2'),' + ',N(u,'U','u3','u2')]);
+    L.push(['= ',N(x,'P','x3','t2','m2'),' + ',N(u,'U','u3','u2')]);
     L.push(['= ',N(r,'A','r4','x3','u3')]);
   }
   return {L,T,u,r,x,ones,o:sym(op),n,m,op};
 }
-const CCLS={N:'cN',T:'cT',U:'cU',M:'cM',R:'cR',A:'cA'};
+const CCLS={N:'cN',T:'cT',U:'cU',M:'cM',R:'cR',B:'cB',P:'cP',A:'cA'};
 const tokSpan=(tk,extra='')=>`<span class="${CCLS[tk.k]}${extra}" data-tid="${tk.id}"${tk.from.length?` data-from="${tk.from.join(',')}"`:''}>${tk.v}</span>`;
 
 /* прыжок: копии чисел-источников летят по дуге в число-цель */
@@ -302,8 +304,9 @@ function jumpInto(dst,delay=0){
       document.body.appendChild(f);
       s.classList.add('src-glow');setTimeout(()=>s.classList.remove('src-glow'),700);
       const dx=d.left+d.width/2-(r.left+r.width/2),dy=d.top+d.height/2-(r.top+r.height/2);
-      const a=f.animate([{transform:'translate(0,0) scale(1)'},{transform:`translate(${dx/2}px,${dy/2-55}px) scale(1.35)`,offset:.5},
-        {transform:`translate(${dx}px,${dy}px) scale(${merge?.6:1})`}],{duration:650,easing:'ease-in-out'});
+      const dc=getComputedStyle(dst).color;
+      const a=f.animate([{transform:'translate(0,0) scale(1)',color:cs.color},{transform:`translate(${dx/2}px,${dy/2-55}px) scale(1.35)`,color:cs.color,offset:.5},
+        {transform:`translate(${dx}px,${dy}px) scale(${merge?.6:1})`,color:merge?dc:cs.color}],{duration:650,easing:'ease-in-out'});
       a.onfinish=()=>{f.remove();if(--left===0){dst.style.visibility='';dst.classList.remove('landed');void dst.offsetWidth;dst.classList.add('landed');
         if(merge)tones([880,1175]);}};
     });
@@ -497,9 +500,10 @@ function chainSlides(n,op,m){
     `🦘 Число ${n} разложилось на ${cT(T)} и ${cU(u)} — и <b>все числа перепрыгнули</b> через «=». Проверим: ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔ — ничего не потеряли!`,
     c.ones?`🦘 Снова прыжок! Все числа на месте: ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔. Единицы прыгнули <b>в скобки</b> — их считаем первыми.`
           :`🦘 Снова прыжок! Все числа на месте: ${cT(T)} ✔ ${cM(m)} ✔ ${cU(u)} ✔. Десятки прыгнули <b>в скобки</b>, а ${cU(u)} ждёт за скобками.`,
-    c.ones?`💫 ${cU(u)} и ${cM(m)} из скобок <b>соединились</b> в ${cR(x)}. А ${cT(T)} перепрыгнуло дальше — его не теряем!`
-          :`💫 ${cT(T)} и ${cM(m)} из скобок <b>соединились</b> в ${cR(x)}. А ${cU(u)} перепрыгнуло дальше — его не теряем!`,
-    `💫 Последний прыжок — числа соединились, и вот ответ: <b>${r}</b>! 🎉`];
+    c.ones?`💫 ${cU(u)} и ${cM(m)} из скобок <b>соединились</b> в <span class="cB">${x}</span>. А ${cT(T)} перепрыгнуло дальше — его не теряем!`
+          :`💫 ${cT(T)} и ${cM(m)} из скобок <b>соединились</b> в <span class="cP">${x}</span>. А ${cU(u)} перепрыгнуло дальше — его не теряем!`,
+    c.ones?`💫 ${cT(T)} и <span class="cB">${x}</span> соединились — вот и ответ: <span class="cA">${r}</span> 🎉`
+          :`💫 <span class="cP">${x}</span> и ${cU(u)} соединились — вот и ответ: <span class="cA">${r}</span> 🎉`];
   const res=[];
   for(let k=1;k<c.L.length;k++){
     const ls=c.L.slice(0,k+1).map((line,i)=>`<div class="cl${i===k?' new':''}">${line.map(tk=>typeof tk==='string'?tk:tokSpan(tk)).join('')}</div>`).join('');
