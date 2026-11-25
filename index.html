@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Белочка Пушинка: десятки и единицы</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Comic Sans MS","Segoe UI","Trebuchet MS",sans-serif;
+    background:linear-gradient(180deg,#bfe6ff 0%,#e3f6d8 55%,#b9e08f 100%);
+    min-height:100vh;color:#3a2a1a;
+    -webkit-user-select:none;user-select:none;
+  }
+  #app{max-width:780px;margin:0 auto;padding:14px 12px 40px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+  .dots{display:flex;flex-wrap:wrap;gap:4px;font-size:20px}
+  .dot{width:30px;height:30px;border-radius:50%;background:#ffffffaa;display:flex;align-items:center;justify-content:center;font-size:17px;border:2px solid #fff}
+  .dot.cur{background:#ffd76a;border-color:#e6a500;transform:scale(1.15)}
+  .nutcount{font-size:26px;font-weight:bold;background:#fff;border-radius:20px;padding:4px 14px;box-shadow:0 3px 0 #d9b98a;white-space:nowrap}
+  .snd{font-size:22px;background:#fff;border:none;border-radius:50%;width:42px;height:42px;cursor:pointer;box-shadow:0 3px 0 #ccc}
+  .card{background:#fff;border-radius:28px;padding:20px 18px 22px;box-shadow:0 8px 0 #d9b98a,0 10px 30px #0002}
+  .who{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+  .who .face{font-size:54px;line-height:1}
+  .bubble{background:#fff6dc;border:3px solid #f0cf7a;border-radius:20px;padding:10px 14px;font-size:22px;line-height:1.35;flex:1}
+  .num-label{font-size:16px;color:#a07a40;margin-bottom:4px}
+  .expr{display:flex;align-items:flex-start;justify-content:center;gap:12px;font-size:50px;font-weight:bold;margin:14px 0 6px;flex-wrap:wrap}
+  .expr .t{line-height:64px}
+  .tree{display:inline-flex;flex-direction:column;align-items:center}
+  .tree .tn{line-height:64px}
+  .branch{width:84px;height:26px;stroke:#5aa83c;stroke-width:4;fill:none;stroke-linecap:round}
+  .leaves{display:flex;gap:28px;font-size:30px;color:#2c8a3a}
+  .box{display:inline-flex;align-items:center;justify-content:center;min-width:92px;height:64px;padding:0 10px;border:4px dashed #8ab4f8;border-radius:16px;color:#2a5bd7;background:#f2f7ff}
+  .box.ok{border:4px solid #4caf50;background:#e7f8e8;color:#237a2b}
+  .box.small{min-width:76px;height:52px;font-size:36px}
+  .steps{margin:10px 0 4px;display:flex;flex-direction:column;gap:10px;align-items:center}
+  .step{display:flex;align-items:center;gap:10px;font-size:30px;font-weight:bold;background:#f7f7ff;border-radius:16px;padding:6px 14px}
+  .step .sn{font-size:18px;color:#8a7;font-weight:normal}
+  .step.cur{background:#fff3c4;box-shadow:0 0 0 3px #ffd76a}
+  .choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .btn{font-family:inherit;font-size:32px;font-weight:bold;border:none;border-radius:20px;padding:14px 10px;cursor:pointer;background:#ffe08a;color:#5a3b00;box-shadow:0 6px 0 #e0a800;transition:transform .08s}
+  .btn:active{transform:translateY(4px);box-shadow:0 2px 0 #e0a800}
+  .btn.off{background:#eee;color:#aaa;box-shadow:0 6px 0 #ccc;pointer-events:none}
+  .btn.good{background:#8be08f;box-shadow:0 6px 0 #3c9a41;color:#124d16}
+  .btn.green{background:#6fd27a;color:#fff;box-shadow:0 6px 0 #3c9a41}
+  .btn.blue{background:#6aa8ff;color:#fff;box-shadow:0 6px 0 #2f6fd0}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:380px;margin:16px auto 0}
+  .pad .btn{font-size:34px;padding:12px 0;background:#e8f1ff;color:#2a4a8a;box-shadow:0 5px 0 #a9c3ee}
+  .pad .btn.del{background:#ffe0e0;color:#b33;box-shadow:0 5px 0 #eaa}
+  .pad .btn.go{background:#6fd27a;color:#fff;box-shadow:0 5px 0 #3c9a41}
+  .fb{margin-top:14px}
+  .praise{text-align:center;font-size:32px;font-weight:bold;color:#1f8a2c;animation:pop .4s}
+  .soft{font-size:24px;font-weight:bold;color:#d26a00;margin-bottom:8px}
+  .explain{background:#fff8ef;border:3px solid #ffc58a;border-radius:20px;padding:12px 14px;font-size:21px;line-height:1.5}
+  .explain p{margin:6px 0}
+  .explain b{color:#c2410c}
+  .rule{background:#ffe9f1;border:3px solid #f48fb1;border-radius:16px;padding:8px 12px;margin-top:8px;text-align:center;font-weight:bold;color:#a0245a}
+  .answer-reveal{font-size:26px;font-weight:bold;color:#2a5bd7;margin:6px 0}
+  .next{display:block;margin:16px auto 0;font-size:30px;padding:14px 34px}
+  .sticks{display:flex;gap:10px;margin:10px 0;justify-content:center;flex-wrap:wrap}
+  .col{border:3px solid #e2c36a;border-radius:14px;background:#fffbe6;min-width:140px}
+  .ch{background:#f7df8f;text-align:center;font-weight:bold;padding:3px 8px;border-radius:10px 10px 0 0;font-size:18px}
+  .cb{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;padding:8px;min-height:70px;font-size:28px;color:#bbb}
+  .bundle{display:inline-flex;gap:1px;padding:2px;margin:3px;position:relative}
+  .bundle i{display:block;width:3px;height:50px;background:#3b6fd8;border-radius:2px}
+  .bundle::after{content:"";position:absolute;left:-3px;right:-3px;top:22px;height:5px;background:#6b4a22;border-radius:3px}
+  .bundle.new i{background:#e0453a}
+  .stick{display:inline-block;width:8px;height:50px;background:#3b6fd8;border-radius:3px;margin:3px 3px;position:relative}
+  .stick.new{background:#e0453a}
+  .gone i,.stick.gone{opacity:.3}
+  .gone::before{content:"✖";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#e0245e;font-size:34px;z-index:2;font-weight:bold}
+  .stick.gone::before{font-size:24px}
+  .legend{text-align:center;font-size:16px;color:#7a6a50}
+  .shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  @keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+  .conf{position:fixed;top:-40px;font-size:30px;pointer-events:none;animation:fall linear forwards;z-index:99}
+  @keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+  .center{text-align:center}
+  h1{font-size:38px;margin:6px 0;color:#6b3d00;text-align:center}
+  .big{font-size:24px;line-height:1.45}
+  .cert{border:8px double #e6a500;border-radius:24px;padding:20px;background:#fffbea;text-align:center}
+  .cert .medal{font-size:96px;animation:pop .6s}
+  .story{font-size:58px;text-align:center;margin:4px 0}
+  .tf{display:flex;gap:14px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+  .tf .btn{min-width:200px}
+  .menu{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+  .mcard{font-family:inherit;border:none;border-radius:24px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:transform .1s}
+  .mcard:active{transform:translateY(4px)}
+  .mcard.theory{background:#d9ecff;box-shadow:0 7px 0 #6aa8ff}
+  .mcard.practice{background:#ffe9a8;box-shadow:0 7px 0 #e0a800}
+  .mi{font-size:64px}.mt{font-size:34px;font-weight:bold;color:#3a2a1a}.ms{font-size:18px;color:#6a5a40}
+  .home{font-family:inherit;font-size:20px;font-weight:bold;background:#fff;color:#6b3d00;border:none;border-radius:20px;padding:8px 14px;cursor:pointer;box-shadow:0 3px 0 #d9b98a;white-space:nowrap}
+  .home:active{transform:translateY(2px)}
+  .overlay{position:fixed;inset:0;background:#0006;display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}
+  .chunk{margin:10px 0}
+  .chunk.fresh{animation:pop .45s}
+  .hl{color:#e0453a;background:#fff1c2;border-radius:10px;padding:0 8px}
+  .tnav{display:flex;justify-content:space-between;gap:12px;margin-top:18px}
+  .tnav .btn{font-size:26px;padding:12px 22px}
+  @media(max-width:520px){.menu{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ================= помощники ================= */
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const sym=op=>op==='-'?'−':'+';
+const calc=(n,op,m)=>op==='-'?n-m:n+m;
+function plural(n,f){const a=n%100,b=n%10;if(a>10&&a<20)return f[2];if(b===1)return f[0];if(b>=2&&b<=4)return f[1];return f[2];}
+const NAME='Наташа';
+
+/* ---------- генераторы примеров (без перехода через десяток) ---------- */
+function gAddU(){const t=R(1,8),u=R(1,7);return {n:10*t+u,op:'+',m:R(1,9-u)}}
+function gAddT(){const t=R(1,7),u=R(1,9);return {n:10*t+u,op:'+',m:R(1,9-t)*10}}
+function gSubU(){const t=R(1,9),u=R(2,9);return {n:10*t+u,op:'-',m:R(1,u)}}
+function gSubT(){const t=R(3,9),u=R(1,9);return {n:10*t+u,op:'-',m:R(1,t-1)*10}}
+
+/* ---------- картинки ---------- */
+function tree(n){const T=Math.floor(n/10)*10,u=n%10;
+  return `<span class="tree"><span class="tn">${n}</span><svg class="branch" viewBox="0 0 84 26"><path d="M42 3 L14 24 M42 3 L70 24"/></svg><span class="leaves"><span>${T}</span><span>${u}</span></span></span>`}
+function expr(p,boxId='ans'){
+  const left=p.swap?`<span class="t">${p.m}</span><span class="t">+</span>${tree(p.n)}`:`${tree(p.n)}<span class="t">${sym(p.op)}</span><span class="t">${p.m}</span>`;
+  return `<div class="expr">${left}<span class="t">=</span><span class="t"><span class="box" id="${boxId}">?</span></span></div>`}
+function sticks(n,o={}){
+  const t=Math.floor(n/10),u=n%10;let tens='',units='';
+  for(let i=0;i<t;i++)tens+=`<span class="bundle${i>=t-(o.remT||0)?' gone':''}">${'<i></i>'.repeat(10)}</span>`;
+  for(let i=0;i<(o.addT||0);i++)tens+=`<span class="bundle new">${'<i></i>'.repeat(10)}</span>`;
+  for(let i=0;i<u;i++)units+=`<span class="stick${i>=u-(o.remU||0)?' gone':''}"></span>`;
+  for(let i=0;i<(o.addU||0);i++)units+=`<span class="stick new"></span>`;
+  return `<div class="sticks"><div class="col"><div class="ch">Десятки</div><div class="cb">${tens||'—'}</div></div><div class="col"><div class="ch">Единицы</div><div class="cb">${units||'—'}</div></div></div>`}
+const RULE=`<div class="rule">Единицы — с единицами, десятки — с десятками!</div>`;
+
+/* ---------- объяснение примера ---------- */
+function explain(p){
+  const {n,op,m}=p,T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m);let s='';
+  if(p.swap)s+=`<p>Удобнее начать с большого числа: <b>${m} + ${n} = ${n} + ${m}</b>.</p>`;
+  s+=`<p>Разложим <b>${n}</b> на десятки и единицы: <b>${T}</b> и <b>${u}</b>.</p>`;
+  let vis;
+  if(m<10){
+    s+=`<p>${m} — это единицы. Единицы ${op==='+'?'складываем с единицами':'вычитаем из единиц'}: ${u} ${sym(op)} ${m} = <b>${calc(u,op,m)}</b>.</p>`;
+    s+=`<p>Десятки не трогаем: ${T} + ${calc(u,op,m)} = <b>${r}</b>.</p>`;
+    vis=sticks(n,op==='+'?{addU:m}:{remU:m});
+  }else{
+    s+=`<p>${m} — это ${m/10} ${plural(m/10,['десяток','десятка','десятков'])}. Десятки ${op==='+'?'складываем с десятками':'вычитаем из десятков'}: ${T} ${sym(op)} ${m} = <b>${calc(T,op,m)}</b>.</p>`;
+    s+=`<p>Единицы не трогаем, просто добавляем: ${calc(T,op,m)} + ${u} = <b>${r}</b>.</p>`;
+    vis=sticks(n,op==='+'?{addT:m/10}:{remT:m/10});
+  }
+  const leg=op==='+'?'синие — было, красные — прибавили':'зачёркнутые — убрали';
+  return `<div class="explain">${s}${vis}<div class="legend">${leg}</div>${RULE}</div>`}
+
+function stepsFor(p){
+  const {n,op,m}=p,T=Math.floor(n/10)*10,u=n%10;
+  if(m<10)return [{l:`Единицы: ${u} ${sym(op)} ${m} =`,a:calc(u,op,m)},{l:`${T} + ${calc(u,op,m)} =`,a:calc(n,op,m)}];
+  return [{l:`Десятки: ${T} ${sym(op)} ${m} =`,a:calc(T,op,m)},{l:`${calc(T,op,m)} + ${u} =`,a:calc(n,op,m)}];
+}
+
+/* ================= задания ================= */
+function buildTasks(){
+  const L=[];
+  // 1. Из чего состоит число
+  {const t=R(2,9);let u=R(1,9);while(u===t)u=R(1,9);const n=10*t+u,T=10*t;
+   const opts=shuffle([`${T} + ${u}`,`${u*10} + ${t}`,`${T} + ${u*10}`,`${t} + ${u*10}`]);
+   L.push({type:'choice',face:'🐿️',q:`Я сложила палочки в пучки. В каждом пучке — 10 палочек. Какое число получилось и из чего оно состоит?`,
+     html:sticks(n)+`<div class="expr"><span class="t">${n} = ?</span></div>`,opts,ans:`${T} + ${u}`,
+     exp:()=>`<div class="explain"><p>Пучки — это <b>десятки</b>: ${t} ${plural(t,['пучок','пучка','пучков'])} = <b>${T}</b>.</p><p>Отдельные палочки — <b>единицы</b>: <b>${u}</b>.</p><p>Значит, ${n} = <b>${T} + ${u}</b>.</p></div>`});}
+  // 2-5. По шагам
+  const sq=[[gAddU,'Сначала единицы, потом всё вместе!'],[gAddT,'Теперь прибавляем десятки!'],[gSubU,'Вычитаем единицы!'],[gSubT,'Вычитаем десятки!']];
+  for(const [g,hint] of sq){const p=g();
+    L.push({type:'steps',face:'🐿️',q:`Реши по шагам, как в учебнике. ${hint}`,html:expr(p,'final'),steps:stepsFor(p),exp:()=>explain(p),res:calc(p.n,p.op,p.m)});}
+  // 6. В уме
+  {const p=pick([gAddU,gSubU,gAddT,gSubT])();
+   L.push({type:'num',face:'🦉',q:'Совёнок Угу просит: посчитай в уме!',html:expr(p),ans:calc(p.n,p.op,p.m),exp:()=>explain(p)});}
+  // 7. Выбор ответа
+  {const p=gSubT(),r=calc(p.n,p.op,p.m);
+   const set=new Set([r]);[p.n-p.m/10,p.n+p.m,r+10,r-10,r+1,r-1].forEach(x=>{if(set.size<4&&x>0&&x<100)set.add(x)});
+   L.push({type:'choice',face:'🦊',q:'Лисичка нашла четыре ответа. Какой правильный?',html:expr(p),opts:shuffle([...set].map(String)),ans:String(r),exp:()=>explain(p)});}
+  // 8. Хитрый пример (однозначное первым)
+  {const p=gAddU();p.swap=true;
+   L.push({type:'num',face:'🐰',q:'Хитрый пример от зайчика! Подсказка: поменяй числа местами.',html:expr(p),ans:calc(p.n,p.op,p.m),exp:()=>explain(p)});}
+  // 9. Найди ошибку
+  {const p=pick([gAddU,gAddT,gSubU,gSubT])(),r=calc(p.n,p.op,p.m);
+   let wrong;if(p.m<10)wrong=p.op==='+'?p.n+p.m*10:p.n-p.m*10;else wrong=p.op==='+'?p.n+p.m/10:p.n-p.m/10;
+   if(wrong<=0||wrong>=100)wrong=p.m<10?(p.op==='+'?r+10:r-10):(p.op==='+'?r+1:r-1);
+   const ok=Math.random()<0.5,shown=ok?r:wrong;
+   L.push({type:'tf',face:'🦔',q:'Ёжик Колючкин решил пример. Он прав или ошибся?',
+     html:`<div class="expr"><span class="t">${p.n} ${sym(p.op)} ${p.m} = ${shown}</span></div>`,isOk:ok,
+     exp:()=>`<div class="explain"><p>${ok?'Ёжик решил <b>правильно</b>!':`Ёжик перепутал десятки и единицы. Правильный ответ: <b>${r}</b>.`}</p></div>`+explain(p)});}
+  // 10. Задача
+  {let p,text;
+   if(Math.random()<0.5){p=pick([gAddU,gAddT])();
+     text=`Пушинка собрала ${p.n} ${plural(p.n,['орешек','орешка','орешков'])}, а потом нашла ещё ${p.m}. Сколько орешков стало у Пушинки?`;}
+   else{p=pick([gSubU,gSubT])();
+     text=`В кладовке у Пушинки ${p.n} ${plural(p.n,['шишка','шишки','шишек'])}. ${p.m} ${plural(p.m,['шишку','шишки','шишек'])} она подарила ёжику. Сколько шишек осталось?`;}
+   const r=calc(p.n,p.op,p.m);
+   L.push({type:'num',face:'🐿️',q:'Задача!',html:`<div class="bubble" style="margin:6px 0">${text}</div><div class="expr"><span class="t">Ответ:</span><span class="box" id="ans">?</span></div>`,ans:r,
+     exp:()=>`<div class="explain"><p>${p.op==='+'?'«Нашла ещё» — орешков стало <b>больше</b>, значит, <b>складываем</b>':'«Подарила» — шишек стало <b>меньше</b>, значит, <b>вычитаем</b>'}: ${p.n} ${sym(p.op)} ${p.m}.</p></div>`+explain(p)});}
+  // 11. Удобный способ
+  {const a=R(1,9),c=10-a;let b=R(2,9);while(b===a||b===c)b=R(2,9);
+   L.push({type:'num',face:'🐻',q:'Мишка считает удобным способом. Найди два числа, которые вместе дают 10!',
+     html:`<div class="expr"><span class="t">${a} + ${b} + ${c} =</span><span class="box" id="ans">?</span></div>`,ans:a+b+c,
+     exp:()=>`<div class="explain"><p>Ищем «числа-друзья», которые вместе дают 10: <b>${a} + ${c} = 10</b>.</p><p>Потом к 10 прибавляем ${b}: 10 + ${b} = <b>${10+b}</b>.</p><p>Так считать легче, чем по порядку!</p></div>`});}
+  // 12. Финальная задача по шагам
+  {const z=R(3,8),more=R(2,5),b=z+more;
+   L.push({type:'steps',face:'🏆',q:`Последнее задание! На поляне играют ${z} ${plural(z,['зайчонок','зайчонка','зайчат'])}, а бельчат — на ${more} больше. Сколько всего зверят на поляне?`,
+     html:'',steps:[{l:`Сколько бельчат? ${z} + ${more} =`,a:b},{l:`Сколько всего? ${z} + ${b} =`,a:z+b}],
+     exp:()=>`<div class="explain"><p>«На ${more} больше» — значит, столько же, сколько зайчат, и ещё ${more}: ${z} + ${more} = <b>${b}</b> бельчат.</p><p>«Всего» — складываем зайчат и бельчат: ${z} + ${b} = <b>${z+b}</b> зверят.</p></div>`});}
+  return L;
+}
+
+/* ================= звук и конфетти ================= */
+let actx=null,soundOn=true;
+function tones(fs,type='triangle'){if(!soundOn)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+  fs.forEach((f,i)=>{const t=actx.currentTime+i*0.11,o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.25,t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+0.3);
+    o.connect(g).connect(actx.destination);o.start(t);o.stop(t+0.35)})}catch(e){}}
+const yay=()=>tones([523,659,784,1047]);
+const oops=()=>tones([330,262],'sine');
+function confetti(n=36){for(let i=0;i<n;i++){const d=document.createElement('div');d.className='conf';d.textContent=pick(['🌰','⭐','🍂','✨','🎉','🌟']);
+  d.style.left=Math.random()*100+'vw';d.style.animationDuration=(1.4+Math.random()*1.4)+'s';d.style.animationDelay=Math.random()*0.4+'s';
+  document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
+
+const PRAISE=[`Умница, ${NAME}! 🌟`,'Супер! Пушинка в восторге! 🐿️','Точно в цель! 🎯','Вот это да! Настоящий математик! 🧠','Великолепно! ✨','Браво! Орешек твой! 🌰','Ура! Так держать! 🚀','Отлично считаешь! 💪','Молодец! Ты молния! ⚡'];
+const SOFT=['Почти получилось! Давай разберёмся вместе 👀','Ничего страшного — ошибки помогают учиться! Смотри:','Хорошая попытка! Посмотри, как надо:'];
+let lastPraise=-1;
+function praise(){let i;do{i=R(0,PRAISE.length-1)}while(i===lastPraise);lastPraise=i;return PRAISE[i]}
+
+/* ================= игра ================= */
+const app=document.getElementById('app');
+let tasks,idx,nuts,results,st;
+
+function header(){
+  const dots=tasks.map((_,i)=>{const r=results[i];const c=i===idx&&r===undefined?'cur':'';
+    return `<span class="dot ${c}">${r==='star'?'⭐':r==='help'?'👍':r==='learn'?'📘':(i===idx?'🐿️':'')}</span>`}).join('');
+  return `<div class="top"><div class="dots">${dots}</div><div style="display:flex;gap:8px;align-items:center"><span class="nutcount">🌰 ${nuts}</span><button class="snd" onclick="toggleSound(this)">${soundOn?'🔊':'🔇'}</button><button class="home" onclick="askExit()">🏠 В меню</button></div></div>`}
+function askExit(){if(document.getElementById('exitbox'))return;
+  const d=document.createElement('div');d.id='exitbox';d.className='overlay';
+  d.innerHTML=`<div class="card center" style="max-width:420px"><div style="font-size:60px">🐿️</div><p class="big">Выйти в главное меню?<br><span style="font-size:19px;color:#8a7">Орешки этой игры не сохранятся.</span></p>
+   <div class="tnav" style="justify-content:center;flex-wrap:wrap"><button class="btn green" onclick="document.getElementById('exitbox').remove()">Остаться</button><button class="btn" onclick="document.getElementById('exitbox').remove();startScreen()">🏠 В меню</button></div></div>`;
+  document.body.appendChild(d);}
+function toggleSound(b){soundOn=!soundOn;b.textContent=soundOn?'🔊':'🔇'}
+
+/* ================= меню ================= */
+function startScreen(){tasks=null;st=null;
+  app.innerHTML=`<div class="card center">
+    <div class="story">🐿️🌳🍂</div>
+    <h1>Белочка Пушинка готовится к зиме!</h1>
+    <p class="big">Привет, ${NAME}! Сегодня учимся складывать и вычитать<br><b>десятки и единицы</b>. Что выберешь?</p>
+    <div class="menu">
+      <button class="mcard theory" onclick="openTheory(0)"><span class="mi">📖</span><span class="mt">Учимся</span><span class="ms">Пушинка объяснит, как решать</span></button>
+      <button class="mcard practice" onclick="begin()"><span class="mi">🎮</span><span class="mt">Играем</span><span class="ms">12 заданий и орешки за ответы</span></button>
+    </div></div>`}
+
+/* ================= теория ================= */
+function plainExpr(s){return `<div class="expr"><span class="t">${s}</span></div>`}
+function treeExpr(p,res){const left=`${tree(p.n)}<span class="t">${sym(p.op)}</span><span class="t">${p.m}</span>`;
+  return `<div class="expr">${left}<span class="t">=</span><span class="t"><span class="box ${res!==undefined?'ok':''}">${res??'?'}</span></span></div>`}
+function lessonOp(n,op,m,title,face){
+  const p={n,op,m},T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m),ones=m<10;
+  const c=[];
+  c.push(`<p class="big">Решим пример:</p>${plainExpr(`${n} ${sym(op)} ${m} = ?`)}`);
+  c.push(`<p class="big"><b>Шаг 1.</b> Разложим <b>${n}</b> на десятки и единицы: <b>${T}</b> и <b>${u}</b>.</p>${treeExpr(p)}`);
+  c.push(`<p class="big">Смотрим на число <b>${m}</b>. ${ones?`Это <b>единицы</b> — отдельные палочки.`:`Это <b>десятки</b> — ${m/10} ${plural(m/10,['пучок','пучка','пучков'])}.`} Значит, ${op==='+'?(ones?'прибавляем их к единицам':'прибавляем их к десяткам'):(ones?'вычитаем их из единиц':'вычитаем их из десятков')}!</p>`
+    +sticks(n,op==='+'?(ones?{addU:m}:{addT:m/10}):(ones?{remU:m}:{remT:m/10}))
+    +`<div class="legend">${op==='+'?'синие — было, красные — прибавили':'зачёркнутые — убрали'}</div>`);
+  if(ones){
+    c.push(`<p class="big"><b>Шаг 2.</b> Единицы ${op==='+'?'складываем с единицами':'вычитаем из единиц'}:</p>${plainExpr(`${u} ${sym(op)} ${m} = <span class="hl">${calc(u,op,m)}</span>`)}`);
+    c.push(`<p class="big"><b>Шаг 3.</b> Десятки не трогали. Соединяем десятки и единицы:</p>${plainExpr(`${T} + ${calc(u,op,m)} = <span class="hl">${r}</span>`)}`);
+    c.push(`<p class="big">Как записать в тетради:</p>${plainExpr(`${T} + (${u} ${sym(op)} ${m}) = ${r}`)}${treeExpr(p,r)}`);
+  }else{
+    c.push(`<p class="big"><b>Шаг 2.</b> Десятки ${op==='+'?'складываем с десятками':'вычитаем из десятков'}:</p>${plainExpr(`${T} ${sym(op)} ${m} = <span class="hl">${calc(T,op,m)}</span>`)}`);
+    c.push(`<p class="big"><b>Шаг 3.</b> Единицы не трогали. Соединяем десятки и единицы:</p>${plainExpr(`${calc(T,op,m)} + ${u} = <span class="hl">${r}</span>`)}`);
+    c.push(`<p class="big">Как записать в тетради:</p>${plainExpr(`(${T} ${sym(op)} ${m}) + ${u} = ${r}`)}${treeExpr(p,r)}`);
+  }
+  return {title,face,chunks:c};
+}
+const LESSONS=[
+  {title:'Что такое десятки и единицы',face:'🐿️',chunks:[
+    `<p class="big">Пушинка собирает палочки. Когда палочек становится <b>10</b>, она связывает их в <b>пучок</b>.</p><div class="sticks"><div class="cb" style="border:3px solid #e2c36a;border-radius:14px;background:#fffbe6">${'<span class="stick"></span>'.repeat(10)}<span style="font-size:40px;color:#7a5;margin:0 10px">→</span><span class="bundle">${'<i></i>'.repeat(10)}</span></div></div><p class="big center">Один пучок = <b>1 десяток</b> = 10 палочек.</p>`,
+    `<p class="big">А палочки, которые остались без пучка, — это <b>единицы</b>.</p>`,
+    `<p class="big">Вот число <b>36</b>: <b>3 пучка</b> (3 десятка) и <b>6 палочек</b> (6 единиц).</p>${sticks(36)}`,
+    `<p class="big">Поэтому 36 можно разложить на <b>30</b> и <b>6</b>. В учебнике это рисуют «домиком»:</p><div class="expr">${tree(36)}</div>`,
+    `<div class="rule" style="font-size:22px">В числе 36 первая цифра <b>3</b> — сколько десятков,<br>вторая цифра <b>6</b> — сколько единиц.</div>`]},
+  lessonOp(36,'+',2,'Прибавляем единицы: 36 + 2','🐿️'),
+  lessonOp(36,'+',20,'Прибавляем десятки: 36 + 20','🦉'),
+  lessonOp(36,'-',2,'Вычитаем единицы: 36 − 2','🦊'),
+  lessonOp(36,'-',20,'Вычитаем десятки: 36 − 20','🐻'),
+  {title:'Хитрый пример: 3 + 46',face:'🐰',chunks:[
+    `<p class="big">Зайчик спрашивает: а если маленькое число стоит первым?</p>${plainExpr('3 + 46 = ?')}`,
+    `<p class="big">От перестановки чисел сумма не меняется! Поменяем их местами:</p>${plainExpr('3 + 46 = 46 + 3')}`,
+    `<p class="big">Дальше решаем как обычно:</p>${treeExpr({n:46,op:'+',m:3})}<p class="big">Единицы с единицами: 6 + 3 = <span class="hl">9</span>. Потом 40 + 9 = <span class="hl">49</span>.</p>`]},
+  {title:'Будь внимательна!',face:'🦔',chunks:[
+    `<p class="big">Ёжик Колючкин торопился и решил так:</p>${plainExpr('36 + 2 = <s style="color:#e0245e">56</s>')}`,
+    `<p class="big">Он ошибся: прибавил <b>2</b> к десяткам, а 2 — это <b>единицы</b>!</p><p class="big">Правильно: 6 + 2 = 8, а 30 + 8 = <span class="hl">38</span>.</p>`,
+    `<p class="big">Перед тем как решать, всегда спрашивай себя:</p><div class="rule" style="font-size:24px">Что я прибавляю или вычитаю — <b>единицы</b> или <b>десятки</b>?</div>`,
+    `${RULE.replace('class="rule"','class="rule" style="font-size:26px"')}<p class="big center">Ты всё знаешь! Теперь можно играть 🎮</p>`]}
+];
+let L_i=0,L_k=0;
+function openTheory(i){L_i=i;L_k=0;renderTheory();window.scrollTo({top:0})}
+function renderTheory(){const L=LESSONS[L_i],lastLesson=L_i===LESSONS.length-1,allShown=L_k>=L.chunks.length-1;
+  const dots=LESSONS.map((_,i)=>`<span class="dot ${i===L_i?'cur':''}">${i<L_i?'✅':i===L_i?'📖':''}</span>`).join('');
+  let body='';for(let k=0;k<=L_k;k++)body+=`<div class="chunk${k===L_k?' fresh':''}">${L.chunks[k]}</div>`;
+  let nextLabel,nextFn;
+  if(!allShown){nextLabel='Дальше 👉';nextFn='theoryNext()'}
+  else if(!lastLesson){nextLabel='Следующий урок ➜';nextFn=`openTheory(${L_i+1})`}
+  else{nextLabel='Играть! 🎮';nextFn='begin()'}
+  app.innerHTML=`<div class="top"><div class="dots">${dots}</div><button class="home" onclick="startScreen()">🏠 В меню</button></div>
+   <div class="card"><div class="num-label">Урок ${L_i+1} из ${LESSONS.length}</div>
+   <div class="who"><div class="face">${L.face}</div><div class="bubble"><b>${L.title}</b></div></div>
+   ${body}
+   <div class="tnav">${(L_i>0||L_k>0)?`<button class="btn" onclick="theoryBack()">👈 Назад</button>`:'<span></span>'}<button class="btn green" onclick="${nextFn}">${nextLabel}</button></div></div>`;
+  const f=document.querySelector('.chunk.fresh');if(f&&L_k>0)f.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function theoryNext(){L_k++;tones([660,880]);renderTheory()}
+function theoryBack(){if(L_k>0){L_k--;renderTheory()}else{L_i--;L_k=LESSONS[L_i].chunks.length-1;renderTheory()}}
+
+function begin(){tasks=buildTasks();idx=0;nuts=0;results=[];showTask()}
+
+function showTask(){
+  const t=tasks[idx];st={tries:0,step:0,err:false,input:'',done:false,lock:false};
+  app.innerHTML=header()+`<div class="card">
+    <div class="num-label">Задание ${idx+1} из ${tasks.length}</div>
+    <div class="who"><div class="face">${t.face}</div><div class="bubble">${t.q}</div></div>
+    <div id="main">${t.html}</div><div id="stepsBox"></div><div id="fb" class="fb"></div><div id="ctl"></div></div>`;
+  if(t.type==='choice')renderChoices();
+  else if(t.type==='tf')renderTF();
+  else{if(t.type==='steps')renderSteps();renderPad();}
+}
+
+/* --- выбор ответа --- */
+function renderChoices(){const t=tasks[idx];
+  document.getElementById('ctl').innerHTML=`<div class="choices">${t.opts.map((o,i)=>`<button class="btn" data-i="${i}">${o}</button>`).join('')}</div>`;
+  document.querySelectorAll('.choices .btn').forEach(b=>b.onclick=()=>{if(st.done)return;
+    if(b.textContent===t.ans){b.classList.add('good');document.querySelectorAll('.choices .btn').forEach(x=>{if(x!==b)x.classList.add('off')});win();}
+    else{b.classList.add('off','shake');miss(t.ans,()=>{document.querySelectorAll('.choices .btn').forEach(x=>{if(x.textContent===t.ans)x.classList.add('good');else x.classList.add('off')})});}
+  });}
+
+/* --- прав / не прав --- */
+function renderTF(){const t=tasks[idx];
+  document.getElementById('ctl').innerHTML=`<div class="tf"><button class="btn green" id="yes">✅ Прав</button><button class="btn blue" id="no">❌ Ошибся</button></div>`;
+  const h=say=>{if(st.done)return;document.getElementById('yes').classList.add('off');document.getElementById('no').classList.add('off');
+    if(say===t.isOk){win(t.isOk?'':t.exp())}else{st.tries=1;miss(null,null,true)}};
+  document.getElementById('yes').onclick=()=>h(true);document.getElementById('no').onclick=()=>h(false);}
+
+/* --- шаги --- */
+function renderSteps(){const t=tasks[idx];
+  let h='<div class="steps">';
+  t.steps.forEach((s,i)=>{if(i>st.step)return;const done=i<st.step||st.done;
+    h+=`<div class="step ${!done?'cur':''}"><span class="sn">Шаг ${i+1}.</span>${s.l}<span class="box small ${done?'ok':''}" ${!done?'id="ans"':''}>${done?s.a:(st.input||'?')}</span></div>`});
+  document.getElementById('stepsBox').innerHTML=h+'</div>';}
+
+/* --- цифровая клавиатура --- */
+function renderPad(){
+  const keys=['1','2','3','4','5','6','7','8','9','⌫','0','✓'];
+  document.getElementById('ctl').innerHTML=`<div class="pad">${keys.map(k=>`<button class="btn ${k==='⌫'?'del':k==='✓'?'go':''}" data-k="${k}">${k}</button>`).join('')}</div>`;
+  document.querySelectorAll('.pad .btn').forEach(b=>b.onclick=()=>key(b.dataset.k));}
+function key(k){if(st.done||st.lock)return;const box=document.getElementById('ans');if(!box)return;
+  if(k==='⌫')st.input=st.input.slice(0,-1);
+  else if(k==='✓')return check();
+  else if(st.input.length<3)st.input+=k;
+  box.textContent=st.input||'?';}
+document.addEventListener('keydown',e=>{if(!tasks||!st)return;const t=tasks[idx];if(!t||(t.type!=='num'&&t.type!=='steps'))return;
+  if(/^[0-9]$/.test(e.key))key(e.key);else if(e.key==='Backspace')key('⌫');else if(e.key==='Enter')key('✓');});
+
+function check(){const t=tasks[idx];const box=document.getElementById('ans');
+  if(!st.input){box.classList.add('shake');setTimeout(()=>box.classList.remove('shake'),400);return}
+  const v=parseInt(st.input,10);
+  const need=t.type==='steps'?t.steps[st.step].a:t.ans;
+  if(v===need){
+    if(t.type==='steps'&&st.step<t.steps.length-1){
+      st.step++;st.input='';st.tries=0;tones([660,880]);renderSteps();
+      document.getElementById('fb').innerHTML=`<div class="praise">Верно! Следующий шаг 👉</div>`;return}
+    box.classList.add('ok');win();
+  }else{
+    box.classList.add('shake');setTimeout(()=>box.classList.remove('shake'),400);
+    miss(need,()=>{box.textContent=need;box.classList.add('ok');});
+  }}
+
+/* --- верно --- */
+function win(extra=''){const t=tasks[idx];st.done=true;
+  const g=st.err?1:2;nuts+=g;results[idx]=st.err?'help':'star';
+  if(t.type==='steps'){renderSteps();const f=document.getElementById('final');if(f){f.textContent=t.res;f.classList.add('ok')}}
+  yay();confetti(st.err?18:36);
+  document.getElementById('fb').innerHTML=`<div class="praise">${praise()}<br><span style="font-size:24px">+${g} 🌰</span></div>${extra}`;
+  nextBtn();}
+
+/* --- ошибка --- */
+function miss(correct,reveal,final=false){const t=tasks[idx];st.err=true;st.tries++;st.input='';oops();
+  const fb=document.getElementById('fb');
+  if(st.tries===1&&!final){
+    fb.innerHTML=`<div class="soft">${pick(SOFT)}</div>${t.exp()}<div class="soft" style="color:#2a5bd7;margin-top:10px">Попробуй ещё раз! 💪</div>`;
+    const b=document.getElementById('ans');if(b)b.textContent='?';
+  }else{
+    if(reveal)reveal();
+    if(t.type==='steps'&&st.step<t.steps.length-1){ // показываем ответ шага и идём дальше
+      st.step++;st.tries=0;renderSteps();
+      fb.innerHTML=`<div class="answer-reveal">Правильно было: ${correct}. Ничего, идём к следующему шагу! 👉</div>`;return}
+    st.done=true;results[idx]='learn';
+    if(t.type==='steps'){renderSteps();const f=document.getElementById('final');if(f){f.textContent=t.res;f.classList.add('ok')}}
+    fb.innerHTML=`${correct!==null?`<div class="answer-reveal">Правильный ответ: ${correct}</div>`:`<div class="soft">Давай посмотрим, как было на самом деле:</div>`}${t.exp()}<div class="soft" style="color:#2a5bd7;margin-top:8px">Теперь ты знаешь, как решать! В следующий раз получится 😊</div>`;
+    nextBtn();
+  }
+  fb.scrollIntoView({behavior:'smooth',block:'nearest'});}
+
+function nextBtn(){const last=idx===tasks.length-1;
+  document.getElementById('ctl').innerHTML=`<button class="btn green next" id="nx">${last?'Узнать результат 🏆':'Дальше ➜'}</button>`;
+  document.getElementById('nx').onclick=()=>{if(last)finish();else{idx++;showTask();window.scrollTo({top:0,behavior:'smooth'})}};}
+
+/* --- финал --- */
+function finish(){const max=tasks.length*2;
+  let medal,title;
+  if(nuts>=max-4){medal='🥇';title='Золотая белочка!'}
+  else if(nuts>=max*0.6){medal='🥈';title='Серебряная белочка!'}
+  else{medal='🥉';title='Смелая белочка!'}
+  const stars=results.filter(r=>r==='star').length;
+  app.innerHTML=`<div class="card"><div class="cert">
+    <div style="font-size:26px;letter-spacing:4px;color:#b07a00">ГРАМОТА</div>
+    <div class="medal">${medal}</div>
+    <h1>${title}</h1>
+    <p class="big"><b>${NAME}</b> помогла белочке Пушинке и собрала<br><span style="font-size:44px">🌰 ${nuts}</span> из ${max} орешков!</p>
+    <p class="big">С первого раза решено: <b>${stars}</b> из ${tasks.length} ⭐</p>
+    <p class="big">${nuts>=max-4?'Ты настоящий мастер десятков и единиц! 🧠✨':'Ты отлично постаралась! Сыграй ещё раз — будет ещё лучше! 💪'}</p>
+    ${RULE}
+    <div class="tnav" style="justify-content:center;flex-wrap:wrap"><button class="btn" onclick="startScreen()">🏠 В меню</button><button class="btn" onclick="openTheory(0)">📖 Повторить теорию</button><button class="btn green" onclick="begin()">Играть ещё раз 🔄</button></div>
+    <div style="font-size:16px;color:#999;margin-top:6px">Каждый раз будут новые примеры!</div>
+  </div></div>`;
+  yay();confetti(60);setTimeout(()=>confetti(40),900);}
+
+startScreen();
+</script>
+</body>
+</html>
