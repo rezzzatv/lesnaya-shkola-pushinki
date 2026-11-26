@@ -36,7 +36,10 @@
   .box.small{min-width:76px;height:52px;font-size:36px}
   .steps{margin:10px 0 4px;display:flex;flex-direction:column;gap:10px;align-items:center}
   .step{display:flex;align-items:center;gap:10px;font-size:30px;font-weight:bold;background:#f7f7ff;border-radius:16px;padding:6px 14px}
-  .step .sn{font-size:18px;color:#8a7;font-weight:normal}
+  .step{flex-wrap:wrap;justify-content:center}
+  .step .sn{flex-basis:100%;text-align:center;font-size:20px;color:#6b3d00;font-weight:bold;white-space:normal;line-height:1.4}
+  .step .sb{display:inline-block;background:#6aa8ff;color:#fff;border-radius:12px;padding:0 10px;margin-right:4px}
+  .step:not(.cur) .sb{background:#8be08f;color:#124d16}
   .step.cur{background:#fff3c4;box-shadow:0 0 0 3px #ffd76a}
   .choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
   .btn{font-family:inherit;font-size:32px;font-weight:bold;border:none;border-radius:20px;padding:14px 10px;cursor:pointer;background:#ffe08a;color:#5a3b00;box-shadow:0 6px 0 #e0a800;transition:transform .08s}
@@ -197,7 +200,8 @@
   .pslot.ok{border:3px solid #a8dcab;background:#f0fbf1}
   .pslot.new{animation:pop .5s;box-shadow:0 0 0 3px #ffd76a;background:#fff3c4}
   .explain .pline{font-size:19px;line-height:1.7}
-  .explain .tr{font-size:24px}.explain .prow{font-size:18px}
+  .explain .tr{font-size:24px}
+  .eqi{display:inline-block;white-space:nowrap;font-size:1.1em;color:#2a2a8a}.explain .prow{font-size:18px}
   .sent{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin:10px 0}
   .sw{display:flex;flex-direction:column;align-items:center}
   .sw .sq{font-size:17px;color:#8a7a5a}.sw .ww{font-size:32px;font-weight:bold}.sw .sl{font-size:18px;font-weight:bold}
@@ -227,7 +231,7 @@
     .box{min-width:64px;height:46px;border-width:3px;border-radius:12px}
     .branch{width:64px;height:18px}.leaves{font-size:22px;gap:20px}
     .box.small{min-width:56px;height:40px;font-size:26px}
-    .steps{gap:6px;margin:6px 0 2px}.step{font-size:19px;padding:4px 8px;gap:6px;white-space:nowrap}.step .sn{font-size:12px}
+    .steps{gap:6px;margin:6px 0 2px}.step{font-size:19px;padding:3px 8px;gap:2px 6px;white-space:nowrap}.step .sn{font-size:15px}.step:not(.cur) .sn{display:none}.steps{gap:4px}
     .choices{gap:8px;margin-top:8px}
     .btn{font-size:24px;padding:10px 6px;border-radius:16px}
     .pad{gap:6px;margin:8px auto 0;max-width:330px}.pad .btn{font-size:26px;padding:8px 0}
@@ -312,19 +316,22 @@ function sticks(n,o={}){
   return `<div class="sticks"><div class="col"><div class="ch">Десятки</div><div class="cb">${tens||'—'}</div></div><div class="col"><div class="ch">Единицы</div><div class="cb">${units||'—'}</div></div></div>`}
 const RULE=`<div class="rule">Единицы — с единицами, десятки — с десятками!</div>`;
 
+/* пример — жирным сразу после фразы с точкой. НИКОГДА не ставить «:» перед числами — во 2 классе это знак деления */
+const eq=s=>`<b class="eqi">${s}</b>`;
+const NUMW=['','один','два','три','четыре','пять','шесть','семь','восемь','девять'];
 /* ---------- объяснение примера ---------- */
 function explain(p,pre=''){
   const {n,op,m}=p,T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m);let s=pre?`<p>${pre}</p>`:'';
-  if(p.swap)s+=`<p>Поменяем местами: <b>${m} + ${n} = ${n} + ${m}</b>.</p>`;
-  s+=`<p>Разложим <b>${n}</b>: <b>${T}</b> и <b>${u}</b>.</p>`;
+  if(p.swap)s+=`<p>Поменяем числа местами. ${eq(`${m} + ${n} = ${n} + ${m}`)}</p>`;
+  s+=`<p>Разложим число <b>${n}</b> на десятки и единицы. ${eq(`${n} = ${T} + ${u}`)}</p>`;
   let vis;
   if(m<10){
-    s+=`<p>${m} — это единицы. Единицы ${op==='+'?'складываем с единицами':'вычитаем из единиц'}: ${u} ${sym(op)} ${m} = <b>${calc(u,op,m)}</b>.</p>`;
-    s+=`<p>Десятки не трогаем: ${T} + ${calc(u,op,m)} = <b>${r}</b>.</p>`;
+    s+=`<p>В числе ${m} только единицы. Единицы ${op==='+'?'складываем с единицами':'вычитаем из единиц'}. ${eq(`${u} ${sym(op)} ${m} = ${calc(u,op,m)}`)}</p>`;
+    s+=`<p>Добавляем десятки. ${eq(`${T} + ${calc(u,op,m)} = ${r}`)}</p>`;
     vis=sticks(n,op==='+'?{addU:m}:{remU:m});
   }else{
-    s+=`<p>${m} — это ${m/10} ${plural(m/10,['десяток','десятка','десятков'])}. Десятки ${op==='+'?'складываем с десятками':'вычитаем из десятков'}: ${T} ${sym(op)} ${m} = <b>${calc(T,op,m)}</b>.</p>`;
-    s+=`<p>Единицы не трогаем, просто добавляем: ${calc(T,op,m)} + ${u} = <b>${r}</b>.</p>`;
+    s+=`<p>В числе ${m} ${NUMW[m/10]} ${plural(m/10,['десяток','десятка','десятков'])}. Десятки ${op==='+'?'складываем с десятками':'вычитаем из десятков'}. ${eq(`${T} ${sym(op)} ${m} = ${calc(T,op,m)}`)}</p>`;
+    s+=`<p>Добавляем единицы. ${eq(`${calc(T,op,m)} + ${u} = ${r}`)}</p>`;
     vis=sticks(n,op==='+'?{addT:m/10}:{remT:m/10});
   }
   const leg=op==='+'?'синие — было, красные — прибавили':'зачёркнутые — убрали';
@@ -332,8 +339,8 @@ function explain(p,pre=''){
 
 function stepsFor(p){
   const {n,op,m}=p,T=Math.floor(n/10)*10,u=n%10;
-  if(m<10)return [{l:`Единицы: ${u} ${sym(op)} ${m} =`,a:calc(u,op,m)},{l:`${T} + ${calc(u,op,m)} =`,a:calc(n,op,m)}];
-  return [{l:`Десятки: ${T} ${sym(op)} ${m} =`,a:calc(T,op,m)},{l:`${calc(T,op,m)} + ${u} =`,a:calc(n,op,m)}];
+  if(m<10)return [{t:'Считаем единицы',l:`${u} ${sym(op)} ${m} =`,a:calc(u,op,m)},{t:'Добавляем десятки',l:`${T} + ${calc(u,op,m)} =`,a:calc(n,op,m)}];
+  return [{t:'Считаем десятки',l:`${T} ${sym(op)} ${m} =`,a:calc(T,op,m)},{t:'Добавляем единицы',l:`${calc(T,op,m)} + ${u} =`,a:calc(n,op,m)}];
 }
 
 /* ================= задания ================= */
@@ -392,26 +399,26 @@ function animateLine(line){[...line.querySelectorAll('[data-from]')].forEach((el
 /* ---------- задание-цепочка: ребёнок вписывает числа в окошки ---------- */
 function chainTask(p,given){
   const c=chainSpec(p.n,p.op,p.m),{T,u,r,x,o,n,m}=c;
-  const dec=`Разложи ${n} на десятки и единицы: ${n} = <b>${T}</b> + <b>${u}</b>. Оба числа перепрыгивают через «=».`;
+  const dec=`Разложи число ${n} на десятки и единицы<br><b>${n} = ${T} + ${u}</b><br>Оба числа перепрыгивают через «=».`;
   const H=c.ones?{t1:dec,u1:dec,
       t2:`Десятки <b>${T}</b> перепрыгивают через «=» и встают за скобками. Не теряем!`,
-      u2:`В скобки перепрыгивают <b>единицы</b>: сначала ${u}, потом ${m}.`,
-      m2:`Число <b>${m}</b> тоже перепрыгивает в скобки — его нельзя потерять!`,
-      t3:`Десятки <b>${T}</b> снова перепрыгивают через «=» — не теряем!`,
-      x3:`${u} и ${m} из скобок соединяются в одно число: ${u} ${o} ${m} = <b>${x}</b>.`,
-      r4:`Последний прыжок: ${T} и ${x} соединяются: ${T} + ${x} = <b>${r}</b>.`}
+      u2:`В скобки перепрыгивают <b>единицы</b>. Сначала число ${u}, потом число ${m}.`,
+      m2:`Число <b>${m}</b> тоже перепрыгивает в скобки. Его нельзя потерять!`,
+      t3:`Десятки <b>${T}</b> снова перепрыгивают через «=». Не теряем!`,
+      x3:`Числа ${u} и ${m} из скобок соединяются в одно число<br><b>${u} ${o} ${m} = ${x}</b>`,
+      r4:`Последний прыжок! Числа ${T} и ${x} соединяются<br><b>${T} + ${x} = ${r}</b>`}
     :{t1:dec,u1:dec,
-      t2:`В скобки перепрыгивают <b>десятки</b>: сначала ${T}, потом ${m}.`,
-      m2:`Число <b>${m}</b> перепрыгивает в скобки к десяткам — его нельзя потерять!`,
+      t2:`В скобки перепрыгивают <b>десятки</b>. Сначала число ${T}, потом число ${m}.`,
+      m2:`Число <b>${m}</b> перепрыгивает в скобки к десяткам. Его нельзя потерять!`,
       u2:`Единицы <b>${u}</b> перепрыгивают за скобки и ждут. Не теряем!`,
-      x3:`${T} и ${m} из скобок соединяются в одно число: ${T} ${o} ${m} = <b>${x}</b>.`,
-      u3:`Единицы <b>${u}</b> снова перепрыгивают через «=» — не теряем!`,
-      r4:`Последний прыжок: ${x} и ${u} соединяются: ${x} + ${u} = <b>${r}</b>.`};
+      x3:`Числа ${T} и ${m} из скобок соединяются в одно число<br><b>${T} ${o} ${m} = ${x}</b>`,
+      u3:`Единицы <b>${u}</b> снова перепрыгивают через «=». Не теряем!`,
+      r4:`Последний прыжок! Числа ${x} и ${u} соединяются<br><b>${x} + ${u} = ${r}</b>`};
   const slots=[];
   c.L.forEach((line,li)=>line.forEach(tk=>{if(typeof tk==='string'||li===0)return;
     if(li===1&&(given||tk.k==='M'))return;tk.slot=slots.length;slots.push({a:tk.v,k:tk.k,id:tk.id,hint:H[tk.id]});}));
   const t={type:'steps',chain:c,face:given?'🦉':'🐻',
-    q:given?'Запиши цепочкой! Числа перепрыгивают через «=» — впиши их в окошки. Ничего не теряем!':'Сам разложи число и допиши цепочку! Все числа должны перепрыгнуть 😉',
+    q:given?'Запиши цепочкой! Впиши числа в окошки. Ничего не теряем!':'Сам разложи число и допиши цепочку! Все числа должны перепрыгнуть 😉',
     html:'',steps:slots,res:r};
   t.exp=()=>`<div class="explain"><p>${slots[Math.min(st.step,slots.length-1)].hint}</p><div class="chain mini">${chainHTML(t,99,true)}</div>${RULE}</div>`;
   return t;
@@ -433,7 +440,7 @@ function buildTasks(){
    const opts=shuffle([`${T} + ${u}`,`${u*10} + ${t}`,`${T} + ${u*10}`,`${t} + ${u*10}`]);
    L.push({type:'choice',face:'🐿️',q:`Я сложила палочки в пучки. В каждом пучке — 10 палочек. Какое число получилось и из чего оно состоит?`,
      html:sticks(n)+`<div class="expr"><span class="t">${n} = ?</span></div>`,opts,ans:`${T} + ${u}`,
-     exp:()=>`<div class="explain"><p>Пучки — это <b>десятки</b>: ${t} ${plural(t,['пучок','пучка','пучков'])} = <b>${T}</b>.</p><p>Отдельные палочки — <b>единицы</b>: <b>${u}</b>.</p><p>Значит, ${n} = <b>${T} + ${u}</b>.</p></div>`});}
+     exp:()=>`<div class="explain"><p>Пучки — это <b>десятки</b>. Пучков ${NUMW[t]}, значит, десятков <b>${T}</b>.</p><p>Отдельные палочки — это <b>единицы</b>. Их <b>${u}</b>.</p><p>Значит, так ${eq(`${n} = ${T} + ${u}`)}</p></div>`});}
   // 2-5. По шагам
   const sq=[[gAddU,'Сначала единицы, потом всё вместе!'],[gSubT,'Вычитаем десятки!']];
   for(const [g,hint] of sq){const p=g();
@@ -442,14 +449,14 @@ function buildTasks(){
   [[gAddU,true],[gAddT,true],[gSubU,false],[gSubT,false]].forEach(([g,given])=>L.push(chainTask(g(),given)));
   // 6. В уме
   {const p=pick([gAddU,gSubU,gAddT,gSubT])();
-   L.push({type:'num',face:'🦉',q:'Совёнок Угу просит: посчитай в уме!',html:expr(p),ans:calc(p.n,p.op,p.m),exp:()=>explain(p)});}
+   L.push({type:'num',face:'🦉',q:'Совёнок Угу просит посчитать в уме!',html:expr(p),ans:calc(p.n,p.op,p.m),exp:()=>explain(p)});}
   // 7. Выбор ответа
   {const p=gSubT(),r=calc(p.n,p.op,p.m);
    const set=new Set([r]);[p.n-p.m/10,p.n+p.m,r+10,r-10,r+1,r-1].forEach(x=>{if(set.size<4&&x>0&&x<100)set.add(x)});
    L.push({type:'choice',face:'🦊',q:'Лисичка нашла четыре ответа. Какой правильный?',html:expr(p),opts:shuffle([...set].map(String)),ans:String(r),exp:()=>explain(p)});}
   // 8. Хитрый пример (однозначное первым)
   {const p=gAddU();p.swap=true;
-   L.push({type:'num',face:'🐰',q:'Хитрый пример от зайчика! Подсказка: поменяй числа местами.',html:expr(p),ans:calc(p.n,p.op,p.m),exp:()=>explain(p)});}
+   L.push({type:'num',face:'🐰',q:'Хитрый пример от зайчика! Подсказка — поменяй числа местами.',html:expr(p),ans:calc(p.n,p.op,p.m),exp:()=>explain(p)});}
   // 9. Найди ошибку
   {const p=pick([gAddU,gAddT,gSubU,gSubT])(),r=calc(p.n,p.op,p.m);
    let wrong;if(p.m<10)wrong=p.op==='+'?p.n+p.m*10:p.n-p.m*10;else wrong=p.op==='+'?p.n+p.m/10:p.n-p.m/10;
@@ -457,7 +464,7 @@ function buildTasks(){
    const ok=Math.random()<0.5,shown=ok?r:wrong;
    L.push({type:'tf',face:'🦔',q:'Ёжик Колючкин решил пример. Он прав или ошибся?',
      html:`<div class="expr"><span class="t">${p.n} ${sym(p.op)} ${p.m} = ${shown}</span></div>`,isOk:ok,r,
-     exp:()=>explain(p,ok?'Ёжик решил <b>правильно</b>!':`Ёжик перепутал десятки и единицы. Правильно: <b>${r}</b>.`)});}
+     exp:()=>explain(p,ok?'Ёжик решил <b>правильно</b>!':`Ёжик перепутал десятки и единицы. Правильный ответ <b>${r}</b>.`)});}
   // 10. Задача
   {let p,text;
    if(Math.random()<0.5){p=pick([gAddU,gAddT])();
@@ -465,18 +472,18 @@ function buildTasks(){
    else{p=pick([gSubU,gSubT])();
      text=`В кладовке у Пушинки ${p.n} ${plural(p.n,['шишка','шишки','шишек'])}. ${p.m} ${plural(p.m,['шишку','шишки','шишек'])} она подарила ёжику. Сколько шишек осталось?`;}
    const r=calc(p.n,p.op,p.m);
-   L.push({type:'num',face:'🐿️',q:'Задача!',html:`<div class="bubble" style="margin:6px 0">${text}</div><div class="expr"><span class="t">Ответ:</span><span class="box" id="ans">?</span></div>`,ans:r,
-     exp:()=>explain(p,`${p.op==='+'?'«Нашла ещё» — стало <b>больше</b>, значит, <b>складываем</b>':'«Подарила» — стало <b>меньше</b>, значит, <b>вычитаем</b>'}: ${p.n} ${sym(p.op)} ${p.m}.`)});}
+   L.push({type:'num',face:'🐿️',q:'Задача!',html:`<div class="bubble" style="margin:6px 0">${text}</div><div class="expr"><span class="t">Ответ</span><span class="box" id="ans">?</span></div>`,ans:r,
+     exp:()=>explain(p,`${p.op==='+'?'«Нашла ещё» — стало <b>больше</b>, значит, <b>складываем</b>':'«Подарила» — стало <b>меньше</b>, значит, <b>вычитаем</b>'}. ${eq(`${p.n} ${sym(p.op)} ${p.m}`)}`)});}
   // 11. Удобный способ
   {const a=R(1,9),c=10-a;let b=R(2,9);while(b===a||b===c)b=R(2,9);
    L.push({type:'num',face:'🐻',q:'Мишка считает удобным способом. Найди два числа, которые вместе дают 10!',
      html:`<div class="expr"><span class="t">${a} + ${b} + ${c} =</span><span class="box" id="ans">?</span></div>`,ans:a+b+c,
-     exp:()=>`<div class="explain"><p>Ищем «числа-друзья», которые вместе дают 10: <b>${a} + ${c} = 10</b>.</p><p>Потом к 10 прибавляем ${b}: 10 + ${b} = <b>${10+b}</b>.</p><p>Так считать легче, чем по порядку!</p></div>`});}
+     exp:()=>`<div class="explain"><p>Ищем «числа-друзья», которые вместе дают 10. ${eq(`${a} + ${c} = 10`)}</p><p>Потом к 10 прибавляем ${b}. ${eq(`10 + ${b} = ${10+b}`)}</p><p>Так считать легче, чем по порядку!</p></div>`});}
   // 12. Финальная задача по шагам
   {const z=R(3,8),more=R(2,5),b=z+more;
    L.push({type:'steps',face:'🏆',q:`Последнее задание! На поляне играют ${z} ${plural(z,['зайчонок','зайчонка','зайчат'])}, а бельчат — на ${more} больше. Сколько всего зверят на поляне?`,
-     html:'',steps:[{l:`Сколько бельчат? ${z} + ${more} =`,a:b},{l:`Сколько всего? ${z} + ${b} =`,a:z+b}],
-     exp:()=>`<div class="explain"><p>«На ${more} больше» — значит, столько же, сколько зайчат, и ещё ${more}: ${z} + ${more} = <b>${b}</b> бельчат.</p><p>«Всего» — складываем зайчат и бельчат: ${z} + ${b} = <b>${z+b}</b> зверят.</p></div>`});}
+     html:'',steps:[{t:'Сколько бельчат?',l:`${z} + ${more} =`,a:b},{t:'Сколько всего зверят?',l:`${z} + ${b} =`,a:z+b}],
+     exp:()=>`<div class="explain"><p>«На ${more} больше» — значит, столько же, сколько зайчат, и ещё ${more}. ${eq(`${z} + ${more} = ${b}`)}</p><p>«Всего» — складываем зайчат и бельчат. ${eq(`${z} + ${b} = ${z+b}`)}</p></div>`});}
   return L;
 }
 
@@ -510,7 +517,7 @@ function confetti(n=36){for(let i=0;i<n;i++){const d=document.createElement('div
   document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
 
 const PRAISE=[()=>`Умница, ${esc(NAME)}! 🌟`,()=>'Супер! Пушинка в восторге! 🐿️',()=>'Точно в цель! 🎯',()=>CUR.p1,()=>'Великолепно! ✨',()=>'Браво! Орешек твой! 🌰',()=>`Ура! Так держать, ${esc(NAME)}! 🚀`,()=>CUR.p2,()=>'Молодец! Ты молния! ⚡'];
-const SOFT=['Почти получилось! Давай разберёмся вместе 👀','Ничего страшного — ошибки помогают учиться! Смотри:','Хорошая попытка! Посмотри, как надо:'];
+const SOFT=['Почти получилось! Давай разберёмся вместе 👀','Ничего страшного — ошибки помогают учиться! Смотри 👀','Хорошая попытка! Посмотри, как надо 👀'];
 let lastPraise=-1;
 function praise(){let i;do{i=R(0,PRAISE.length-1)}while(i===lastPraise);lastPraise=i;return PRAISE[i]()}
 
@@ -591,17 +598,17 @@ function chainSlides(n,op,m){
   const c=chainSpec(n,op,m),{T,u,r,x,o}=c;
   const cT=v=>`<span class="cT">${v}</span>`,cU=v=>`<span class="cU">${v}</span>`,cM=v=>`<span class="cM">${v}</span>`,cR=v=>`<span class="cR">${v}</span>`;
   const notes=[null,
-    `🦘 Число ${n} разложилось на ${cT(T)} и ${cU(u)} — и <b>все числа перепрыгнули</b> через «=». Проверим: ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔ — ничего не потеряли!`,
-    c.ones?`🦘 Снова прыжок! Все числа на месте: ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔. Единицы прыгнули <b>в скобки</b> — их считаем первыми.`
-          :`🦘 Снова прыжок! Все числа на месте: ${cT(T)} ✔ ${cM(m)} ✔ ${cU(u)} ✔. Десятки прыгнули <b>в скобки</b>, а ${cU(u)} ждёт за скобками.`,
-    c.ones?`💫 ${cU(u)} и ${cM(m)} из скобок <b>соединились</b> в <span class="cB">${x}</span>. А ${cT(T)} перепрыгнуло дальше — его не теряем!`
-          :`💫 ${cT(T)} и ${cM(m)} из скобок <b>соединились</b> в <span class="cP">${x}</span>. А ${cU(u)} перепрыгнуло дальше — его не теряем!`,
-    c.ones?`💫 ${cT(T)} и <span class="cB">${x}</span> соединились — вот и ответ: <span class="cA">${r}</span> 🎉`
-          :`💫 <span class="cP">${x}</span> и ${cU(u)} соединились — вот и ответ: <span class="cA">${r}</span> 🎉`];
+    `🦘 Число ${n} разложилось на ${cT(T)} и ${cU(u)} — и <b>все числа перепрыгнули</b> через «=». Проверим! ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔ — ничего не потеряли!`,
+    c.ones?`🦘 Снова прыжок! Все числа на месте! ${cT(T)} ✔ ${cU(u)} ✔ ${cM(m)} ✔. Единицы прыгнули <b>в скобки</b> — их считаем первыми.`
+          :`🦘 Снова прыжок! Все числа на месте! ${cT(T)} ✔ ${cM(m)} ✔ ${cU(u)} ✔. Десятки прыгнули <b>в скобки</b>. Число ${cU(u)} ждёт за скобками.`,
+    c.ones?`💫 ${cU(u)} и ${cM(m)} из скобок <b>соединились</b> — получилось <span class="cB">${x}</span>. Число ${cT(T)} перепрыгнуло дальше — его не теряем!`
+          :`💫 ${cT(T)} и ${cM(m)} из скобок <b>соединились</b> — получилось <span class="cP">${x}</span>. Число ${cU(u)} перепрыгнуло дальше — его не теряем!`,
+    c.ones?`💫 ${cT(T)} и <span class="cB">${x}</span> соединились. Получился ответ <span class="cA">${r}</span> 🎉`
+          :`💫 <span class="cP">${x}</span> и ${cU(u)} соединились. Получился ответ <span class="cA">${r}</span> 🎉`];
   const res=[];
   for(let k=1;k<c.L.length;k++){
     const ls=c.L.slice(0,k+1).map((line,i)=>`<div class="cl${i===k?' new':''}">${line.map(tk=>typeof tk==='string'?tk:tokSpan(tk)).join('')}</div>`).join('');
-    res.push(`<p class="big"><b>Как записать в тетради</b> — следи за прыжками:</p><div class="chain theory">${ls}</div><div class="cnote">${notes[k]}</div>`
+    res.push(`<p class="big"><b>Как записать в тетради</b> — следи за прыжками 👀</p><div class="chain theory">${ls}</div><div class="cnote">${notes[k]}</div>`
       +`<div class="center"><button class="replay" onclick="replayJump()">🔁 Ещё раз прыжок</button></div>`);
   }
   return res;
@@ -610,8 +617,8 @@ function replayJump(){const l=document.querySelector('.chain.theory .cl.new');if
 function lessonOp(n,op,m,title,face){
   const p={n,op,m},T=Math.floor(n/10)*10,u=n%10,r=calc(n,op,m),ones=m<10;
   const c=[];
-  c.push(`<p class="big">Решим пример:</p>${plainExpr(`${n} ${sym(op)} ${m} = ?`)}`);
-  c.push(`<p class="big"><b>Шаг 1.</b> Разложим <b>${n}</b> на десятки и единицы: <b>${T}</b> и <b>${u}</b>.</p>${treeExpr(p)}`);
+  c.push(`<p class="big">Решим пример.</p>${plainExpr(`${n} ${sym(op)} ${m} = ?`)}`);
+  c.push(`<p class="big"><b>Шаг 1.</b> Разложим <b>${n}</b> на десятки и единицы. Получится <b>${T}</b> и <b>${u}</b>.</p>${treeExpr(p)}`);
   c.push(`<p class="big">Смотрим на число <b>${m}</b>. ${ones?`Это <b>единицы</b> — отдельные палочки.`:`Это <b>десятки</b> — ${m/10} ${plural(m/10,['пучок','пучка','пучков'])}.`} Значит, ${op==='+'?(ones?'прибавляем их к единицам':'прибавляем их к десяткам'):(ones?'вычитаем их из единиц':'вычитаем их из десятков')}!</p>`
     +sticks(n,op==='+'?(ones?{addU:m}:{addT:m/10}):(ones?{remU:m}:{remT:m/10}))
     +`<div class="legend">${op==='+'?'синие — было, красные — прибавили':'зачёркнутые — убрали'}</div>`);
@@ -622,21 +629,21 @@ const MATH_LESSONS=[
   {title:'Что такое десятки и единицы',face:'🐿️',chunks:[
     `<p class="big">Пушинка собирает палочки. Когда палочек становится <b>10</b>, она связывает их в <b>пучок</b>.</p><div class="sticks"><div class="cb" style="border:3px solid #e2c36a;border-radius:14px;background:#fffbe6">${'<span class="stick"></span>'.repeat(10)}<span style="font-size:40px;color:#7a5;margin:0 10px">→</span><span class="bundle">${'<i></i>'.repeat(10)}</span></div></div><p class="big center">Один пучок = <b>1 десяток</b> = 10 палочек.</p>`,
     `<p class="big">А палочки, которые остались без пучка, — это <b>единицы</b>.</p>`,
-    `<p class="big">Вот число <b>36</b>: <b>3 пучка</b> (3 десятка) и <b>6 палочек</b> (6 единиц).</p>${sticks(36)}`,
-    `<p class="big">Поэтому 36 можно разложить на <b>30</b> и <b>6</b>. В учебнике это рисуют «домиком»:</p><div class="expr">${tree(36)}</div>`,
+    `<p class="big">Вот число <b>36</b>. <b>3 пучка</b> (3 десятка) и <b>6 палочек</b> (6 единиц).</p>${sticks(36)}`,
+    `<p class="big">Поэтому 36 можно разложить на <b>30</b> и <b>6</b>. В учебнике это рисуют «домиком».</p><div class="expr">${tree(36)}</div>`,
     `<div class="rule" style="font-size:22px">В числе 36 первая цифра <b>3</b> — сколько десятков,<br>вторая цифра <b>6</b> — сколько единиц.</div>`]},
-  lessonOp(76,'+',2,'Прибавляем единицы: 76 + 2','🐿️'),
-  lessonOp(36,'+',20,'Прибавляем десятки: 36 + 20','🦉'),
-  lessonOp(36,'-',2,'Вычитаем единицы: 36 − 2','🦊'),
-  lessonOp(36,'-',20,'Вычитаем десятки: 36 − 20','🐻'),
-  {title:'Хитрый пример: 3 + 46',face:'🐰',chunks:[
-    `<p class="big">Зайчик спрашивает: а если маленькое число стоит первым?</p>${plainExpr('3 + 46 = ?')}`,
-    `<p class="big">От перестановки чисел сумма не меняется! Поменяем их местами:</p>${plainExpr('3 + 46 = 46 + 3')}`,
-    `<p class="big">Дальше решаем как обычно:</p>${treeExpr({n:46,op:'+',m:3})}<p class="big">Единицы с единицами: 6 + 3 = <span class="hl">9</span>. Потом 40 + 9 = <span class="hl">49</span>.</p>`]},
+  lessonOp(76,'+',2,'Прибавляем единицы','🐿️'),
+  lessonOp(36,'+',20,'Прибавляем десятки','🦉'),
+  lessonOp(36,'-',2,'Вычитаем единицы','🦊'),
+  lessonOp(36,'-',20,'Вычитаем десятки','🐻'),
+  {title:'Хитрый пример',face:'🐰',chunks:[
+    `<p class="big">Зайчик спрашивает. А если маленькое число стоит первым?</p>${plainExpr('3 + 46 = ?')}`,
+    `<p class="big">От перестановки чисел сумма не меняется! Поменяем их местами.</p>${plainExpr('3 + 46 = 46 + 3')}`,
+    `<p class="big">Дальше решаем как обычно.</p>${treeExpr({n:46,op:'+',m:3})}<p class="big">Единицы с единицами, потом десятки.</p><div class="plist">6 + 3 = <span class="hl">9</span><br>40 + 9 = <span class="hl">49</span></div>`]},
   {title:'Осторожно, ловушка!',face:'🦔',chunks:[
-    `<p class="big">Ёжик Колючкин торопился и решил так:</p>${plainExpr('36 + 2 = <s style="color:#e0245e">56</s>')}`,
-    `<p class="big">Он ошибся: прибавил <b>2</b> к десяткам, а 2 — это <b>единицы</b>!</p><p class="big">Правильно: 6 + 2 = 8, а 30 + 8 = <span class="hl">38</span>.</p>`,
-    `<p class="big">Перед тем как решать, всегда спрашивай себя:</p><div class="rule" style="font-size:24px">Что я прибавляю или вычитаю — <b>единицы</b> или <b>десятки</b>?</div>`,
+    `<p class="big">Ёжик Колючкин торопился и решил так.</p>${plainExpr('36 + 2 = <s style="color:#e0245e">56</s>')}`,
+    `<p class="big">Он ошибся. Прибавил <b>2</b> к десяткам. Но 2 — это <b>единицы</b>!</p><p class="big">Правильно так.</p><div class="plist">6 + 2 = 8<br>30 + 8 = <span class="hl">38</span></div>`,
+    `<p class="big">Перед тем как решать, всегда спрашивай себя.</p><div class="rule" style="font-size:24px">Что я прибавляю или вычитаю — <b>единицы</b> или <b>десятки</b>?</div>`,
     `${RULE.replace('class="rule"','class="rule" style="font-size:26px"')}<p class="big center">Ты всё знаешь! Теперь можно играть 🎮</p>`]}
 ];
 let LESSONS=MATH_LESSONS;
@@ -693,7 +700,7 @@ function renderChoices(){const t=tasks[idx];
 function renderTF(){const t=tasks[idx];
   document.getElementById('ctl').innerHTML=`<div class="tf"><button class="btn green" id="yes">✅ Прав</button><button class="btn blue" id="no">❌ Ошибся</button></div>`;
   const h=say=>{if(st.done)return;document.getElementById('yes').classList.add('off');document.getElementById('no').classList.add('off');
-    if(say===t.isOk){win(t.isOk?'':`<div class="soft" style="text-align:center">Ёжик ошибся. Правильно: ${t.r}</div>`)}else{st.tries=1;miss(null,null,true)}};
+    if(say===t.isOk){win(t.isOk?'':`<div class="soft" style="text-align:center">Ёжик ошибся. Правильный ответ ${t.r}</div>`)}else{st.tries=1;miss(null,null,true)}};
   document.getElementById('yes').onclick=()=>h(true);document.getElementById('no').onclick=()=>h(false);}
 
 /* --- шаги --- */
@@ -702,7 +709,7 @@ function renderSteps(){const t=tasks[idx];
   if(t.chain){document.getElementById('stepsBox').innerHTML=`<div class="chain task">${chainHTML(t,st.done?99:st.step,st.done)}</div>`;return}
   let h='<div class="steps">';
   t.steps.forEach((s,i)=>{if(i>st.step)return;const done=i<st.step||st.done;
-    h+=`<div class="step ${!done?'cur':''}"><span class="sn">Шаг ${i+1}.</span>${s.l}<span class="box small ${done?'ok':''}" ${!done?'id="ans"':''}>${done?s.a:(st.input||'?')}</span></div>`});
+    h+=`<div class="step ${!done?'cur':''}"><span class="sn"><span class="sb">Шаг ${i+1}</span>${s.t?` ${s.t}`:''}</span>${s.l}<span class="box small ${done?'ok':''}" ${!done?'id="ans"':''}>${done?s.a:(st.input||'?')}</span></div>`});
   document.getElementById('stepsBox').innerHTML=h+'</div>';}
 
 /* --- цифровая клавиатура --- */
@@ -756,12 +763,12 @@ function miss(correct,reveal,final=false){const t=tasks[idx];const ex=t.exp();st
     if(reveal)reveal();
     if(t.type==='steps'&&st.step<t.steps.length-1){ // показываем ответ шага и идём дальше
       st.step++;st.tries=0;renderSteps();
-      fb.innerHTML=`<div class="answer-reveal" style="text-align:center">Было: ${correct}. Идём дальше! 👉</div>`;
-      popup(`<div class="answer-reveal">Правильно было: ${correct}</div>${ex}`,'Понятно 👍');return}
+      fb.innerHTML=`<div class="answer-reveal" style="text-align:center">Правильный ответ ${correct}. Идём дальше! 👉</div>`;
+      popup(`<div class="answer-reveal">Правильный ответ ${correct}</div>${ex}`,'Понятно 👍');return}
     st.done=true;results[idx]='learn';
     if(t.type==='steps'){renderSteps();const f=document.getElementById('final');if(f){f.textContent=t.res;f.classList.add('ok')}}
-    fb.innerHTML=`<div class="answer-reveal" style="text-align:center">${correct!==null?`Правильный ответ: ${correct}`:'В следующий раз получится! 😊'}</div>`;
-    popup(`${correct!==null?`<div class="answer-reveal">Правильный ответ: ${correct}</div>`:`<div class="soft">Давай посмотрим, как было на самом деле:</div>`}${ex}<div class="soft" style="color:#2a5bd7;margin-top:8px">Теперь ты знаешь, как решать! 😊</div>`,'Понятно 👍');
+    fb.innerHTML=`<div class="answer-reveal" style="text-align:center">${correct!==null?`Правильный ответ ${correct}`:'В следующий раз получится! 😊'}</div>`;
+    popup(`${correct!==null?`<div class="answer-reveal">Правильный ответ ${correct}</div>`:`<div class="soft">Давай посмотрим, как было на самом деле 👀</div>`}${ex}<div class="soft" style="color:#2a5bd7;margin-top:8px">Теперь ты знаешь, как решать! 😊</div>`,'Понятно 👍');
     nextBtn();
   }}
 
@@ -818,7 +825,7 @@ function finish(){const max=tasks.length*2;
     <div class="medal">${medal}</div>
     <h1>${title}</h1>
     <p class="big"><b>${esc(NAME)}</b> ${g("помогла","помог")} белочке Пушинке и ${g("собрала","собрал")}<br><span style="font-size:44px">🌰 ${nuts}</span> из ${max} орешков!</p>
-    <p class="big">С первого раза решено: <b>${stars}</b> из ${tasks.length} ⭐</p>
+    <p class="big">С первого раза решено <b>${stars}</b> из ${tasks.length} ⭐</p>
     <p class="big">${nuts>=max-4?CUR.master:`Ты отлично ${g('постаралась','постарался')}! Сыграй ещё раз — будет ещё лучше! 💪`}</p>
     ${CUR.rule}
     <div class="tnav" style="justify-content:center;flex-wrap:wrap"><button class="btn" onclick="startScreen()">🏠 В меню</button><button class="btn" onclick="openTheory(0)">📖 Повторить теорию</button><button class="btn green" onclick="begin()">Играть ещё раз 🔄</button></div>
@@ -982,7 +989,7 @@ const RUS_LESSONS=[
     ...morphSlides(),
     `<p class="big">У глагола и прилагательного план короче:<br><b>часть речи, вопрос, число</b>.</p>${wcard(byW(VERBS,'прыгает'),false)}${pline(byW(VERBS,'прыгает'),()=>'ok')}${wcard(byW(ADJS,'рыжая'),false)}${pline(byW(ADJS,'рыжая'),()=>'ok')}`]},
   {title:'Осторожно, ловушка!',face:'🦔',chunks:[
-    `<p class="big">Ёжик Колючкин торопился и решил:</p><div class="wcard">Бег — <s style="color:#e0245e">гл.</s></div><p class="big">«Бег — это же действие! Значит, глагол!»</p>`,
+    `<p class="big">Ёжик Колючкин торопился и решил так.</p><div class="wcard">Бег — <s style="color:#e0245e">гл.</s></div><p class="big">«Бег — это же действие! Значит, глагол!»</p>`,
     `<p class="big">Не спеши — <b>задай вопрос</b>!</p><div class="plist">(<b>что?</b>) бег — <span class="pN">сущ.</span><br>(<b>что делает?</b>) бежит — <span class="pV">гл.</span></div><p class="big">«Бег» отвечает на вопрос <b>что?</b> — значит, это <b class="pN">существительное</b>!</p>`,
     `<p class="big">Ещё ловушка: <b>дети</b> — одно слово, но детей <b>много</b>.</p><div class="story">🧒👧🧒</div><p class="big center">Значит, <b>мн. ч.</b>!</p>`,
     `${RRULE.replace('class="rule"','class="rule" style="font-size:24px"')}<p class="big center">Ты всё знаешь! Теперь можно играть 🎮</p>`]}
@@ -1158,9 +1165,9 @@ const sumStr=(a,b)=>Array(b).fill(a).join(' + ');
 const rz=b=>plural(b,['раз','раза','раз']);
 const mExpr=(s,box=true)=>`<div class="expr"><span class="t">${s}</span>${box?'<span class="t"><span class="box" id="ans">?</span></span>':''}</div>`;
 function explM(a,b,pre=''){const r=a*b;let s=pre?`<p>${pre}</p>`:'';
-  if(b===0)s+=`<p>По ${a} взять <b>0 раз</b> — ничего не взяли. ${a} · 0 = <b>0</b>.</p>`;
-  else if(a===0)s+=`<p>По 0 взять ${b} ${rz(b)}: ${sumStr(0,b)} = <b>0</b>. С нулём всегда 0!</p>`;
-  else{s+=`<p>${a} · ${b} — это по <b>${a}</b> взять <b>${b}</b> ${rz(b)}:</p><p class="center"><b>${sumStr(a,b)} = ${r}</b></p>`;if(r<=20&&b<=5)s+=groups(a,b)}
+  if(b===0)s+=`<p>Взять число ${a} ноль раз — значит ничего не взять. С нулём всегда <b>0</b>. ${eq(`${a} · 0 = 0`)}</p>`;
+  else if(a===0)s+=`<p>Сколько нулей ни складывай, всё равно будет <b>0</b>. ${eq(`${sumStr(0,b)} = 0`)}</p>`;
+  else{s+=`<p>Умножить ${a} на ${b} значит взять число <b>${a}</b> ${NUMW[b]} ${rz(b)}. ${eq(`${sumStr(a,b)} = ${r}`)}</p>`;if(r<=20&&b<=5)s+=groups(a,b)}
   return `<div class="explain">${s}${MRULE}</div>`}
 /* квадрат Пифагора: строка r и столбик c подсвечены */
 function pyth(r,c){let h='<div class="pyth"><span class="ph">·</span>';
@@ -1168,39 +1175,40 @@ function pyth(r,c){let h='<div class="pyth"><span class="ph">·</span>';
   for(let i=1;i<=9;i++){h+=`<span class="ph${i===r?' pr':''}">${i}</span>`;
     for(let j=1;j<=9;j++)h+=`<span class="${i===r&&j===c?'px':i===r?'prl':j===c?'pcl':''}">${i*j}</span>`}
   return h+'</div>'}
-const tabExp=(a,b,pre='')=>`<div class="explain">${pre?`<p>${pre}</p>`:''}<p>Найди в таблице строку <b class="cT">${a}</b> и столбик <b class="cU">${b}</b>:</p>${pyth(a,b)}<p class="center"><b>${a} · ${b} = ${a*b}</b></p></div>`;
+const tabExp=(a,b,pre='')=>`<div class="explain">${pre?`<p>${pre}</p>`:''}<p>Найди в таблице строку <b class="cT">${a}</b> и столбик <b class="cU">${b}</b>.</p>${pyth(a,b)}<p class="center"><b>${a} · ${b} = ${a*b}</b></p></div>`;
 const tabTable=n=>`<div class="mtab">${[1,2,3,4,5,6,7,8,9].map(b=>`<span>${n} · ${b} = <span class="cR">${n*b}</span></span>`).join('')}</div>`;
 const MUL_LESSONS=[
   {title:'Что такое умножение',face:'🐿️',chunks:[
     `<p class="big">Пушинка разложила орешки в <b>4 кучки</b>, в каждой — по <b>2</b> орешка.</p>${groups(2,4)}<p class="big center">Сколько всего орешков?</p>`,
-    `<p class="big">Можно сложить:</p>${plainExpr('2 + 2 + 2 + 2 = 8')}<p class="big">Все слагаемые <b>одинаковые</b> — по 2. Писать долго!</p>`,
-    `<p class="big">Запишем короче — <b>умножением</b>:</p>${plainExpr('2 · 4 = 8')}<p class="big center">«по <b>2</b> взять <b>4</b> раза»</p>${groups(2,4)}`]},
+    `<p class="big">Можно сложить.</p>${plainExpr('2 + 2 + 2 + 2 = 8')}<p class="big">Все слагаемые <b>одинаковые</b> — по 2. Писать долго!</p>`,
+    `<p class="big">Запишем короче — <b>умножением</b>!</p>${plainExpr('2 · 4 = 8')}<p class="big center">«по <b>2</b> взять <b>4</b> раза»</p>${groups(2,4)}`]},
   {title:'Как читать запись',face:'🦉',chunks:[
-    `${plainExpr('2 · 4 = 8')}<p class="big">Читаем: «<b>два умножить на четыре</b> — будет восемь».</p><p class="big center">Знак умножения — точка <b>·</b></p>`,
-    `<p class="big">У чисел есть имена:</p><div class="sent"><span class="sw"><span class="ww">2</span><span class="sl">множитель</span></span><span class="sw"><span class="ww">·</span></span><span class="sw"><span class="ww">4</span><span class="sl">множитель</span></span><span class="sw"><span class="ww">=</span></span><span class="sw"><span class="ww cR">8</span><span class="sl">произведение</span></span></div>`,
+    `${plainExpr('2 · 4 = 8')}<p class="big">Читаем так. «<b>Два умножить на четыре</b>, будет восемь».</p><p class="big center">Знак умножения — точка <b>·</b></p>`,
+    `<p class="big">У чисел есть имена.</p><div class="sent"><span class="sw"><span class="ww">2</span><span class="sl">множитель</span></span><span class="sw"><span class="ww">·</span></span><span class="sw"><span class="ww">4</span><span class="sl">множитель</span></span><span class="sw"><span class="ww">=</span></span><span class="sw"><span class="ww cR">8</span><span class="sl">произведение</span></span></div>`,
     `<p class="big">Первое число — <b>сколько в каждой кучке</b>.<br>Второе — <b>сколько кучек</b> (сколько раз).</p>${groups(3,2)}${plainExpr('3 · 2 = 6')}`]},
   {title:'Сумму — в произведение',face:'🦊',chunks:[
-    `<p class="big">Если слагаемые <b>одинаковые</b>, сумму можно заменить произведением:</p><div class="plist">3 + 3 + 3 + 3 = <b>3 · 4</b><br>5 + 5 = <b>5 · 2</b><br>4 + 4 + 4 = <b>4 · 3</b></div>`,
-    `<p class="big">А если слагаемые <b>разные</b> — заменить нельзя:</p><div class="plist">2 + 3 + 4 — ❌</div><p class="big">Умножение — только для одинаковых!</p>`,
-    `<p class="big">Как найти <b>3 · 4</b>? Заменим сложением:</p><div class="plist">3 · 4 = 3 + 3 + 3 + 3 = <b>12</b></div>${groups(3,4)}`]},
+    `<p class="big">Если слагаемые <b>одинаковые</b>, сумму можно заменить произведением.</p><div class="plist">3 + 3 + 3 + 3 = <b>3 · 4</b><br>5 + 5 = <b>5 · 2</b><br>4 + 4 + 4 = <b>4 · 3</b></div>`,
+    `<p class="big">Если слагаемые <b>разные</b>, заменить нельзя.</p><div class="plist">2 + 3 + 4 ❌</div><p class="big">Умножение — только для одинаковых!</p>`,
+    `<p class="big">Как найти <b>3 · 4</b>? Заменим сложением.</p><div class="plist">3 + 3 + 3 + 3 = <b>12</b><br>3 · 4 = <b>12</b></div>${groups(3,4)}`]},
   {title:'Переставляем множители',face:'🐻',chunks:[
-    `<p class="big">Орешки лежат <b>2 ряда</b>, в каждом по <b>3</b>:</p>${arr(2,3)}${plainExpr('3 · 2 = 6')}`,
-    `<p class="big">Повернём картинку: <b>3 ряда</b> по <b>2</b>:</p>${arr(3,2)}${plainExpr('2 · 3 = 6')}<p class="big center">Орешков столько же!</p>`,
+    `<p class="big">Орешки лежат <b>2 ряда</b>, в каждом по <b>3</b>.</p>${arr(2,3)}${plainExpr('3 · 2 = 6')}`,
+    `<p class="big">Повернём картинку. Теперь <b>3 ряда</b> по <b>2</b>.</p>${arr(3,2)}${plainExpr('2 · 3 = 6')}<p class="big center">Орешков столько же!</p>`,
     `<div class="rule" style="font-size:22px">От перестановки множителей произведение не меняется!</div>${plainExpr('2 · 3 = 3 · 2')}`]},
   {title:'Умножение на 1 и на 0',face:'🐰',chunks:[
-    `<p class="big">По 5 взять <b>1 раз</b> — будет 5:</p>${plainExpr('5 · 1 = 5')}<p class="big">А 1 · 5 = 1 + 1 + 1 + 1 + 1 = <b>5</b>.</p><p class="big center">На 1 умножаем — число не меняется!</p>`,
-    `<p class="big">В 3 корзинках <b>нет</b> орешков — по 0:</p><div class="story">🧺 🧺 🧺</div>${plainExpr('0 · 3 = 0')}<p class="big center">И 3 · 0 = 0. С нулём всегда <b>0</b>!</p>`]},
+    `<p class="big">Взять число 5 <b>один раз</b> — будет 5.</p>${plainExpr('5 · 1 = 5')}<p class="big">Переставим множители. Ответ тот же.</p>${plainExpr('1 · 5 = 5')}<p class="big center">На 1 умножаем — число не меняется!</p>`,
+    `<p class="big">В 3 корзинках <b>нет</b> орешков.</p><div class="story">🧺 🧺 🧺</div>${plainExpr('0 · 3 = 0')}<p class="big">Переставим множители.</p>${plainExpr('3 · 0 = 0')}<p class="big center">С нулём всегда <b>0</b>!</p>`]},
   {title:'Вся таблица умножения',face:'🦉',chunks:[
-    `<p class="big">Вся таблица умножения — в одном квадрате! Найди строку <b class="cT">7</b> и столбик <b class="cU">8</b> — на пересечении ответ:</p>${pyth(7,8)}<p class="big center">7 · 8 = <span class="cA">56</span></p>`,
-    `<p class="big">Переставим множители — ответ тот же:</p><div class="plist">7 · 8 = 56<br>8 · 7 = 56</div><p class="big center">Знаешь одно — знаешь и другое! Половина таблицы уже выучена 😉</p>`,
-    `<p class="big">Забыл ответ? Прибавь число к прошлому ответу:</p><div class="plist">6 · 7 = 42<br>6 · 8 = 42 + 6 = <b>48</b></div>`]},
+    `<p class="big">Вся таблица умножения — в одном квадрате! Найди строку <b class="cT">7</b> и столбик <b class="cU">8</b> — на пересечении ответ.</p>${pyth(7,8)}<p class="big center">7 · 8 = <span class="cA">56</span></p>`,
+    `<p class="big">Переставим множители. Ответ тот же.</p><div class="plist">7 · 8 = 56<br>8 · 7 = 56</div><p class="big center">Знаешь одно — знаешь и другое! Половина таблицы уже выучена 😉</p>`,
+    `<p class="big">Забыл ответ? Возьми прошлый ответ и прибавь к нему число.</p><div class="plist">6 · 7 = 42<br>42 + 6 = <b>48</b><br>6 · 8 = <b>48</b></div>`]},
   {title:'Хитрости таблицы',face:'🐿️',chunks:[
-    `<p class="big">На <b>5</b>: ответы всегда кончаются на <b>0</b> или <b>5</b>:</p><div class="plist">5, 10, 15, 20, 25, 30, 35, 40, 45</div>`,
-    `<p class="big">На <b>9</b>: сумма цифр ответа всегда <b>9</b>:</p><div class="plist">9 · 4 = 36 → 3 + 6 = 9<br>9 · 7 = 63 → 6 + 3 = 9</div><p class="big center">А первая цифра на 1 меньше второго множителя: 9 · <b>7</b> = <b>6</b>3</p>`,
-    `<p class="big">На <b>4</b>: умножь на 2, а потом ещё раз на 2:</p><div class="plist">4 · 6: 6 · 2 = 12, 12 · 2 = <b>24</b></div>`]},
+    `<p class="big">Умножаем на <b>5</b>.</p><p class="big">Ответ всегда кончается на <b>0</b> или на <b>5</b>.</p><div class="plist">5 · 1 = 5<br>5 · 2 = 1<b class="cM">0</b><br>5 · 3 = 1<b class="cM">5</b><br>5 · 4 = 2<b class="cM">0</b></div>`,
+    `<p class="big">Умножаем на <b>9</b>.</p><p class="big">Сложи цифры ответа — всегда получится <b>9</b>!</p><div class="plist">9 · 4 = 36<br>3 + 6 = <b>9</b> ✔</div><div class="plist">9 · 7 = 63<br>6 + 3 = <b>9</b> ✔</div>`,
+    `<p class="big">Умножаем на <b>4</b>.</p><p class="big">Это всё равно что умножить на 2 и потом ещё раз на 2.</p><p class="big">Возьмём пример</p>${plainExpr('6 · 4 = ?')}`,
+    `<p class="big">Сначала умножим 6 на 2</p><div class="plist">6 · 2 = <b>12</b></div><p class="big">Потом 12 умножим на 2</p><div class="plist">12 · 2 = <b>24</b></div><p class="big center">Получилось 6 · 4 = <span class="cA">24</span></p>`]},
   {title:'Осторожно, ловушка!',face:'🦔',chunks:[
-    `<p class="big">Ёжик Колючкин торопился и решил:</p>${plainExpr('3 · 4 = <s style="color:#e0245e">7</s>')}<p class="big">Он <b>сложил</b> 3 и 4, а надо было <b>умножить</b>!</p>`,
-    `<p class="big">3 · 4 — это по 3 взять 4 раза:</p><div class="plist">3 + 3 + 3 + 3 = <b>12</b></div>${groups(3,4)}`,
+    `<p class="big">Ёжик Колючкин торопился и решил так.</p>${plainExpr('3 · 4 = <s style="color:#e0245e">7</s>')}<p class="big">Он <b>сложил</b> 3 и 4, а надо было <b>умножить</b>!</p>`,
+    `<p class="big">Умножить 3 на 4 значит взять число 3 четыре раза.</p><div class="plist">3 + 3 + 3 + 3 = <b>12</b></div>${groups(3,4)}`,
     `${MRULE.replace('class="rule"','class="rule" style="font-size:24px"')}<p class="big center">Ты всё знаешь! Теперь можно играть 🎮</p>`]}
 ];
 function buildMul(){const L=[],EMO=['🌰','🍎','🍄','🌸','⭐','🥕'];
@@ -1210,19 +1218,19 @@ function buildMul(){const L=[],EMO=['🌰','🍎','🍄','🌸','⭐','🥕'];
   {const a=R(2,4),k=R(2,4),e=pick(EMO),ok=`${a} · ${k}`;
    L.push({type:'choice',face:'🐿️',q:`В ${k} ${plural(k,['кучке','кучках','кучках'])} по ${a}. Какая запись подходит?`,html:groups(a,k,e),
      opts:shuffle(uniq([ok,`${a} + ${k}`,`${a+1} · ${k}`,`${a} · ${k+1}`,`${a} · ${k+2}`])),ans:ok,
-     exp:()=>explM(a,k,`В каждой кучке по <b>${a}</b>, кучек <b>${k}</b>. Записываем: <b>${ok}</b>.`)});}
+     exp:()=>explM(a,k,`В каждой кучке по <b>${a}</b>, кучек <b>${k}</b>. Записываем так<br><b>${ok}</b>`)});}
   // 2. Сумму — в произведение
   {const a=R(2,5),b=R(2,4),ds=[...new Set([a,b,a+1,b+1])].sort((x,y)=>x-y).map(String);
    L.push(slotTask({face:'🦊',q:'Замени сумму произведением! Нажимай числа — они прилетят в окошки.',html:'',
      steps:[{a:String(a),opts:ds},{a:String(b),opts:ds}],
      line:s=>`<div class="prow" style="font-size:26px">${sumStr(a,b)} = ${slot(0,s,a)} · ${slot(1,s,b)}</div>`,
-     hint:i=>i===0?`Складываем одинаковые числа <b>${a}</b> — первым пишем ${a}.`:`Число ${a} повторяется <b>${b}</b> ${rz(b)} — вторым пишем ${b}.`,extra:()=>MRULE}));}
+     hint:i=>i===0?`Складываем одинаковые числа <b>${a}</b>. Первым пишем число ${a}.`:`Число ${a} повторяется ${NUMW[b]} ${rz(b)}. Вторым пишем число <b>${b}</b>.`,extra:()=>MRULE}));}
   // 3. Произведение — в сумму
   {const a=R(2,5),b=R(2,4),ok=sumStr(a,b);
    L.push({type:'choice',face:'🐰',q:`Какая сумма подходит к записи ${a} · ${b}?`,html:plainExpr(`${a} · ${b}`),cls:' one',
      opts:shuffle(uniq([ok,`${a} + ${b}`,sumStr(a,b+1),sumStr(a,b-1),sumStr(a+1,b),sumStr(a,b+2)].filter(x=>x.includes('+')))),ans:ok,exp:()=>explM(a,b)});}
   // 4-5. Таблица умножения: сначала полегче, потом потруднее
-  for(const [lo,hi,face,q] of [[2,5,'🐻','Таблица умножения! Посчитай:'],[6,9,'🦉','Задание потруднее! Посчитай:']]){const [a,b]=tab(R(lo,hi));
+  for(const [lo,hi,face,q] of [[2,5,'🐻','Таблица умножения! Посчитай!'],[6,9,'🦉','Задание потруднее! Посчитай!']]){const [a,b]=tab(R(lo,hi));
     L.push({type:'num',face,q,html:mExpr(`${a} · ${b} =`),ans:a*b,exp:()=>tabExp(a,b)});}
   // 6. На 1 и на 0
   {const x=R(2,9),[a,b]=pick([[x,0],[0,x],[x,1],[1,x]]);
@@ -1231,34 +1239,34 @@ function buildMul(){const L=[],EMO=['🌰','🍎','🍄','🌸','⭐','🥕'];
   // 7. Переставь множители
   {const [a,b]=tab(R(2,9));
    L.push({type:'num',face:'🐻',q:'Мишка переставил множители. Какое число спряталось?',html:`<div class="expr"><span class="t">${a} · ${b} = ${b} ·</span><span class="t"><span class="box" id="ans">?</span></span></div>`,ans:a,
-     exp:()=>`<div class="explain"><p>От перестановки множителей произведение не меняется:</p><p class="center"><b>${a} · ${b} = ${b} · ${a}</b></p>${a*b<=20?arr(Math.min(a,b),Math.max(a,b)):''}</div>`});}
+     exp:()=>`<div class="explain"><p>От перестановки множителей произведение не меняется.</p><p class="center"><b>${a} · ${b} = ${b} · ${a}</b></p>${a*b<=20?arr(Math.min(a,b),Math.max(a,b)):''}</div>`});}
   // 8. Прав ли ёжик
   {const [a,b]=tab(R(3,9)),ok=Math.random()<0.5,shown=ok?a*b:pick([a+b,a*b+a,a*b-b].filter(x=>x!==a*b&&x>0));
    L.push({type:'tf',face:'🦔',q:'Ёжик Колючкин решил пример. Он прав или ошибся?',html:plainExpr(`${a} · ${b} = ${shown}`),isOk:ok,r:a*b,
-     exp:()=>tabExp(a,b,ok?'Ёжик решил <b>правильно</b>!':`Ёжик ${shown===a+b?'<b>сложил</b> числа, а надо умножить':'ошибся'}. Правильно: <b>${a*b}</b>.`)});}
+     exp:()=>tabExp(a,b,ok?'Ёжик решил <b>правильно</b>!':`Ёжик ${shown===a+b?'<b>сложил</b> числа, а надо умножить':'ошибся'}. Правильный ответ <b>${a*b}</b>.`)});}
   // 9. Какой рисунок подходит
   {const a=R(2,3),b=R(2,4),e=pick(EMO),pic=(x,k)=>Array(k).fill(`(${e.repeat(x)})`).join(' '),ok=pic(a,b);
    L.push({type:'choice',face:'🐿️',q:`Какой рисунок подходит к записи ${a} · ${b}?`,html:plainExpr(`${a} · ${b}`),cls:' one emo',
      opts:shuffle(uniq([ok,pic(a+1,b),pic(a,b+1),`(${e.repeat(a)}) (${e.repeat(b)})`])),ans:ok,
-     exp:()=>explM(a,b,`${a} · ${b} — это <b>${b}</b> ${plural(b,['кучка','кучки','кучек'])} по <b>${a}</b>.`)});}
+     exp:()=>explM(a,b,`Нужно ${NUMW[b]} ${plural(b,['кучка','кучки','кучек'])}, в каждой по <b>${a}</b>.`)});}
   // 10. Считаем двойками / тройками
   {const s=R(2,9),h=R(2,4),seq=[1,2,3,4,5,6].map(k=>k*s);
    L.push({type:'num',face:'🦊',q:`Считаем ${['двойками','тройками','четвёрками','пятёрками','шестёрками','семёрками','восьмёрками','девятками'][s-2]}! Какое число пропало?`,
      html:`<div class="expr" style="flex-wrap:wrap">${seq.map((v,i)=>i===h?'<span class="t"><span class="box" id="ans">?</span></span>':`<span class="t">${v}${i<5?',':''}</span>`).join('')}</div>`,ans:seq[h],
-     exp:()=>`<div class="explain"><p>Каждое число больше прошлого на <b>${s}</b>: ${seq[h-1]} + ${s} = <b>${seq[h]}</b>.</p><p>Это таблица на ${s}: ${s} · ${h+1} = <b>${seq[h]}</b>.</p></div>`});}
+     exp:()=>`<div class="explain"><p>Каждое число больше прошлого на <b>${s}</b>. ${eq(`${seq[h-1]} + ${s} = ${seq[h]}`)}</p><p>Это таблица умножения на ${s}. ${eq(`${s} · ${h+1} = ${seq[h]}`)}</p></div>`});}
   // 11. Пропущенный множитель
   {const a=R(2,9),b=R(2,9);
    L.push({type:'num',face:'🐰',q:'Какой множитель спрятался?',html:`<div class="expr"><span class="t">${a} ·</span><span class="t"><span class="box" id="ans">?</span></span><span class="t">= ${a*b}</span></div>`,ans:b,
-     exp:()=>tabExp(a,b,`Ищем: по ${a} взять сколько раз, чтобы получилось ${a*b}?`)});}
+     exp:()=>tabExp(a,b,`Ищем, сколько раз взять число ${a}, чтобы получилось ${a*b}.`)});}
   // 12. Задача
   {const a=R(2,9),b=R(2,7);
-   L.push({type:'num',face:'🐦',q:'Задача!',html:`<div class="bubble" style="margin:6px 0">На ${b} ${plural(b,['ветке','ветках','ветках'])} сидят птички, на каждой — по ${a}. Сколько всего птичек?</div>${a*b<=15&&b<=4?groups(a,b,'🐦'):''}<div class="expr"><span class="t">Ответ:</span><span class="box" id="ans">?</span></div>`,ans:a*b,
-     exp:()=>explM(a,b,`«По ${a}» взять ${b} ${rz(b)} — значит, <b>умножаем</b>: ${a} · ${b}.`)});}
+   L.push({type:'num',face:'🐦',q:'Задача!',html:`<div class="bubble" style="margin:6px 0">На ${b} ${plural(b,['ветке','ветках','ветках'])} сидят птички, на каждой — по ${a}. Сколько всего птичек?</div>${a*b<=15&&b<=4?groups(a,b,'🐦'):''}<div class="expr"><span class="t">Ответ</span><span class="box" id="ans">?</span></div>`,ans:a*b,
+     exp:()=>explM(a,b,`На каждой ветке по ${a}, веток ${b}. Значит, <b>умножаем</b>.<br><b>${a} · ${b}</b>`)});}
   // 12. Финал: задача в два шага
   {const a=R(2,9),b=R(2,9),c=R(1,9);
    L.push({type:'steps',face:'🏆',q:`Последнее задание! В ${b} ${plural(b,['корзинке','корзинках','корзинках'])} по ${a} ${plural(a,['гриб','гриба','грибов'])}. Ещё ${c} ${plural(c,['гриб','гриба','грибов'])} Пушинка нашла под ёлкой. Сколько всего грибов?`,html:'',
-     steps:[{l:`Шаг 1: ${a} · ${b} =`,a:a*b},{l:`Шаг 2: ${a*b} + ${c} =`,a:a*b+c}],res:a*b+c,
-     exp:()=>`<div class="explain"><p><b>Шаг 1.</b> В корзинках по ${a} взять ${b} ${rz(b)}: ${a} · ${b} = <b>${a*b}</b>.</p><p><b>Шаг 2.</b> Прибавим грибы под ёлкой: ${a*b} + ${c} = <b>${a*b+c}</b>.</p></div>`});}
+     steps:[{t:'Сколько грибов в корзинках?',l:`${a} · ${b} =`,a:a*b},{t:'Сколько всего грибов?',l:`${a*b} + ${c} =`,a:a*b+c}],res:a*b+c,
+     exp:()=>`<div class="explain"><p><b>Шаг 1.</b> Сколько грибов в корзинках? Умножаем. ${eq(`${a} · ${b} = ${a*b}`)}</p><p><b>Шаг 2.</b> Прибавим грибы под ёлкой. ${eq(`${a*b} + ${c} = ${a*b+c}`)}</p></div>`});}
   return mixTasks(L);
 }
 
