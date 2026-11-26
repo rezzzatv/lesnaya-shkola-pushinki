@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Белочка Пушинка: десятки и единицы</title>
+<title>Белочка Пушинка: лесная школа</title>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
@@ -153,6 +153,66 @@
   @keyframes flash{0%,100%{opacity:0}50%{opacity:1}}
   .linkbtn{font-family:inherit;background:none;border:none;color:#8a6a30;font-size:16px;text-decoration:underline;margin-top:14px;cursor:pointer}
   .slide{flex:1;display:flex;flex-direction:column;justify-content:center}
+  /* ---- предметы и темы ---- */
+  .mcard.math{background:#d9f5d0;box-shadow:0 7px 0 #6fbf5a}
+  .mcard.rus{background:#ffe0ec;box-shadow:0 7px 0 #f48fb1}
+  .tlist{display:flex;flex-direction:column;gap:14px;margin-top:10px}
+  .tbtn{font-family:inherit;display:flex;align-items:center;gap:14px;width:100%;border:none;border-radius:20px;padding:14px 16px;background:#fff6dc;box-shadow:0 6px 0 #e0a800;cursor:pointer;text-align:left;color:#3a2a1a}
+  .tbtn:active{transform:translateY(4px);box-shadow:0 2px 0 #e0a800}
+  .tbtn .ti{font-size:46px}.tbtn .tt{display:block;font-size:26px;font-weight:bold}.tbtn .ts{display:block;font-size:16px;color:#6a5a40}
+  #ctl.wait{opacity:.6;transition:opacity .25s}
+  .choices.long .btn{font-size:24px}.choices.one{grid-template-columns:1fr}
+  /* ---- русский язык ---- */
+  .pN,.pslot.pN{color:#2a5bd7}.pA,.pslot.pA{color:#1f8a2c}.pV,.pslot.pV{color:#d93025}
+  .wcard{text-align:center;font-size:40px;font-weight:bold;margin:8px 0}
+  .wcard .pic{display:block;font-size:46px;line-height:1.15}
+  .wcard .ctx{color:#8a7a5a}
+  .hw{background:#fff1a8;color:inherit;border-radius:12px;padding:0 8px;box-shadow:0 0 0 3px #ffd24d;animation:glowW 1.6s ease-in-out infinite}
+  .hl1{background:#ffd24d;color:inherit;border-radius:8px;padding:0 3px;box-shadow:0 0 0 2px #ffb300}
+  @keyframes glowW{0%,100%{box-shadow:0 0 0 3px #ffd24d}50%{box-shadow:0 0 0 5px #ffe58a,0 0 12px #ffd24d}}
+  .pickhint{text-align:center;font-size:16px;color:#8a7a5a;margin-top:6px}
+  /* фонетика: гласный — красный, твёрдый — синий, мягкий — зелёный */
+  .sV,.pslot.sV{color:#d32f2f}.sH,.pslot.sH{color:#1e66d0}.sS,.pslot.sS{color:#1f8a2c}
+  .sq{display:inline-block;width:26px;height:26px;border-radius:6px;margin:2px;vertical-align:middle;border:2px solid #0002}
+  .sqV{background:#e53935}.sqH{background:#1e66d0}.sqS{background:#2e9e44}
+  .tr{font-size:32px;font-weight:bold;text-align:center;margin:6px 0;letter-spacing:1px}
+  .ftab{display:grid;grid-template-columns:auto auto 1fr;gap:4px 10px;align-items:center;font-size:20px;margin:8px auto;max-width:420px}
+  .ftab .fl{font-size:26px;font-weight:bold;text-align:center}.ftab .fs{font-weight:bold;font-size:24px}
+  .ftab .new{animation:pop .5s;background:#fff3c4;border-radius:8px}
+  .prow{font-size:22px;font-weight:bold;text-align:center;line-height:2}
+  /* умножение */
+  .groups{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+  .grp{display:inline-flex;flex-wrap:wrap;justify-content:center;max-width:110px;border:3px solid #e2c36a;background:#fffbe6;border-radius:18px;padding:4px 6px;font-size:26px;line-height:1.15}
+  .arr{display:inline-grid;gap:4px;font-size:28px;line-height:1;background:#fffbe6;border:3px solid #e2c36a;border-radius:14px;padding:6px}
+  .mtab{display:grid;grid-template-columns:1fr 1fr;gap:2px 18px;font-size:24px;font-weight:bold;max-width:320px;margin:6px auto}
+  .mtab span{white-space:nowrap}
+  .choices.emo .btn{font-size:20px;letter-spacing:-1px;padding:10px 6px}
+  .pyth{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;max-width:420px;margin:6px auto;font-size:17px;font-weight:bold;text-align:center}
+  .pyth span{background:#fffbe6;border-radius:5px;padding:3px 0}
+  .pyth .ph{background:#f7df8f}.pyth .pr{background:#2a5bd7;color:#fff}.pyth .pc{background:#1f8a2c;color:#fff}
+  .pyth .prl{background:#dce8ff}.pyth .pcl{background:#dff5df}.pyth .px{background:#ffd24d;box-shadow:0 0 0 2px #e0a800;color:#2b1a0c}
+  .pline{font-size:26px;font-weight:bold;line-height:1.9;text-align:center;margin:8px 0}
+  .pslot{display:inline-block;min-width:62px;padding:0 8px;border:3px dashed #b9c9e8;border-radius:12px;background:#f7f9ff;line-height:1.35;vertical-align:middle;margin:2px;color:#3a2a1a}
+  .pslot.cur{border:3px solid #ffb300;background:#fff3c4;box-shadow:0 0 0 3px #ffe08a;color:#c2410c}
+  .pslot.ok{border:3px solid #a8dcab;background:#f0fbf1}
+  .pslot.new{animation:pop .5s;box-shadow:0 0 0 3px #ffd76a;background:#fff3c4}
+  .explain .pline{font-size:19px;line-height:1.7}
+  .explain .tr{font-size:24px}.explain .prow{font-size:18px}
+  .sent{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin:10px 0}
+  .sw{display:flex;flex-direction:column;align-items:center}
+  .sw .sq{font-size:17px;color:#8a7a5a}.sw .ww{font-size:32px;font-weight:bold}.sw .sl{font-size:18px;font-weight:bold}
+  .pcards{display:flex;flex-direction:column;gap:10px;margin:8px 0}
+  .pcard{border:3px solid;border-radius:16px;padding:6px 12px;font-size:20px;line-height:1.35}
+  .pcard i,.pcard em{display:block;font-style:normal}.pcard i{font-weight:bold}.pcard em{color:#6a5a40}
+  .pcard.N{border-color:#6aa8ff;background:#eef5ff}.pcard.N b{color:#2a5bd7}
+  .pcard.A{border-color:#6fd27a;background:#effbef}.pcard.A b{color:#1f8a2c}
+  .pcard.V{border-color:#f28b82;background:#fff0ef}.pcard.V b{color:#d93025}
+  .pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+  .pairs>div{border-radius:16px;padding:8px;text-align:center;font-size:21px;line-height:1.5;background:#fffbe6;border:3px solid #e2c36a}
+  .pairs h3{margin:0 0 2px;font-size:24px;color:#a0245a}
+  .plist{font-size:24px;line-height:1.7;text-align:center;margin:8px 0}
+  .memo{background:#fffbe6;border:3px dashed #e2c36a;border-radius:16px;padding:8px 14px;font-size:21px;margin-top:8px}
+  .memo ol{margin:4px 0;padding-left:26px}
   /* ---- телефон ---- */
   @media (max-width:600px),(max-height:900px){
     #app{padding:6px 6px 8px}
@@ -196,6 +256,21 @@
     .tf{gap:8px;margin-top:10px}.tf .btn{min-width:140px}
     .pop .btn{font-size:20px;padding:10px 18px}
     .hl{padding:0 4px}
+    .tbtn{padding:10px 12px;gap:10px}.tbtn .ti{font-size:34px}.tbtn .tt{font-size:20px}.tbtn .ts{font-size:13px}
+    .choices.long .btn{font-size:18px;padding:9px 4px}
+    .wcard{font-size:28px;margin:4px 0}.wcard .pic{font-size:34px}
+    .pline{font-size:19px;line-height:1.75;margin:4px 0}.pslot{min-width:46px;padding:0 5px;border-width:2px;border-radius:9px}
+    .explain .pline{font-size:15px}
+    .sent{gap:10px;margin:6px 0}.sw .sq{font-size:13px}.sw .ww{font-size:22px}.sw .sl{font-size:14px}
+    .pcards{gap:6px}.pcard{font-size:15px;padding:4px 10px;border-width:2px}
+    .pairs{gap:6px}.pairs>div{font-size:16px;padding:5px;line-height:1.4;border-width:2px}.pairs h3{font-size:18px}
+    .plist{font-size:18px}.memo{font-size:16px;padding:6px 10px}
+    .tr{font-size:24px}.sq{width:20px;height:20px}.ftab{font-size:15px;gap:2px 8px}.ftab .fl{font-size:20px}.ftab .fs{font-size:18px}
+    .prow{font-size:17px;line-height:1.9}.pickhint{font-size:13px;margin-top:3px}
+    .groups{gap:5px;margin:5px 0}.grp{font-size:19px;max-width:84px;padding:3px 4px;border-width:2px;border-radius:12px}
+    .arr{font-size:22px;gap:3px;padding:4px}.mtab{font-size:18px;gap:0 14px}
+    .choices.emo .btn{font-size:16px;padding:8px 4px}
+    .pyth{font-size:12px;gap:1px}.pyth span{padding:2px 0;border-radius:3px}
   }
   @media(max-width:520px){.menu{grid-template-columns:1fr}}
 </style>
@@ -434,7 +509,7 @@ function confetti(n=36){for(let i=0;i<n;i++){const d=document.createElement('div
   d.style.left=Math.random()*100+'vw';d.style.animationDuration=(1.4+Math.random()*1.4)+'s';d.style.animationDelay=Math.random()*0.4+'s';
   document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
 
-const PRAISE=[()=>`Умница, ${esc(NAME)}! 🌟`,()=>'Супер! Пушинка в восторге! 🐿️',()=>'Точно в цель! 🎯',()=>'Вот это да! Настоящий математик! 🧠',()=>'Великолепно! ✨',()=>'Браво! Орешек твой! 🌰',()=>`Ура! Так держать, ${esc(NAME)}! 🚀`,()=>'Отлично считаешь! 💪',()=>'Молодец! Ты молния! ⚡'];
+const PRAISE=[()=>`Умница, ${esc(NAME)}! 🌟`,()=>'Супер! Пушинка в восторге! 🐿️',()=>'Точно в цель! 🎯',()=>CUR.p1,()=>'Великолепно! ✨',()=>'Браво! Орешек твой! 🌰',()=>`Ура! Так держать, ${esc(NAME)}! 🚀`,()=>CUR.p2,()=>'Молодец! Ты молния! ⚡'];
 const SOFT=['Почти получилось! Давай разберёмся вместе 👀','Ничего страшного — ошибки помогают учиться! Смотри:','Хорошая попытка! Посмотри, как надо:'];
 let lastPraise=-1;
 function praise(){let i;do{i=R(0,PRAISE.length-1)}while(i===lastPraise);lastPraise=i;return PRAISE[i]()}
@@ -472,21 +547,40 @@ function nameScreen(){tasks=null;st=null;document.querySelectorAll('.overlay').f
     if(pickG===null){err.textContent='Нажми: девочка или мальчик 🙂';return}
     NAME=v.charAt(0).toUpperCase()+v.slice(1);GIRL=pickG;
     try{localStorage.setItem('pl_name',NAME);localStorage.setItem('pl_girl',GIRL?'1':'0')}catch(e){}
-    startScreen()};
+    homeScreen()};
   document.getElementById('nmGo').onclick=go;
   document.getElementById('nm').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('nm').blur()}};}
 
-function startScreen(){tasks=null;st=null;document.querySelectorAll('.overlay').forEach(o=>o.remove());
+/* главный экран: выбор предмета */
+function homeScreen(){CUR=null;tasks=null;st=null;document.querySelectorAll('.overlay').forEach(o=>o.remove());
   if(!NAME)return nameScreen();
   app.innerHTML=`<div class="card center fit">
-    <div class="story">🐿️🌳🍂</div>
-    <h1>Белочка Пушинка готовится к зиме!</h1>
-    <p class="big">Привет, <b>${esc(NAME)}</b>! Сегодня учимся складывать и вычитать<br><b>десятки и единицы</b>. Что выберешь?</p>
-    <div class="menu">
-      <button class="mcard theory" onclick="openTheory(0)"><span class="mi">📖</span><span class="mt">Учимся</span><span class="ms">Пушинка объяснит, как решать</span></button>
-      <button class="mcard practice" onclick="begin()"><span class="mi">🎮</span><span class="mt">Играем</span><span class="ms">12 заданий и орешки за ответы</span></button>
-    </div>
+    <div class="story">🐿️🎒📚</div>
+    <h1>Привет, ${esc(NAME)}!</h1>
+    <p class="big">Пушинка зовёт в лесную школу. Что будем учить?</p>
+    <div class="menu">${SUBJECTS.map(s=>`<button class="mcard ${s.id}" onclick="subjectScreen('${s.id}')"><span class="mi">${s.icon}</span><span class="mt">${s.name}</span><span class="ms">${s.sub}</span></button>`).join('')}</div>
     <button class="linkbtn" onclick="nameScreen()">✏️ Играет кто-то другой? Сменить имя</button></div>`}
+/* экран предмета: список тем */
+function subjectScreen(id){const s=SUBJECTS.find(x=>x.id===id);CUR=null;tasks=null;st=null;document.querySelectorAll('.overlay').forEach(o=>o.remove());
+  app.innerHTML=`<div class="top"><button class="home" onclick="homeScreen()">⬅ Предметы</button></div><div class="card center fit">
+    <div class="story">${s.icon}</div><h1>${s.name}</h1><p class="big">Выбери тему:</p>
+    <div class="tlist">${s.topics.map((t,i)=>`<button class="tbtn" onclick="openTopic('${id}',${i})"><span class="ti">${t.icon}</span><span><span class="tt">${t.name}</span><span class="ts">${t.sub}</span></span></button>`).join('')}</div>
+    <p class="legend" style="margin-top:14px">Скоро здесь появятся новые темы ✨</p></div>`}
+function openTopic(id,i){CUR=SUBJECTS.find(x=>x.id===id).topics[i];startScreen()}
+/* меню темы: Учимся / Играем */
+function startScreen(){tasks=null;st=null;document.querySelectorAll('.overlay').forEach(o=>o.remove());
+  if(!NAME)return nameScreen();
+  if(!CUR)return homeScreen();
+  LESSONS=CUR.lessons;
+  app.innerHTML=`<div class="card center fit">
+    <div class="story">${CUR.story}</div>
+    <h1>${CUR.h1}</h1>
+    <p class="big">${CUR.intro} Что выберешь?</p>
+    <div class="menu">
+      <button class="mcard theory" onclick="openTheory(0)"><span class="mi">📖</span><span class="mt">Учимся</span><span class="ms">${CUR.tsub}</span></button>
+      <button class="mcard practice" onclick="begin()"><span class="mi">🎮</span><span class="mt">Играем</span><span class="ms">${CUR.build().length} заданий и орешки за ответы</span></button>
+    </div>
+    <button class="home" style="margin:14px auto 0" onclick="subjectScreen('${CUR.subj}')">⬅ Другие темы</button></div>`}
 
 /* ================= теория ================= */
 function plainExpr(s){return `<div class="expr"><span class="t">${s}</span></div>`}
@@ -524,7 +618,7 @@ function lessonOp(n,op,m,title,face){
   c.push(...chainSlides(n,op,m));
   return {title,face,chunks:c};
 }
-const LESSONS=[
+const MATH_LESSONS=[
   {title:'Что такое десятки и единицы',face:'🐿️',chunks:[
     `<p class="big">Пушинка собирает палочки. Когда палочек становится <b>10</b>, она связывает их в <b>пучок</b>.</p><div class="sticks"><div class="cb" style="border:3px solid #e2c36a;border-radius:14px;background:#fffbe6">${'<span class="stick"></span>'.repeat(10)}<span style="font-size:40px;color:#7a5;margin:0 10px">→</span><span class="bundle">${'<i></i>'.repeat(10)}</span></div></div><p class="big center">Один пучок = <b>1 десяток</b> = 10 палочек.</p>`,
     `<p class="big">А палочки, которые остались без пучка, — это <b>единицы</b>.</p>`,
@@ -545,6 +639,7 @@ const LESSONS=[
     `<p class="big">Перед тем как решать, всегда спрашивай себя:</p><div class="rule" style="font-size:24px">Что я прибавляю или вычитаю — <b>единицы</b> или <b>десятки</b>?</div>`,
     `${RULE.replace('class="rule"','class="rule" style="font-size:26px"')}<p class="big center">Ты всё знаешь! Теперь можно играть 🎮</p>`]}
 ];
+let LESSONS=MATH_LESSONS;
 let L_i=0,L_k=0;
 function openTheory(i){L_i=i;L_k=0;renderTheory();window.scrollTo({top:0})}
 function renderTheory(){const L=LESSONS[L_i],lastLesson=L_i===LESSONS.length-1,allShown=L_k>=L.chunks.length-1;
@@ -565,8 +660,13 @@ function renderTheory(){const L=LESSONS[L_i],lastLesson=L_i===LESSONS.length-1,a
 function theoryNext(){L_k++;tones([660,880]);renderTheory()}
 function theoryBack(){if(L_k>0){L_k--;renderTheory()}else{L_i--;L_k=LESSONS[L_i].chunks.length-1;renderTheory()}}
 
-function begin(){tasks=buildTasks();idx=0;nuts=0;results=[];showTask()}
+function begin(){tasks=CUR.build();idx=0;nuts=0;results=[];showTask()}
 
+/* защита от случайных повторных нажатий: после смены кнопок внизу они немного «спят» */
+let guardUntil=0;
+function guard(ms){guardUntil=Date.now()+ms;const c=document.getElementById('ctl');if(!c)return;c.classList.add('wait');
+  setTimeout(()=>{if(Date.now()>=guardUntil){const k=document.getElementById('ctl');if(k)k.classList.remove('wait')}},ms+20);}
+document.addEventListener('click',e=>{if(Date.now()<guardUntil&&e.target.closest&&e.target.closest('#ctl')){e.stopPropagation();e.preventDefault()}},true);
 function showTask(){
   const t=tasks[idx];st={tries:0,step:0,err:false,input:'',done:false,lock:false};
   app.innerHTML=header()+`<div class="card">
@@ -575,12 +675,15 @@ function showTask(){
     <div id="main">${t.html}</div><div id="stepsBox"></div><div id="fb" class="fb"></div><div id="ctl"></div></div>`;
   if(t.type==='choice')renderChoices();
   else if(t.type==='tf')renderTF();
+  else if(t.parse)renderSteps();
   else{if(t.type==='steps')renderSteps();renderPad();}
+  guard(800);
 }
 
 /* --- выбор ответа --- */
 function renderChoices(){const t=tasks[idx];
-  document.getElementById('ctl').innerHTML=`<div class="choices">${t.opts.map((o,i)=>`<button class="btn" data-i="${i}">${o}</button>`).join('')}</div>`;
+  const oc=t.cls??optCls(t.opts);
+  document.getElementById('ctl').innerHTML=`${oc?'<div class="pickhint">👇 Выбери правильный ответ</div>':''}<div class="choices${oc}">${t.opts.map((o,i)=>`<button class="btn" data-i="${i}">${o}</button>`).join('')}</div>`;
   document.querySelectorAll('.choices .btn').forEach(b=>b.onclick=()=>{if(st.done)return;
     if(b.textContent===t.ans){b.classList.add('good');document.querySelectorAll('.choices .btn').forEach(x=>{if(x!==b)x.classList.add('off')});win();}
     else{b.classList.add('off','shake');miss(t.ans,()=>{document.querySelectorAll('.choices .btn').forEach(x=>{if(x.textContent===t.ans)x.classList.add('good');else x.classList.add('off')})});}
@@ -595,6 +698,7 @@ function renderTF(){const t=tasks[idx];
 
 /* --- шаги --- */
 function renderSteps(){const t=tasks[idx];
+  if(t.parse)return renderParse();
   if(t.chain){document.getElementById('stepsBox').innerHTML=`<div class="chain task">${chainHTML(t,st.done?99:st.step,st.done)}</div>`;return}
   let h='<div class="steps">';
   t.steps.forEach((s,i)=>{if(i>st.step)return;const done=i<st.step||st.done;
@@ -611,7 +715,7 @@ function key(k){if(st.done||st.lock||document.getElementById('popbox'))return;co
   else if(k==='✓')return check();
   else if(st.input.length<3)st.input+=k;
   box.textContent=st.input||'?';}
-document.addEventListener('keydown',e=>{if(!tasks||!st)return;const t=tasks[idx];if(!t||(t.type!=='num'&&t.type!=='steps'))return;
+document.addEventListener('keydown',e=>{if(!tasks||!st)return;const t=tasks[idx];if(!t||t.parse||(t.type!=='num'&&t.type!=='steps'))return;
   if(/^[0-9]$/.test(e.key))key(e.key);else if(e.key==='Backspace')key('⌫');else if(e.key==='Enter')key('✓');});
 
 function check(){const t=tasks[idx];const box=document.getElementById('ans');
@@ -667,7 +771,7 @@ function popup(html,btn){
   document.body.appendChild(d);
   setTimeout(()=>{d.style.background='';
     d.innerHTML=`<div class="card pop">${html}<button class="btn green">${btn}</button></div>`;
-    d.querySelector('.btn').onclick=()=>d.remove();},950);}
+    d.querySelector('.btn').onclick=()=>{d.remove();guard(400)};},950);}
 
 /* --- орешки летят в счётчик --- */
 let shownNuts=0;
@@ -699,7 +803,8 @@ function crackNut(){
 
 function nextBtn(){const last=idx===tasks.length-1;
   document.getElementById('ctl').innerHTML=`<button class="btn green next" id="nx">${last?'Узнать результат 🏆':'Дальше ➜'}</button>`;
-  document.getElementById('nx').onclick=()=>{if(last)finish();else{idx++;showTask();window.scrollTo({top:0,behavior:'smooth'})}};}
+  document.getElementById('nx').onclick=()=>{if(last)finish();else{idx++;showTask();window.scrollTo({top:0,behavior:'smooth'})}};
+  guard(1000);}
 
 /* --- финал --- */
 function finish(){const max=tasks.length*2;
@@ -714,12 +819,467 @@ function finish(){const max=tasks.length*2;
     <h1>${title}</h1>
     <p class="big"><b>${esc(NAME)}</b> ${g("помогла","помог")} белочке Пушинке и ${g("собрала","собрал")}<br><span style="font-size:44px">🌰 ${nuts}</span> из ${max} орешков!</p>
     <p class="big">С первого раза решено: <b>${stars}</b> из ${tasks.length} ⭐</p>
-    <p class="big">${nuts>=max-4?'Ты настоящий мастер десятков и единиц! 🧠✨':`Ты отлично ${g('постаралась','постарался')}! Сыграй ещё раз — будет ещё лучше! 💪`}</p>
-    ${RULE}
+    <p class="big">${nuts>=max-4?CUR.master:`Ты отлично ${g('постаралась','постарался')}! Сыграй ещё раз — будет ещё лучше! 💪`}</p>
+    ${CUR.rule}
     <div class="tnav" style="justify-content:center;flex-wrap:wrap"><button class="btn" onclick="startScreen()">🏠 В меню</button><button class="btn" onclick="openTheory(0)">📖 Повторить теорию</button><button class="btn green" onclick="begin()">Играть ещё раз 🔄</button></div>
-    <div style="font-size:16px;color:#999;margin-top:6px">Каждый раз будут новые примеры!</div>
+    <div style="font-size:16px;color:#999;margin-top:6px">Каждый раз будут новые задания!</div>
   </div></div>`;
   yay();confetti(60);setTimeout(()=>confetti(40),900);}
+
+/* ================= РУССКИЙ ЯЗЫК: морфологический разбор (2 класс) ================= */
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const optCls=o=>{if(!o.some(x=>/[а-яё]/i.test(x)))return '';const m=Math.max(...o.map(x=>x.length));return m>12?' long one':' long'};
+const PN={N:'существительное',A:'прилагательное',V:'глагол'},PS={N:'сущ.',A:'прил.',V:'гл.'},PC={N:'pN',A:'pA',V:'pV'};
+/* существительные: слово, вопрос, собственное?, число, картинка */
+const NOUNS=[['ёжик','кто?',0,'ед','🦔'],['кошка','кто?',0,'ед','🐱'],['белка','кто?',0,'ед','🐿️'],['котёнок','кто?',0,'ед','🐱'],['зайцы','кто?',0,'мн','🐰'],['птицы','кто?',0,'мн','🐦'],['дети','кто?',0,'мн','🧒'],['рыбки','кто?',0,'мн','🐟'],
+  ['мяч','что?',0,'ед','⚽'],['книга','что?',0,'ед','📕'],['дом','что?',0,'ед','🏠'],['шишки','что?',0,'мн','🌲'],['яблоки','что?',0,'мн','🍎'],['санки','что?',0,'мн','🛷'],['карандаши','что?',0,'мн','✏️'],
+  ['Мурзик','кто?',1,'ед','🐱'],['Шарик','кто?',1,'ед','🐶'],['Пушинка','кто?',1,'ед','🐿️'],['Москва','что?',1,'ед','🏙️'],['Волга','что?',1,'ед','🌊'],['Байкал','что?',1,'ед','🏞️']]
+  .map(([w,q,p,num,pic])=>({kind:'N',w,q,anim:q==='кто?',prop:!!p,num,pic}));
+/* глаголы: слово, число, кто действует, картинка */
+const VERBS=[['прыгает','ед','белка','🐿️'],['бежит','ед','ёжик','🦔'],['поёт','ед','птичка','🐦'],['плывёт','ед','рыбка','🐟'],['спит','ед','котёнок','😴'],['рисует','ед','художник','🎨'],
+  ['летят','мн','птицы','🐦'],['играют','мн','дети','⚽'],['растут','мн','грибы','🍄'],['читают','мн','ребята','📚'],['падают','мн','листья','🍂']]
+  .map(([w,num,ctx,pic])=>({kind:'V',w,q:num==='ед'?'что делает?':'что делают?',num,ctx,pic}));
+/* прилагательные: слово, вопрос, с каким словом дружит, картинка */
+const ADJS=[['рыжая','какая?','белка','🐿️'],['пушистый','какой?','котёнок','🐱'],['колючий','какой?','ёжик','🦔'],['большой','какой?','дом','🏠'],['зелёное','какое?','дерево','🌳'],['синее','какое?','море','🌊'],['тёплое','какое?','солнышко','☀️'],
+  ['весёлые','какие?','дети','🧒'],['спелые','какие?','яблоки','🍎'],['тёплые','какие?','варежки','🧤'],['золотая','какая?','осень','🍂']]
+  .map(([w,q,ctx,pic])=>({kind:'A',w,q,num:q==='какие?'?'мн':'ед',ctx,pic}));
+const byW=(pool,w)=>pool.find(o=>o.w===w);
+const SENTS=[['рыжая','белка','прыгает'],['колючий','ёжик','бежит'],['весёлые','дети','играют'],['пушистый','котёнок','спит']]
+  .map(([a,n,v])=>[byW(ADJS,a),byW(NOUNS,n),byW(VERBS,v)]);
+const numL=o=>o.num==='ед'?'ед. ч.':'мн. ч.';
+const RRULE=`<div class="rule">Сначала задай вопрос — он подскажет часть речи!</div>`;
+/* что пишем в разборе — по порядку плана */
+function vals(o){return o.kind==='N'?[PS.N,o.q,o.anim?'одуш.':'неодуш.',o.prop?'собств.':'нариц.',numL(o)]:[PS[o.kind],o.q,numL(o)]}
+function slotOpts(o,i){if(i===0)return ['сущ.','прил.','гл.'];
+  if(i===1)return o.kind==='N'?['кто?','что?']:o.kind==='V'?['что делает?','что делают?']:['какой?','какая?','какое?','какие?'];
+  if(o.kind==='N'&&i===2)return ['одуш.','неодуш.'];if(o.kind==='N'&&i===3)return ['собств.','нариц.'];return ['ед. ч.','мн. ч.']}
+/* подсказка к конкретному окошку разбора */
+function hint(o,i){const W=`«${o.w}»`,last=vals(o).length-1;
+  if(i===0)return o.kind==='N'?`${W} — это предмет: (<b>${o.q}</b>) ${o.w}. Значит, это <b class="pN">существительное</b> — пишем «сущ.».`
+    :o.kind==='V'?`${W} — это действие: ${o.ctx} (<b>${o.q}</b>) ${o.w}. Значит, это <b class="pV">глагол</b> — пишем «гл.».`
+    :`${W} — это признак предмета: ${o.ctx} (<b>${o.q}</b>) ${o.w}. Значит, это <b class="pA">прилагательное</b> — пишем «прил.».`;
+  if(i===1)return o.kind==='N'?(o.anim?`${cap(o.w)} — человек или животное. Спрашиваем <b>кто?</b>`:`${cap(o.w)} — не человек и не животное. Спрашиваем <b>что?</b>`)
+    :`Вопрос задаём от слова «${o.ctx}»: ${o.ctx} (<b>${o.q}</b>) ${o.w}.`;
+  if(o.kind==='N'&&i===2)return o.anim?`Отвечает на вопрос <b>кто?</b> — значит, <b>одушевлённое</b> («одуш.»).`:`Отвечает на вопрос <b>что?</b> — значит, <b>неодушевлённое</b> («неодуш.»).`;
+  if(o.kind==='N'&&i===3)return o.prop?`${cap(o.w)} — это имя, кличка или название. Пишется с большой буквы — <b>собственное</b> («собств.»).`:`${cap(o.w)} — общее название, не имя. Пишется с маленькой буквы — <b>нарицательное</b> («нариц.»).`;
+  if(i===last){if(o.kind==='N')return o.num==='ед'?`${cap(o.w)} — <b>один</b>. Значит, <b>единственное число</b> («ед. ч.»).`:`${cap(o.w)} — это <b>много</b>. Значит, <b>множественное число</b> («мн. ч.»).`;
+    if(o.kind==='V')return o.num==='ед'?`${cap(o.ctx)} — один, вопрос <b>что делает?</b> — значит, <b>ед. ч.</b>`:`${cap(o.ctx)} — много, вопрос <b>что делают?</b> — значит, <b>мн. ч.</b>`;
+    return o.num==='ед'?`Вопрос <b>${o.q}</b> — про один предмет (${o.ctx}). Значит, <b>ед. ч.</b>`:`Вопрос <b>какие?</b> — про много предметов (${o.ctx}). Значит, <b>мн. ч.</b>`}
+  return ''}
+/* картинки */
+function wcard(o,pic=true){const p=pic&&o.pic?`<span class="pic">${o.pic}</span>`:'';
+  if(o.kind==='N')return `<div class="wcard">${p}${o.w}</div>`;
+  if(o.kind==='V')return `<div class="wcard">${p}<span class="ctx">${cap(o.ctx)}</span> <mark class="hw">${o.w}</mark></div>`;
+  return `<div class="wcard">${p}<mark class="hw">${cap(o.w)}</mark> <span class="ctx">${o.ctx}</span></div>`}
+function sentHTML(os){return `<div class="sent">${os.map((o,i)=>`<span class="sw"><span class="sq">(${o.q})</span><span class="ww ${PC[o.kind]}">${i?o.w:cap(o.w)}</span><span class="sl ${PC[o.kind]}">${PS[o.kind]}</span></span>`).join('')}</div>`}
+/* строка разбора «как в тетради»: Котёнок — сущ. (кто?), одуш., нариц., ед. ч. */
+function pline(o,state){const v=vals(o),tpl=o.kind==='N'?[0,' (',1,'), ',2,', ',3,', ',4,'.']:[0,' (',1,'), ',2,'.'];
+  return `<div class="pline">${cap(o.w)} — ${tpl.map(x=>{if(typeof x==='string')return x;const s=state(x),col=x===0?' '+PC[o.kind]:'';
+    if(s==='ok'||s==='new')return `<span class="pslot ok${s==='new'?' new':''}${col}" data-si="${x}">${v[x]}</span>`;
+    if(s==='cur')return `<span class="pslot cur" id="ans" data-si="${x}">?</span>`;
+    return `<span class="pslot" data-si="${x}">&nbsp;</span>`}).join('')}</div>`}
+
+/* ---------- задание «разбор по плану»: ответ прилетает в окошко ---------- */
+function parseTask(o,face,q,html){const v=vals(o);
+  const t={type:'steps',parse:true,o,face,q,html:html||wcard(o),steps:v.map((a,i)=>({a,opts:slotOpts(o,i)})),res:''};
+  t.exp=()=>`<div class="explain"><p>${hint(o,Math.min(st.step,v.length-1))}</p>${pline(o,()=>'ok')}${RRULE}</div>`;
+  return t}
+function renderParse(){const t=tasks[idx],n=t.steps.length;
+  const state=i=>st.done||i<st.step?'ok':i===st.step?'cur':'';
+  document.getElementById('stepsBox').innerHTML=t.line?t.line(state):pline(t.o,state);
+  if(st.done)return;
+  const opts=t.steps[st.step].opts;
+  document.getElementById('ctl').innerHTML=`<div class="choices${optCls(opts)}">${opts.map(x=>`<button class="btn">${x}</button>`).join('')}</div>`;
+  document.querySelectorAll('#ctl .btn').forEach(b=>b.onclick=()=>{if(st.done||document.getElementById('popbox'))return;
+    const need=t.steps[st.step].a,i=st.step;
+    if(b.textContent===need){const r=b.getBoundingClientRect();
+      if(i<n-1){st.step++;st.tries=0;renderParse();guard(450);document.getElementById('fb').innerHTML=`<div class="praise" style="font-size:20px">Верно! ✔</div>`}
+      else win();
+      flyWord(r,t.steps[i].fly||need,document.querySelector(`#stepsBox [data-si="${i}"]`));
+    }else{b.classList.add('off','shake');miss(need,null)}});}
+/* ответ с кнопки летит по дуге в своё окошко */
+function flyWord(r,text,dst){if(!dst)return;dst.style.visibility='hidden';
+  const d=dst.getBoundingClientRect(),cs=getComputedStyle(dst);
+  const f=document.createElement('div');f.className='jumper';f.textContent=text;
+  f.style.cssText+=`left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;font-size:${cs.fontSize};color:${cs.color}`;
+  document.body.appendChild(f);jumpSound(false);
+  const dx=d.left+d.width/2-(r.left+r.width/2),dy=d.top+d.height/2-(r.top+r.height/2);
+  f.animate([{transform:'translate(0,0) scale(1)'},{transform:`translate(${dx/2}px,${dy/2-60}px) scale(1.3)`,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(1)`}],{duration:600,easing:'ease-in-out'})
+   .onfinish=()=>{f.remove();dst.style.visibility='';dst.classList.remove('landed');void dst.offsetWidth;dst.classList.add('landed')};}
+
+function buildRus(){const L=[],COMMON=NOUNS.filter(o=>!o.prop),PROPER=NOUNS.filter(o=>o.prop);
+  // 1. Какая часть речи
+  {const o=pick([pick(COMMON),pick(VERBS),pick(ADJS)]);
+   L.push({type:'choice',face:'🐿️',q:`Вопрос: слово «${o.w}» — это какая часть речи? Выбери ответ внизу 👇`,html:wcard(o),opts:['существительное','прилагательное','глагол'],ans:PN[o.kind],
+     exp:()=>`<div class="explain"><p>${hint(o,0)}</p>${RRULE}</div>`});}
+  // 2. Какой вопрос
+  {const o=pick([pick(NOUNS),pick(VERBS),pick(ADJS)]);
+   const opts={N:['кто?','что?','какой?','что делает?'],V:['что делает?','что делают?','кто?','какой?'],A:[o.q,'кто?','что?','что делает?']}[o.kind];
+   L.push({type:'choice',face:'🦉',q:`Какой вопрос задаём к слову «${o.w}»?`,html:wcard(o),opts:shuffle([...opts]),ans:o.q,
+     exp:()=>`<div class="explain"><p>${hint(o,1)}</p><p>${hint(o,0)}</p></div>`});}
+  // 3. Найди лишнее
+  {const [K,X]=shuffle(['N','V','A']),pool={N:COMMON,V:VERBS,A:ADJS};
+   const three=shuffle([...pool[K]]).slice(0,3),odd=pick(pool[X]);
+   L.push({type:'choice',face:'🦊',q:'Лисичка перепутала слова. Три слова — из одной команды, а одно — лишнее. Найди его!',html:'',opts:shuffle([...three,odd]).map(o=>o.w),ans:odd.w,
+     exp:()=>`<div class="explain"><p>${three.map(o=>`(${o.q}) ${o.w}`).join(', ')} — это <b class="${PC[K]}">${PN[K]}</b>.</p><p>А (${odd.q}) <b>${odd.w}</b> — это <b class="${PC[X]}">${PN[X]}</b>. Оно лишнее!</p>${RRULE}</div>`});}
+  // 4. С большой буквы
+  {const pr=pick(PROPER),com=shuffle([...COMMON]).slice(0,3);
+   L.push({type:'choice',face:'🐶',q:'Какое слово нужно писать с большой буквы?',html:'<div class="story" style="font-weight:bold;color:#a0245a">А а</div>',opts:shuffle([pr,...com].map(o=>o.w.toLowerCase())),ans:pr.w.toLowerCase(),
+     exp:()=>`<div class="explain"><p>${hint(pr,3)}</p><p>А ${com.map(o=>o.w).join(', ')} — <b>нарицательные</b>, их пишем с маленькой буквы.</p></div>`});}
+  // 5. Число
+  {const o=pick([pick(COMMON),pick(VERBS),pick(ADJS)]);
+   L.push({type:'choice',face:'🐰',q:`Один или много? Какое число у слова «${o.w}»?`,html:wcard(o),opts:['ед. ч.','мн. ч.'],ans:numL(o),
+     exp:()=>`<div class="explain"><p>${hint(o,vals(o).length-1)}</p><p><b>ед. ч.</b> — единственное число (один), <b>мн. ч.</b> — множественное (много).</p></div>`});}
+  // 6. Найди в предложении
+  {const os=pick(SENTS),K=pick(['N','A','V']),target=os.find(o=>o.kind===K),words=os.map((o,i)=>i?o.w:cap(o.w));
+   L.push({type:'choice',face:'🐻',q:`Найди в предложении <b class="${PC[K]}">${PN[K]}</b>!`,html:`<div class="wcard">${words.join(' ')}.</div>`,opts:words,ans:words[os.indexOf(target)],
+     exp:()=>`<div class="explain"><p>Задаём вопрос к каждому слову:</p>${sentHTML(os)}<p>${hint(target,0)}</p></div>`});}
+  // 7-9. Разбор по плану
+  L.push(parseTask(pick(COMMON),'🦉','Разбери слово по плану! Нажимай ответы — они прилетят в окошки.'));
+  L.push(parseTask(pick(VERBS),'🐰','Разбери выделенное слово по плану!'));
+  L.push(parseTask(pick(ADJS),'🦊','Разбери выделенное слово! Вопрос задаём от предмета.'));
+  // 10. Найди ошибку
+  {const o=pick(NOUNS),ok=Math.random()<0.5,shown={...o};let fi=1;
+   if(!ok){fi=pick([1,3,4]);if(fi===1){shown.q=o.anim?'что?':'кто?';shown.anim=!o.anim}else if(fi===3)shown.prop=!o.prop;else shown.num=o.num==='ед'?'мн':'ед'}
+   const v=vals(o),r=fi===1?`${v[1]}, ${v[2]}`:v[fi];
+   L.push({type:'tf',face:'🦔',q:'Ёжик Колючкин разобрал слово. Он прав или ошибся?',html:wcard(o)+pline(shown,()=>'ok'),isOk:ok,r,
+     exp:()=>`<div class="explain">${ok?`<p>Ёжик разобрал <b>правильно</b>!</p><p>${hint(o,1)}</p><p>${hint(o,4)}</p>`:`<p>Ёжик ошибся. ${hint(o,fi)}</p>`}${pline(o,()=>'ok')}</div>`});}
+  // 11. Имя или название
+  L.push(parseTask(pick(PROPER),'🐶','Разбери слово по плану! Посмотри на первую букву.'));
+  // 12. Финал: слово из предложения
+  {const os=pick(SENTS),target=pick(os),words=os.map((o,i)=>{const w=i?o.w:cap(o.w);return o===target?`<mark class="hw">${w}</mark>`:w});
+   L.push(parseTask(target,'🏆','Последнее задание! Разбери выделенное слово из предложения.',`<div class="wcard">${words.join(' ')}.</div>`));}
+  return mixTasks(L);
+}
+
+/* ---------- уроки ---------- */
+function morphSlides(){const o=byW(NOUNS,'котёнок');
+  const notes=[`<b>1. Часть речи.</b> Котёнок — это предмет. Пишем <b class="pN">сущ.</b>`,
+    `<b>2. Вопрос.</b> Котёнок — животное, поэтому спрашиваем <b>(кто?)</b>`,
+    `<b>3.</b> Отвечает на вопрос кто? — значит, <b>одушевлённое</b>. Пишем «одуш.»`,
+    `<b>4.</b> Котёнок — это не имя и не кличка. Значит, <b>нарицательное</b>: «нариц.»`,
+    `<b>5. Число.</b> Котёнок один — <b>единственное число</b>: «ед. ч.» 🎉 Разбор готов!`];
+  return notes.map((n,k)=>`<p class="big"><b>Разбираем слово, как в тетради:</b></p>${wcard(o)}${pline(o,i=>i<k?'ok':i===k?'new':'')}<div class="cnote">${n}</div>`)}
+const RUS_LESSONS=[
+  {title:'Части речи — команды слов',face:'🦉',chunks:[
+    `<p class="big">Все слова живут в больших <b>командах</b>. Эти команды называются <b>части речи</b>.</p><div class="story">📘 📗 📕</div><p class="big">Сегодня знакомимся с тремя командами!</p>`,
+    `<div class="pcards"><div class="pcard N"><b>Существительное</b> — это <b>предмет</b><i>кто? что?</i><em>🐿️ белка, ⚽ мяч</em></div><div class="pcard A"><b>Прилагательное</b> — <b>признак</b> предмета<i>какой? какая? какое? какие?</i><em>рыжая, большой</em></div><div class="pcard V"><b>Глагол</b> — <b>действие</b> предмета<i>что делает? что делают?</i><em>прыгает, поют</em></div></div>`,
+    `<p class="big">Как узнать, из какой команды слово? <b>Задай к нему вопрос!</b></p>${sentHTML(SENTS[0])}<p class="big center">Вопрос подсказал часть речи 😉</p>`,
+    `<p class="big">В тетради часть речи пишут <b>коротко</b>:</p><div class="pcards"><div class="pcard N">существительное → <b>сущ.</b></div><div class="pcard A">прилагательное → <b>прил.</b></div><div class="pcard V">глагол → <b>гл.</b></div></div>`]},
+  {title:'Имя существительное',face:'🐿️',chunks:[
+    `<p class="big"><b class="pN">Существительное</b> — это предмет. Оно отвечает на вопрос <b>кто?</b> или <b>что?</b></p><div class="pairs"><div><h3>кто?</h3>🐱 кошка<br>🧒 мальчик<br>🐟 рыбка</div><div><h3>что?</h3>⚽ мяч<br>🏠 дом<br>📕 книга</div></div>`,
+    `<p class="big">Люди и животные — <b>кто?</b><br>Это <b>одушевлённые</b> слова. Пишем коротко: <b>одуш.</b></p><p class="big">Всё остальное — <b>что?</b><br>Это <b>неодушевлённые</b> слова: <b>неодуш.</b></p>`,
+    `<p class="big">Имена, клички, названия городов и рек — <b>собственные</b> (собств.). Пишем с <b>большой буквы</b>!</p><div class="pairs"><div><h3>нариц.</h3>кот<br>собака<br>город<br>река</div><div><h3>собств.</h3>Мурзик<br>Шарик<br>Москва<br>Волга</div></div><p class="big center">Остальные — <b>нарицательные</b> (нариц.).</p>`,
+    `<p class="big">Сколько предметов? Это <b>число</b>.</p><div class="pairs"><div><h3>один</h3>🦔 ёж<br>🍎 яблоко<br><b>ед. ч.</b></div><div><h3>много</h3>🦔🦔🦔 ежи<br>🍎🍎🍎 яблоки<br><b>мн. ч.</b></div></div><p class="big center">ед. ч. — единственное число,<br>мн. ч. — множественное число</p>`]},
+  {title:'Глагол',face:'🐰',chunks:[
+    `<p class="big"><b class="pV">Глагол</b> — это <b>действие</b>: что делает предмет?</p>${sentHTML([byW(NOUNS,'белка'),byW(VERBS,'прыгает')])}${sentHTML([byW(NOUNS,'птицы'),byW(VERBS,'летят')])}`,
+    `<p class="big">Вопрос к глаголу задаём <b>от того, кто действует</b>:</p><div class="pairs"><div><h3>один</h3>зайчик<br>(что делает?)<br><span class="pV">прыгает</span><br><b>ед. ч.</b></div><div><h3>много</h3>зайчики<br>(что делают?)<br><span class="pV">прыгают</span><br><b>мн. ч.</b></div></div>`]},
+  {title:'Имя прилагательное',face:'🦊',chunks:[
+    `<p class="big"><b class="pA">Прилагательное</b> — это <b>признак</b> предмета: цвет, размер, вкус, какой он.</p><div class="plist">лиса (<b>какая?</b>) <span class="pA">рыжая</span><br>ёжик (<b>какой?</b>) <span class="pA">колючий</span><br>солнышко (<b>какое?</b>) <span class="pA">тёплое</span><br>яблоки (<b>какие?</b>) <span class="pA">спелые</span></div>`,
+    `<p class="big">Прилагательное всегда <b>дружит с существительным</b>. Вопрос задаём от него!</p><div class="pairs"><div><h3>один</h3>какой?<br>какая?<br>какое?<br><b>ед. ч.</b></div><div><h3>много</h3>какие?<br><br><br><b>мн. ч.</b></div></div>`]},
+  {title:'Морфологический разбор',face:'🦉',chunks:[
+    `<p class="big"><b>Морфологический разбор</b> — это рассказ о слове: из какой оно команды и какое оно.</p><div class="memo"><b>📋 План для существительного</b><ol><li>Часть речи</li><li>Вопрос: кто? или что?</li><li>Одушевлённое или неодушевлённое</li><li>Собственное или нарицательное</li><li>Число</li></ol></div>`,
+    ...morphSlides(),
+    `<p class="big">У глагола и прилагательного план короче:<br><b>часть речи, вопрос, число</b>.</p>${wcard(byW(VERBS,'прыгает'),false)}${pline(byW(VERBS,'прыгает'),()=>'ok')}${wcard(byW(ADJS,'рыжая'),false)}${pline(byW(ADJS,'рыжая'),()=>'ok')}`]},
+  {title:'Осторожно, ловушка!',face:'🦔',chunks:[
+    `<p class="big">Ёжик Колючкин торопился и решил:</p><div class="wcard">Бег — <s style="color:#e0245e">гл.</s></div><p class="big">«Бег — это же действие! Значит, глагол!»</p>`,
+    `<p class="big">Не спеши — <b>задай вопрос</b>!</p><div class="plist">(<b>что?</b>) бег — <span class="pN">сущ.</span><br>(<b>что делает?</b>) бежит — <span class="pV">гл.</span></div><p class="big">«Бег» отвечает на вопрос <b>что?</b> — значит, это <b class="pN">существительное</b>!</p>`,
+    `<p class="big">Ещё ловушка: <b>дети</b> — одно слово, но детей <b>много</b>.</p><div class="story">🧒👧🧒</div><p class="big center">Значит, <b>мн. ч.</b>!</p>`,
+    `${RRULE.replace('class="rule"','class="rule" style="font-size:24px"')}<p class="big center">Ты всё знаешь! Теперь можно играть 🎮</p>`]}
+];
+
+/* перемешивание: лёгкие задания вперемешку, потом разборы вперемешку, финал — последним */
+function mixTasks(L){return [...shuffle(L.slice(0,6)),...shuffle(L.slice(6,L.length-1)),L[L.length-1]]}
+/* окошко для заданий «по шагам» */
+function slot(i,state,content,cls=''){const s=state(i);
+  if(s==='ok'||s==='new')return `<span class="pslot ok${s==='new'?' new':''} ${cls}" data-si="${i}">${content}</span>`;
+  if(s==='cur')return `<span class="pslot cur" id="ans" data-si="${i}">?</span>`;
+  return `<span class="pslot" data-si="${i}">&nbsp;</span>`}
+function slotTask(sp){const t={type:'steps',parse:true,face:sp.face,q:sp.q,html:sp.html,steps:sp.steps,line:sp.line,res:''};
+  t.exp=()=>`<div class="explain"><p>${sp.hint(Math.min(st.step,sp.steps.length-1))}</p>${sp.line(()=>'ok')}${sp.extra?sp.extra():''}</div>`;return t}
+
+/* ================= РУССКИЙ ЯЗЫК: фонетический разбор (2 класс) ================= */
+const VL='аоуыэиеёюя',IOT='еёюя',VOICED='бвгджзлмнрй',ALWS='чщй',ALWH='жшц';
+const PAIR={б:'п',п:'б',в:'ф',ф:'в',г:'к',к:'г',д:'т',т:'д',ж:'ш',ш:'ж',з:'с',с:'з'};
+/* слово: буквы → звуки; st — номер ударной буквы; слоги через «-» */
+function mkW([w,s,st,pic,syl]){
+  const snd=s.split(' ').map(t=>{const b=t[0],v='аоуыэи'.includes(b);return {t,b,v,soft:!v&&t.endsWith("'"),voiced:!v&&VOICED.includes(b)}});
+  const L=[...w],map=[];let k=0;
+  L.forEach((ch,i)=>{const p=L[i-1];
+    if(ch==='ь'||ch==='ъ'){map.push([]);return}
+    if(IOT.includes(ch)&&(i===0||VL.includes(p)||p==='ь'||p==='ъ')){map.push([k,k+1]);k+=2;return}
+    map.push([k]);k++});
+  const m=map[st];snd[m[m.length-1]].stress=true;
+  const nsyl=snd.filter(x=>x.v).length,sy=syl?syl.split('-'):[w];
+  let sv=0;for(let i=0;i<st;i++)if(VL.includes(L[i]))sv++;
+  return {w,snd,map,st,pic,syl:sy,nsyl,ssyl:sy[sv],nl:L.length,ns:snd.length,ok:k===snd.length&&nsyl===sy.length&&!!snd[m[m.length-1]].v}}
+const FW=[['кит',"к' и т",1,'🐋'],['мак',"м а к",1,'🌺'],['сыр',"с ы р",1,'🧀'],['дом',"д о м",1,'🏠'],['лес',"л' э с",1,'🌲'],['мяч',"м' а ч'",1,'⚽'],
+  ['чай',"ч' а й'",1,'🍵'],['ель',"й' э л'",0,'🎄'],['конь',"к о н'",1,'🐴'],['день',"д' э н'",1,'☀️'],['пять',"п' а т'",1,'5️⃣'],
+  ['мышь',"м ы ш",1,'🐭'],['ключ',"к л' у ч'",2,'🔑'],['лиса',"л' и с а",3,'🦊','ли-са'],['рука',"р у к а",3,'✋','ру-ка'],['луна',"л у н а",3,'🌙','лу-на'],
+  ['зима',"з' и м а",3,'❄️','зи-ма'],['рыба',"р ы б а",1,'🐟','ры-ба'],['дыня',"д ы н' а",1,'🍈','ды-ня'],['яма',"й' а м а",0,'🕳️','я-ма'],['юла',"й' у л а",2,'🌀','ю-ла'],
+  ['щука',"щ' у к а",1,'🐟','щу-ка'],['шуба',"ш у б а",1,'🧥','шу-ба'],['зубы',"з у б ы",1,'🦷','зу-бы'],['липа',"л' и п а",1,'🌳','ли-па']].map(mkW);
+const fw=w=>FW.find(o=>o.w===w);
+const scls=x=>x.v?'sV':x.soft?'sS':'sH';
+const semo=x=>x.v?'🟥':x.soft?'🟩':'🟦';
+const stressW=o=>o.nsyl>1?o.w.slice(0,o.st+1)+'́'+o.w.slice(o.st+1):o.w;
+const sndT=(x,o)=>x.t+(x.v&&x.stress&&o.nsyl>1?'́':'');
+const trHTML=o=>`<div class="tr">[${o.snd.map(x=>`<span class="${scls(x)}">${sndT(x,o)}</span>`).join('')}]</div>`;
+const schemeHTML=o=>`<div class="center">${o.snd.map(x=>`<span class="sq sq${x.v?'V':x.soft?'S':'H'}"></span>`).join('')}</div>`;
+const schemeEmo=o=>o.snd.map(semo).join('');
+const wcardF=(o,stress=true)=>`<div class="wcard"><span class="pic">${o.pic}</span>${stress?stressW(o):o.w}</div>`;
+const wordHL=(o,i)=>`<div class="wcard"><span class="pic">${o.pic}</span>${[...o.w].map((c,j)=>j===i?`<mark class="hl1">${c}</mark>`:c).join('')}</div>`;
+const PRULE=`<div class="rule">Слушай звуки, а не смотри на буквы!</div>`;
+/* объяснения */
+function vowWhy(x){return x.v?`[${x.t}] — <b class="sV">гласный</b> звук: его можно пропеть, воздух выходит свободно.`:`[${x.t}] — <b>согласный</b> звук: воздуху мешают губы, зубы или язык.`}
+function softWhy(o,i){const c=o.w[i],n=o.w[i+1],m=o.map[i],x=o.snd[m[0]];
+  if(m.length===2)return `Буква «${c}» здесь даёт два звука: [й'] и [${o.snd[m[1]].t}]. Звук [й'] — всегда <b class="sS">мягкий</b>.`;
+  if(ALWS.includes(c))return `[${x.t}] — всегда <b class="sS">мягкий</b> звук. Это надо запомнить!`;
+  if(ALWH.includes(c))return `[${x.t}] — всегда <b class="sH">твёрдый</b> звук. Это надо запомнить!`;
+  if(x.soft)return `После «${c}» стоит «${n}» — она смягчает звук. [${x.t}] — <b class="sS">мягкий</b>.`;
+  return `${n?`После «${c}» стоит «${n}»`:`«${c}» стоит в конце слова`} — смягчать некому. [${x.t}] — <b class="sH">твёрдый</b>.`}
+function voiceWhy(o,i){const c=o.w[i],x=o.snd[o.map[i][0]],p=PAIR[c];
+  return `[${x.t}] — <b>${x.voiced?'звонкий':'глухой'}</b>: ${x.voiced?'горлышко дрожит, голос звенит':'горлышко не дрожит, только шум'}.${p?` Его пара — [${p}].`:' Пары у него нет.'}`}
+function countWhy(o){let s=`<b>${stressW(o)}</b>: ${o.nl} ${plural(o.nl,['буква','буквы','букв'])}, ${o.ns} ${plural(o.ns,['звук','звука','звуков'])}.`;
+  if(o.w.includes('ь'))s+=' Мягкий знак <b>ь</b> звука не даёт.';
+  o.map.forEach((m,i)=>{if(m.length===2)s+=` Буква «${o.w[i]}» даёт два звука: [й'${o.snd[m[1]].t}].`});
+  if(o.nl===o.ns)s+=' Букв и звуков поровну.';
+  return s}
+function sylWhy(o){return `Сколько гласных — столько и слогов: ${o.syl.join(' - ')} — <b>${o.nsyl}</b> ${plural(o.nsyl,['слог','слога','слогов'])}.`}
+function stressWhy(o){return `Зовём: «${o.syl.map(s=>s===o.ssyl?`<b>${s.toUpperCase()}</b>`:s).join('-')}!» Сильнее тянется слог <b>${o.ssyl}</b>: ${stressW(o)}.`}
+
+function buildPhon(){const L=[],FW2=FW.filter(o=>o.nsyl===2),EQ=FW.filter(o=>o.nl===o.ns);
+  const single=o=>o.map.map((m,i)=>m.length===1?i:-1).filter(i=>i>=0);
+  const cons=o=>single(o).filter(i=>!o.snd[o.map[i][0]].v);
+  const digits=o=>[...new Set([o.nl,o.ns,o.nl+1,o.ns-1])].filter(n=>n>0).sort((a,b)=>a-b).map(String);
+  // 1. Слоги
+  {const o=pick(FW);L.push({type:'choice',face:'🐰',q:`Сколько слогов в слове «${o.w}»?`,html:wcardF(o,false),opts:['1','2','3'],ans:String(o.nsyl),
+    exp:()=>`<div class="explain">${trHTML(o)}<p>${sylWhy(o)}</p></div>`});}
+  // 2. Ударение
+  {const o=pick(FW2);L.push({type:'choice',face:'🦉',q:`Позови слово «${o.w}», будто зовёшь друга. Какой слог ударный?`,html:wcardF(o,false),opts:[...o.syl],ans:o.ssyl,
+    exp:()=>`<div class="explain"><p>${stressWhy(o)}</p></div>`});}
+  // 3. Гласный или согласный
+  {const o=pick(FW),i=pick(single(o)),x=o.snd[o.map[i][0]];
+   L.push({type:'choice',face:'🐦',q:'Выделенная буква — это гласный или согласный звук?',html:wordHL(o,i),opts:['гласный','согласный'],ans:x.v?'гласный':'согласный',
+    exp:()=>`<div class="explain"><p>${vowWhy(x)}</p>${trHTML(o)}</div>`});}
+  // 4. Твёрдый или мягкий
+  {const o=pick(FW),i=pick(cons(o)),x=o.snd[o.map[i][0]];
+   L.push({type:'choice',face:'🦊',q:'Выделенная буква — твёрдый или мягкий согласный звук?',html:wordHL(o,i),opts:['твёрдый','мягкий'],ans:x.soft?'мягкий':'твёрдый',
+    exp:()=>`<div class="explain"><p>${softWhy(o,i)}</p>${trHTML(o)}</div>`});}
+  // 5. Звонкий или глухой
+  {const o=pick(FW),i=pick(cons(o)),x=o.snd[o.map[i][0]];
+   L.push({type:'choice',face:'🐻',q:'Выделенная буква — звонкий или глухой согласный? Положи ладошку на горлышко!',html:wordHL(o,i),opts:['звонкий','глухой'],ans:x.voiced?'звонкий':'глухой',
+    exp:()=>`<div class="explain"><p>${voiceWhy(o,i)}</p></div>`});}
+  // 6. Букв больше или звуков больше
+  {const more=Math.random()<0.5,tg=pick(FW.filter(o=>more?o.nl>o.ns:o.ns>o.nl)),d=shuffle(EQ.filter(o=>o!==tg)).slice(0,3);
+   L.push({type:'choice',face:'🦔',q:more?'В каком слове букв больше, чем звуков?':'В каком слове звуков больше, чем букв?',html:'<div class="story">👀👂</div>',
+    opts:shuffle([tg,...d]).map(o=>o.w),ans:tg.w,exp:()=>`<div class="explain"><p>${countWhy(tg)}</p>${trHTML(tg)}<p>В остальных словах букв и звуков поровну.</p></div>`});}
+  // 7. Буквы и звуки
+  {const o=pick(FW.filter(o=>o.nl!==o.ns)),ds=digits(o);
+   L.push(slotTask({face:'🐿️',q:'Посчитай буквы и звуки! Слушай звуки, а не смотри на буквы.',html:wcardF(o),
+     steps:[{a:String(o.nl),opts:ds},{a:String(o.ns),opts:ds}],
+     line:s=>`<div class="prow">Букв: ${slot(0,s,o.nl)} &nbsp; Звуков: ${slot(1,s,o.ns)}</div>`,
+     hint:i=>i===0?`Буквы считаем глазами: ${[...o.w].join(', ')} — <b>${o.nl}</b>.`:countWhy(o),extra:()=>trHTML(o)}));}
+  // 8. Звуковая схема
+  {const o=pick(FW),ok=schemeEmo(o),set=new Set([ok]);let g=0;
+   while(set.size<3&&g++<60){const a=o.snd.map(x=>({...x})),j=R(0,a.length-1);
+     if(a[j].v){a[j].v=false;a[j].soft=Math.random()<0.5}else if(Math.random()<0.7)a[j].soft=!a[j].soft;else a[j].v=true;
+     set.add(a.map(semo).join(''))}
+   L.push({type:'choice',face:'🐰',q:`Какая звуковая схема у слова «${o.w}»?`,html:wcardF(o)+`<div class="legend">🟥 гласный &nbsp; 🟦 твёрдый согласный &nbsp; 🟩 мягкий согласный</div>`,
+     opts:shuffle([...set]),ans:ok,exp:()=>`<div class="explain"><p>Каждый звук — один квадратик:</p>${trHTML(o)}${schemeHTML(o)}<p>${countWhy(o)}</p></div>`});}
+  // 9. Прав ли ёжик
+  {const o=pick(FW),ok=Math.random()<0.5;let n=o.ns;if(!ok)n=o.nl!==o.ns?o.nl:o.ns+pick([-1,1]);
+   L.push({type:'tf',face:'🦔',q:'Ёжик Колючкин посчитал звуки. Он прав или ошибся?',
+     html:wcardF(o)+`<div class="bubble" style="text-align:center;margin:6px 0">«В слове <b>${o.w}</b> ${n} ${plural(n,['звук','звука','звуков'])}»</div>`,
+     isOk:ok,r:`${o.ns} ${plural(o.ns,['звук','звука','звуков'])}`,exp:()=>`<div class="explain"><p>${countWhy(o)}</p>${trHTML(o)}</div>`});}
+  // 10. Разбор по плану
+  {const o=pick(FW2),ds=digits(o);
+   L.push(slotTask({face:'🦉',q:'Разбери слово по плану! Нажимай ответы — они прилетят в окошки.',html:wcardF(o,false),
+     steps:[{a:String(o.nsyl),opts:['1','2','3']},{a:o.ssyl,opts:[...o.syl]},{a:String(o.nl),opts:ds},{a:String(o.ns),opts:ds}],
+     line:s=>`<div class="prow">Слогов: ${slot(0,s,o.nsyl)} &nbsp; Ударный: ${slot(1,s,o.ssyl)}<br>Букв: ${slot(2,s,o.nl)} &nbsp; Звуков: ${slot(3,s,o.ns)}</div>`,
+     hint:i=>[sylWhy(o),stressWhy(o),`Буквы считаем глазами: ${[...o.w].join(', ')} — <b>${o.nl}</b>.`,countWhy(o)][i],extra:()=>trHTML(o)}));}
+  // 11. Звуки по очереди (короткое слово)
+  {const o=pick(FW.filter(o=>o.ns===3));
+   L.push(slotTask({face:'🐻',q:'Какой каждый звук? Гласный, твёрдый или мягкий согласный?',html:wcardF(o),
+     steps:o.snd.map(x=>({a:x.v?'гласный':x.soft?'мягкий':'твёрдый',opts:['гласный','твёрдый','мягкий'],fly:x.t})),
+     line:s=>`<div class="tr">[ ${o.snd.map((x,i)=>slot(i,s,sndT(x,o),scls(x))).join(' ')} ]</div>`,
+     hint:i=>{const x=o.snd[i];return x.v?vowWhy(x):softWhy(o,o.map.findIndex(m=>m.includes(i)))},extra:()=>schemeHTML(o)}));}
+  // 12. Финал: длинное слово
+  {const o=pick(FW.filter(o=>o.ns===4));
+   L.push(slotTask({face:'🏆',q:'Последнее задание! Какой каждый звук: гласный, твёрдый или мягкий согласный?',html:wcardF(o),
+     steps:o.snd.map(x=>({a:x.v?'гласный':x.soft?'мягкий':'твёрдый',opts:['гласный','твёрдый','мягкий'],fly:x.t})),
+     line:s=>`<div class="tr">[ ${o.snd.map((x,i)=>slot(i,s,sndT(x,o),scls(x))).join(' ')} ]</div>`,
+     hint:i=>{const x=o.snd[i];return x.v?vowWhy(x):softWhy(o,o.map.findIndex(m=>m.includes(i)))},extra:()=>schemeHTML(o)}));}
+  return mixTasks(L);
+}
+
+/* таблица разбора звуков «как в тетради» */
+function ftab(o,upto){let h='<div class="ftab">';
+  [...o.w].forEach((c,i)=>{if(i>upto)return;const m=o.map[i],nw=i===upto?' new':'';
+    const s=m.length?m.map(k=>`<span class="${scls(o.snd[k])}">[${sndT(o.snd[k],o)}]</span>`).join(' '):'—';
+    const d=m.length?m.map(k=>{const x=o.snd[k];return x.v?`гласный, ${x.stress?'ударный':'безударный'}`:`согласный, ${x.soft?'мягкий':'твёрдый'}, ${x.voiced?'звонкий':'глухой'}`}).join('; '):'звука нет';
+    h+=`<span class="fl${nw}">${c}</span><span class="fs${nw}">${s}</span><span class="${nw}">${d}</span>`});
+  return h+'</div>'}
+const PH_LESSONS=[
+  {title:'Звуки и буквы',face:'🦉',chunks:[
+    `<p class="big">Звуки мы <b>слышим и произносим</b> 👂<br>Буквы мы <b>видим и пишем</b> 👀</p><div class="pairs"><div><h3>буквы</h3><span style="font-size:32px;font-weight:bold">кит</span></div><div><h3>звуки</h3>${trHTML(fw('кит'))}</div></div><p class="big center">Звуки пишем в квадратных скобках [ ]</p>`,
+    `<p class="big">Букв и звуков в слове бывает <b>не поровну</b>!</p><div class="pairs"><div><h3>конь</h3>4 буквы${trHTML(fw('конь'))}3 звука</div><div><h3>яма</h3>3 буквы${trHTML(fw('яма'))}4 звука</div></div><p class="big center">Поэтому слушаем звуки, а не смотрим на буквы 😉</p>`]},
+  {title:'Гласные и согласные',face:'🐦',chunks:[
+    `<p class="big"><b class="sV">Гласные</b> звуки можно пропеть: а-а-а! у-у-у! Воздух выходит свободно.</p><div class="tr sV">[а] [о] [у] [ы] [э] [и]</div><p class="big center">На схеме гласный — <span class="sq sqV"></span></p>`,
+    `<p class="big"><b>Согласные</b> звуки не поются: воздуху мешают губы, зубы или язык.</p><p class="big">Согласные бывают <b class="sH">твёрдые</b> <span class="sq sqH"></span> и <b class="sS">мягкие</b> <span class="sq sqS"></span></p><div class="wcard">лиса</div>${trHTML(fw('лиса'))}${schemeHTML(fw('лиса'))}`]},
+  {title:'Слоги и ударение',face:'🐰',chunks:[
+    `<p class="big">Сколько в слове <b>гласных</b> — столько и <b>слогов</b>!</p><div class="plist">кит — <b>1</b> слог<br>ли - са — <b>2</b> слога<br>ры - ба — <b>2</b> слога</div>`,
+    `<p class="big">Позови слово, будто зовёшь друга: «ли-<b>СА-А</b>!»</p><p class="big">Слог, который тянется сильнее, — <b>ударный</b>. Над гласной ставим знак ударения:</p><div class="wcard">лиса́</div>`]},
+  {title:'Твёрдые и мягкие согласные',face:'🦊',chunks:[
+    `<p class="big">Согласный звук <b class="sS">мягкий</b>, если после него стоят буквы <b>е, ё, ю, я, и</b> или <b>ь</b>.</p><div class="plist">лук — [<span class="sH">л</span>ук] — твёрдый<br>люк — [<span class="sS">л'</span>ук] — мягкий</div><p class="big center">Мягкость отмечаем значком ' : [л']</p>`,
+    `<div class="pairs"><div><h3>всегда твёрдые</h3><span class="sH" style="font-size:28px;font-weight:bold">ж ш ц</span></div><div><h3>всегда мягкие</h3><span class="sS" style="font-size:28px;font-weight:bold">ч щ й</span></div></div><p class="big center">Их нужно просто запомнить!</p>`]},
+  {title:'Звонкие и глухие согласные',face:'🐻',chunks:[
+    `<p class="big">Положи ладошку на горлышко и скажи [з-з-з]. Горлышко дрожит — звук <b>звонкий</b> 🔔</p><p class="big">Скажи [с-с-с]. Не дрожит, только шум — звук <b>глухой</b> 🤫</p>`,
+    `<p class="big">Звонкие и глухие дружат <b>парами</b>:</p><div class="plist">б — п &nbsp; в — ф &nbsp; г — к<br>д — т &nbsp; ж — ш &nbsp; з — с</div><div class="pairs"><div><h3>всегда звонкие</h3>л, м, н, р, й</div><div><h3>всегда глухие</h3>х, ц, ч, щ</div></div>`]},
+  {title:'Буквы-хитрюшки',face:'🦔',chunks:[
+    `<p class="big">Мягкий знак <b>ь</b> звука <b>не даёт</b>. Он только смягчает согласный перед собой.</p><div class="wcard">конь</div>${trHTML(fw('конь'))}<p class="big center">4 буквы, 3 звука</p>`,
+    `<p class="big">Буквы <b>е, ё, ю, я</b> в начале слова или после гласной дают <b>два звука</b>:</p><div class="plist">я → [й'а] &nbsp; ю → [й'у]<br>е → [й'э] &nbsp; ё → [й'о]</div>${trHTML(fw('яма'))}<p class="big center">яма: 3 буквы, 4 звука!</p>`,
+    `<p class="big">А после согласного эти буквы дают <b>один</b> звук и делают согласный мягким:</p><div class="wcard">мяч</div>${trHTML(fw('мяч'))}<p class="big center">3 буквы, 3 звука</p>`]},
+  {title:'Фонетический разбор',face:'🦉',chunks:[
+    `<p class="big"><b>Фонетический разбор</b> — это рассказ о <b>звуках</b> слова.</p><div class="memo"><b>📋 План</b><ol><li>Сколько слогов? Какой ударный?</li><li>Каждый звук: гласный или согласный, твёрдый или мягкий, звонкий или глухой</li><li>Сколько букв и сколько звуков</li><li>Звуковая схема</li></ol></div>`,
+    `<p class="big"><b>1.</b> Лиса: ли - са — <b>2 слога</b>.<br>Зовём: «ли-СА!» Ударный слог — <b>са</b>.</p><div class="wcard"><span class="pic">🦊</span>лиса́</div>`,
+    ...[0,1,2,3].map(k=>`<p class="big"><b>2.</b> Разбираем каждый звук:</p><div class="wcard">лиса́</div>${ftab(fw('лиса'),k)}`),
+    `<p class="big"><b>3.</b> 4 буквы, 4 звука:</p>${trHTML(fw('лиса'))}<p class="big"><b>4.</b> Звуковая схема:</p>${schemeHTML(fw('лиса'))}<p class="big center">🎉 Разбор готов!</p>`]},
+  {title:'Осторожно, ловушка!',face:'🦔',chunks:[
+    `<p class="big">Ёжик Колючкин сказал: «В слове <b>пять</b> 4 звука!»</p><p class="big">Нет! Мягкий знак звука не даёт:</p>${trHTML(fw('пять'))}<p class="big center">Всего 3 звука.</p>`,
+    `<p class="big">А ещё ёжик сказал: «<b>Юла</b> начинается со звука [у]».</p><p class="big">Нет! Буква «ю» в начале слова даёт два звука:</p>${trHTML(fw('юла'))}<p class="big center">Первый звук — [й'], мягкий.</p>`,
+    `${PRULE.replace('class="rule"','class="rule" style="font-size:24px"')}<p class="big center">Ты всё знаешь! Теперь можно играть 🎮</p>`]}
+];
+
+/* ================= МАТЕМАТИКА: умножение (2 класс) ================= */
+const MRULE=`<div class="rule">Умножение — это сумма одинаковых слагаемых!</div>`;
+const groups=(a,k,e='🌰')=>`<div class="groups">${Array(k).fill(`<span class="grp">${e.repeat(a)}</span>`).join('')}</div>`;
+const arr=(r,c,e='🌰')=>`<div class="center"><div class="arr" style="grid-template-columns:repeat(${c},auto)">${`<span>${e}</span>`.repeat(r*c)}</div></div>`;
+const sumStr=(a,b)=>Array(b).fill(a).join(' + ');
+const rz=b=>plural(b,['раз','раза','раз']);
+const mExpr=(s,box=true)=>`<div class="expr"><span class="t">${s}</span>${box?'<span class="t"><span class="box" id="ans">?</span></span>':''}</div>`;
+function explM(a,b,pre=''){const r=a*b;let s=pre?`<p>${pre}</p>`:'';
+  if(b===0)s+=`<p>По ${a} взять <b>0 раз</b> — ничего не взяли. ${a} · 0 = <b>0</b>.</p>`;
+  else if(a===0)s+=`<p>По 0 взять ${b} ${rz(b)}: ${sumStr(0,b)} = <b>0</b>. С нулём всегда 0!</p>`;
+  else{s+=`<p>${a} · ${b} — это по <b>${a}</b> взять <b>${b}</b> ${rz(b)}:</p><p class="center"><b>${sumStr(a,b)} = ${r}</b></p>`;if(r<=20&&b<=5)s+=groups(a,b)}
+  return `<div class="explain">${s}${MRULE}</div>`}
+/* квадрат Пифагора: строка r и столбик c подсвечены */
+function pyth(r,c){let h='<div class="pyth"><span class="ph">·</span>';
+  for(let j=1;j<=9;j++)h+=`<span class="ph${j===c?' pc':''}">${j}</span>`;
+  for(let i=1;i<=9;i++){h+=`<span class="ph${i===r?' pr':''}">${i}</span>`;
+    for(let j=1;j<=9;j++)h+=`<span class="${i===r&&j===c?'px':i===r?'prl':j===c?'pcl':''}">${i*j}</span>`}
+  return h+'</div>'}
+const tabExp=(a,b,pre='')=>`<div class="explain">${pre?`<p>${pre}</p>`:''}<p>Найди в таблице строку <b class="cT">${a}</b> и столбик <b class="cU">${b}</b>:</p>${pyth(a,b)}<p class="center"><b>${a} · ${b} = ${a*b}</b></p></div>`;
+const tabTable=n=>`<div class="mtab">${[1,2,3,4,5,6,7,8,9].map(b=>`<span>${n} · ${b} = <span class="cR">${n*b}</span></span>`).join('')}</div>`;
+const MUL_LESSONS=[
+  {title:'Что такое умножение',face:'🐿️',chunks:[
+    `<p class="big">Пушинка разложила орешки в <b>4 кучки</b>, в каждой — по <b>2</b> орешка.</p>${groups(2,4)}<p class="big center">Сколько всего орешков?</p>`,
+    `<p class="big">Можно сложить:</p>${plainExpr('2 + 2 + 2 + 2 = 8')}<p class="big">Все слагаемые <b>одинаковые</b> — по 2. Писать долго!</p>`,
+    `<p class="big">Запишем короче — <b>умножением</b>:</p>${plainExpr('2 · 4 = 8')}<p class="big center">«по <b>2</b> взять <b>4</b> раза»</p>${groups(2,4)}`]},
+  {title:'Как читать запись',face:'🦉',chunks:[
+    `${plainExpr('2 · 4 = 8')}<p class="big">Читаем: «<b>два умножить на четыре</b> — будет восемь».</p><p class="big center">Знак умножения — точка <b>·</b></p>`,
+    `<p class="big">У чисел есть имена:</p><div class="sent"><span class="sw"><span class="ww">2</span><span class="sl">множитель</span></span><span class="sw"><span class="ww">·</span></span><span class="sw"><span class="ww">4</span><span class="sl">множитель</span></span><span class="sw"><span class="ww">=</span></span><span class="sw"><span class="ww cR">8</span><span class="sl">произведение</span></span></div>`,
+    `<p class="big">Первое число — <b>сколько в каждой кучке</b>.<br>Второе — <b>сколько кучек</b> (сколько раз).</p>${groups(3,2)}${plainExpr('3 · 2 = 6')}`]},
+  {title:'Сумму — в произведение',face:'🦊',chunks:[
+    `<p class="big">Если слагаемые <b>одинаковые</b>, сумму можно заменить произведением:</p><div class="plist">3 + 3 + 3 + 3 = <b>3 · 4</b><br>5 + 5 = <b>5 · 2</b><br>4 + 4 + 4 = <b>4 · 3</b></div>`,
+    `<p class="big">А если слагаемые <b>разные</b> — заменить нельзя:</p><div class="plist">2 + 3 + 4 — ❌</div><p class="big">Умножение — только для одинаковых!</p>`,
+    `<p class="big">Как найти <b>3 · 4</b>? Заменим сложением:</p><div class="plist">3 · 4 = 3 + 3 + 3 + 3 = <b>12</b></div>${groups(3,4)}`]},
+  {title:'Переставляем множители',face:'🐻',chunks:[
+    `<p class="big">Орешки лежат <b>2 ряда</b>, в каждом по <b>3</b>:</p>${arr(2,3)}${plainExpr('3 · 2 = 6')}`,
+    `<p class="big">Повернём картинку: <b>3 ряда</b> по <b>2</b>:</p>${arr(3,2)}${plainExpr('2 · 3 = 6')}<p class="big center">Орешков столько же!</p>`,
+    `<div class="rule" style="font-size:22px">От перестановки множителей произведение не меняется!</div>${plainExpr('2 · 3 = 3 · 2')}`]},
+  {title:'Умножение на 1 и на 0',face:'🐰',chunks:[
+    `<p class="big">По 5 взять <b>1 раз</b> — будет 5:</p>${plainExpr('5 · 1 = 5')}<p class="big">А 1 · 5 = 1 + 1 + 1 + 1 + 1 = <b>5</b>.</p><p class="big center">На 1 умножаем — число не меняется!</p>`,
+    `<p class="big">В 3 корзинках <b>нет</b> орешков — по 0:</p><div class="story">🧺 🧺 🧺</div>${plainExpr('0 · 3 = 0')}<p class="big center">И 3 · 0 = 0. С нулём всегда <b>0</b>!</p>`]},
+  {title:'Вся таблица умножения',face:'🦉',chunks:[
+    `<p class="big">Вся таблица умножения — в одном квадрате! Найди строку <b class="cT">7</b> и столбик <b class="cU">8</b> — на пересечении ответ:</p>${pyth(7,8)}<p class="big center">7 · 8 = <span class="cA">56</span></p>`,
+    `<p class="big">Переставим множители — ответ тот же:</p><div class="plist">7 · 8 = 56<br>8 · 7 = 56</div><p class="big center">Знаешь одно — знаешь и другое! Половина таблицы уже выучена 😉</p>`,
+    `<p class="big">Забыл ответ? Прибавь число к прошлому ответу:</p><div class="plist">6 · 7 = 42<br>6 · 8 = 42 + 6 = <b>48</b></div>`]},
+  {title:'Хитрости таблицы',face:'🐿️',chunks:[
+    `<p class="big">На <b>5</b>: ответы всегда кончаются на <b>0</b> или <b>5</b>:</p><div class="plist">5, 10, 15, 20, 25, 30, 35, 40, 45</div>`,
+    `<p class="big">На <b>9</b>: сумма цифр ответа всегда <b>9</b>:</p><div class="plist">9 · 4 = 36 → 3 + 6 = 9<br>9 · 7 = 63 → 6 + 3 = 9</div><p class="big center">А первая цифра на 1 меньше второго множителя: 9 · <b>7</b> = <b>6</b>3</p>`,
+    `<p class="big">На <b>4</b>: умножь на 2, а потом ещё раз на 2:</p><div class="plist">4 · 6: 6 · 2 = 12, 12 · 2 = <b>24</b></div>`]},
+  {title:'Осторожно, ловушка!',face:'🦔',chunks:[
+    `<p class="big">Ёжик Колючкин торопился и решил:</p>${plainExpr('3 · 4 = <s style="color:#e0245e">7</s>')}<p class="big">Он <b>сложил</b> 3 и 4, а надо было <b>умножить</b>!</p>`,
+    `<p class="big">3 · 4 — это по 3 взять 4 раза:</p><div class="plist">3 + 3 + 3 + 3 = <b>12</b></div>${groups(3,4)}`,
+    `${MRULE.replace('class="rule"','class="rule" style="font-size:24px"')}<p class="big center">Ты всё знаешь! Теперь можно играть 🎮</p>`]}
+];
+function buildMul(){const L=[],EMO=['🌰','🍎','🍄','🌸','⭐','🥕'];
+  const tab=n=>{const b=R(2,9);return Math.random()<0.5?[n,b]:[b,n]};
+  const uniq=(arr,n=4)=>[...new Set(arr)].slice(0,n);
+  // 1. Картинка → запись
+  {const a=R(2,4),k=R(2,4),e=pick(EMO),ok=`${a} · ${k}`;
+   L.push({type:'choice',face:'🐿️',q:`В ${k} ${plural(k,['кучке','кучках','кучках'])} по ${a}. Какая запись подходит?`,html:groups(a,k,e),
+     opts:shuffle(uniq([ok,`${a} + ${k}`,`${a+1} · ${k}`,`${a} · ${k+1}`,`${a} · ${k+2}`])),ans:ok,
+     exp:()=>explM(a,k,`В каждой кучке по <b>${a}</b>, кучек <b>${k}</b>. Записываем: <b>${ok}</b>.`)});}
+  // 2. Сумму — в произведение
+  {const a=R(2,5),b=R(2,4),ds=[...new Set([a,b,a+1,b+1])].sort((x,y)=>x-y).map(String);
+   L.push(slotTask({face:'🦊',q:'Замени сумму произведением! Нажимай числа — они прилетят в окошки.',html:'',
+     steps:[{a:String(a),opts:ds},{a:String(b),opts:ds}],
+     line:s=>`<div class="prow" style="font-size:26px">${sumStr(a,b)} = ${slot(0,s,a)} · ${slot(1,s,b)}</div>`,
+     hint:i=>i===0?`Складываем одинаковые числа <b>${a}</b> — первым пишем ${a}.`:`Число ${a} повторяется <b>${b}</b> ${rz(b)} — вторым пишем ${b}.`,extra:()=>MRULE}));}
+  // 3. Произведение — в сумму
+  {const a=R(2,5),b=R(2,4),ok=sumStr(a,b);
+   L.push({type:'choice',face:'🐰',q:`Какая сумма подходит к записи ${a} · ${b}?`,html:plainExpr(`${a} · ${b}`),cls:' one',
+     opts:shuffle(uniq([ok,`${a} + ${b}`,sumStr(a,b+1),sumStr(a,b-1),sumStr(a+1,b),sumStr(a,b+2)].filter(x=>x.includes('+')))),ans:ok,exp:()=>explM(a,b)});}
+  // 4-5. Таблица умножения: сначала полегче, потом потруднее
+  for(const [lo,hi,face,q] of [[2,5,'🐻','Таблица умножения! Посчитай:'],[6,9,'🦉','Задание потруднее! Посчитай:']]){const [a,b]=tab(R(lo,hi));
+    L.push({type:'num',face,q,html:mExpr(`${a} · ${b} =`),ans:a*b,exp:()=>tabExp(a,b)});}
+  // 6. На 1 и на 0
+  {const x=R(2,9),[a,b]=pick([[x,0],[0,x],[x,1],[1,x]]);
+   L.push({type:'num',face:'🐰',q:'Хитрый пример! Подумай, что бывает с 0 и с 1.',html:mExpr(`${a} · ${b} =`),ans:a*b,
+     exp:()=>`<div class="explain"><p>${a*b===0?'Если один из множителей <b>0</b> — произведение всегда <b>0</b>.':'Если умножаем на <b>1</b> — число не меняется.'}</p><p class="center"><b>${a} · ${b} = ${a*b}</b></p></div>`});}
+  // 7. Переставь множители
+  {const [a,b]=tab(R(2,9));
+   L.push({type:'num',face:'🐻',q:'Мишка переставил множители. Какое число спряталось?',html:`<div class="expr"><span class="t">${a} · ${b} = ${b} ·</span><span class="t"><span class="box" id="ans">?</span></span></div>`,ans:a,
+     exp:()=>`<div class="explain"><p>От перестановки множителей произведение не меняется:</p><p class="center"><b>${a} · ${b} = ${b} · ${a}</b></p>${a*b<=20?arr(Math.min(a,b),Math.max(a,b)):''}</div>`});}
+  // 8. Прав ли ёжик
+  {const [a,b]=tab(R(3,9)),ok=Math.random()<0.5,shown=ok?a*b:pick([a+b,a*b+a,a*b-b].filter(x=>x!==a*b&&x>0));
+   L.push({type:'tf',face:'🦔',q:'Ёжик Колючкин решил пример. Он прав или ошибся?',html:plainExpr(`${a} · ${b} = ${shown}`),isOk:ok,r:a*b,
+     exp:()=>tabExp(a,b,ok?'Ёжик решил <b>правильно</b>!':`Ёжик ${shown===a+b?'<b>сложил</b> числа, а надо умножить':'ошибся'}. Правильно: <b>${a*b}</b>.`)});}
+  // 9. Какой рисунок подходит
+  {const a=R(2,3),b=R(2,4),e=pick(EMO),pic=(x,k)=>Array(k).fill(`(${e.repeat(x)})`).join(' '),ok=pic(a,b);
+   L.push({type:'choice',face:'🐿️',q:`Какой рисунок подходит к записи ${a} · ${b}?`,html:plainExpr(`${a} · ${b}`),cls:' one emo',
+     opts:shuffle(uniq([ok,pic(a+1,b),pic(a,b+1),`(${e.repeat(a)}) (${e.repeat(b)})`])),ans:ok,
+     exp:()=>explM(a,b,`${a} · ${b} — это <b>${b}</b> ${plural(b,['кучка','кучки','кучек'])} по <b>${a}</b>.`)});}
+  // 10. Считаем двойками / тройками
+  {const s=R(2,9),h=R(2,4),seq=[1,2,3,4,5,6].map(k=>k*s);
+   L.push({type:'num',face:'🦊',q:`Считаем ${['двойками','тройками','четвёрками','пятёрками','шестёрками','семёрками','восьмёрками','девятками'][s-2]}! Какое число пропало?`,
+     html:`<div class="expr" style="flex-wrap:wrap">${seq.map((v,i)=>i===h?'<span class="t"><span class="box" id="ans">?</span></span>':`<span class="t">${v}${i<5?',':''}</span>`).join('')}</div>`,ans:seq[h],
+     exp:()=>`<div class="explain"><p>Каждое число больше прошлого на <b>${s}</b>: ${seq[h-1]} + ${s} = <b>${seq[h]}</b>.</p><p>Это таблица на ${s}: ${s} · ${h+1} = <b>${seq[h]}</b>.</p></div>`});}
+  // 11. Пропущенный множитель
+  {const a=R(2,9),b=R(2,9);
+   L.push({type:'num',face:'🐰',q:'Какой множитель спрятался?',html:`<div class="expr"><span class="t">${a} ·</span><span class="t"><span class="box" id="ans">?</span></span><span class="t">= ${a*b}</span></div>`,ans:b,
+     exp:()=>tabExp(a,b,`Ищем: по ${a} взять сколько раз, чтобы получилось ${a*b}?`)});}
+  // 12. Задача
+  {const a=R(2,9),b=R(2,7);
+   L.push({type:'num',face:'🐦',q:'Задача!',html:`<div class="bubble" style="margin:6px 0">На ${b} ${plural(b,['ветке','ветках','ветках'])} сидят птички, на каждой — по ${a}. Сколько всего птичек?</div>${a*b<=15&&b<=4?groups(a,b,'🐦'):''}<div class="expr"><span class="t">Ответ:</span><span class="box" id="ans">?</span></div>`,ans:a*b,
+     exp:()=>explM(a,b,`«По ${a}» взять ${b} ${rz(b)} — значит, <b>умножаем</b>: ${a} · ${b}.`)});}
+  // 12. Финал: задача в два шага
+  {const a=R(2,9),b=R(2,9),c=R(1,9);
+   L.push({type:'steps',face:'🏆',q:`Последнее задание! В ${b} ${plural(b,['корзинке','корзинках','корзинках'])} по ${a} ${plural(a,['гриб','гриба','грибов'])}. Ещё ${c} ${plural(c,['гриб','гриба','грибов'])} Пушинка нашла под ёлкой. Сколько всего грибов?`,html:'',
+     steps:[{l:`Шаг 1: ${a} · ${b} =`,a:a*b},{l:`Шаг 2: ${a*b} + ${c} =`,a:a*b+c}],res:a*b+c,
+     exp:()=>`<div class="explain"><p><b>Шаг 1.</b> В корзинках по ${a} взять ${b} ${rz(b)}: ${a} · ${b} = <b>${a*b}</b>.</p><p><b>Шаг 2.</b> Прибавим грибы под ёлкой: ${a*b} + ${c} = <b>${a*b+c}</b>.</p></div>`});}
+  return mixTasks(L);
+}
+
+/* ================= предметы и темы ================= */
+let CUR=null;
+const SUBJECTS=[
+  {id:'math',icon:'🔢',name:'Математика',sub:'числа и примеры',topics:[
+    {subj:'math',icon:'🧮',name:'Десятки и единицы',sub:'сложение и вычитание',story:'🐿️🌳🍂',h1:'Белочка Пушинка готовится к зиме!',
+     intro:'Сегодня учимся складывать и вычитать<br><b>десятки и единицы</b>.',tsub:'Пушинка объяснит, как решать',lessons:MATH_LESSONS,build:buildTasks,rule:RULE,
+     master:'Ты настоящий мастер десятков и единиц! 🧠✨',p1:'Вот это да! Настоящий математик! 🧠',p2:'Отлично считаешь! 💪'},
+    {subj:'math',icon:'✖️',name:'Умножение',sub:'что это такое, вся таблица умножения',story:'🐿️🌰🌰🌰',h1:'Пушинка считает кучками!',
+     intro:'Учимся <b>умножать</b>!',tsub:'Пушинка объяснит, что такое умножение',lessons:MUL_LESSONS,build:buildMul,rule:MRULE,
+     master:'Ты настоящий мастер умножения! 🧠✨',p1:'Вот это да! Настоящий математик! 🧠',p2:'Отлично умножаешь! 💪'}]},
+  {id:'rus',icon:'📚',name:'Русский язык',sub:'слова и правила',topics:[
+    {subj:'rus',icon:'🔍',name:'Морфологический разбор',sub:'части речи и их признаки',story:'🐿️🔍📚',h1:'Пушинка — словесный сыщик!',
+     intro:'Учимся делать <b>морфологический разбор</b> слова!',tsub:'Пушинка расскажет про части речи',lessons:RUS_LESSONS,build:buildRus,rule:RRULE,
+     master:'Ты настоящий знаток частей речи! 📚✨',p1:'Вот это да! Настоящий знаток слов! 🧠',p2:'Отлично разбираешь слова! 💪'},
+    {subj:'rus',icon:'🔔',name:'Фонетический разбор',sub:'звуки и буквы, слоги, ударение',story:'🐿️👂🔔',h1:'Пушинка слушает звуки!',
+     intro:'Учимся делать <b>фонетический разбор</b> слова!',tsub:'Пушинка расскажет про звуки и буквы',lessons:PH_LESSONS,build:buildPhon,rule:PRULE,
+     master:'Ты настоящий знаток звуков и букв! 👂✨',p1:'Вот это слух! Настоящий знаток звуков! 👂',p2:'Отлично слышишь звуки! 💪'}]}
+];
 
 startScreen();
 </script>
